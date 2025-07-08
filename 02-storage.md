@@ -3,17 +3,11 @@
 ## 目次
 
 1. [S3 (Simple Storage Service)](#s3-simple-storage-service)
-
 2. [EBS (Elastic Block Store)](#ebs-elastic-block-store)
-
 3. [EFS (Elastic File System)](#efs-elastic-file-system)
-
 4. [FSx](#fsx)
-
 5. [Storage Gateway](#storage-gateway)
-
 6. [DataSync](#datasync)
-
 7. [サービス比較](#サービス比較)
 
 ---
@@ -189,7 +183,6 @@ s3_client.upload_file(
     'large-file.zip',
     Config=config
 )
-
 ```
 
 #### Transfer Acceleration
@@ -202,21 +195,15 @@ Transfer Acceleration:
 https://my-bucket.s3-accelerate.amazonaws.com
 
 利点:
-
 - CloudFrontエッジロケーション活用
-
 - 長距離転送の高速化
-
 - 追加料金が発生
-
 ```
 
 ### 公式リソース
 
 - [S3 サービス紹介](https://aws.amazon.com/jp/s3/)
-
 - [S3 Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_S3.pdf)
-
 - [S3 パフォーマンスガイド](https://docs.aws.amazon.com/AmazonS3/latest/userguide/optimizing-performance.html)
 
 ---
@@ -233,88 +220,58 @@ EC2 インスタンス用のブロックストレージ。高性能、高可用�
 
 ```
 gp3 (推奨):
-
 - 基準性能: 3,000 IOPS、125 MB/s
-
 - 最大性能: 16,000 IOPS、1,000 MB/s
-
 - IOPS/スループット独立調整
-
 - コスト効率が良い
 
 gp2 (従来):
-
 - 性能: 3 IOPS/GB (最小100 IOPS)
-
 - バーストクレジット制
-
 - 小容量で性能不足の可能性
-
 ```
 
 #### プロビジョンド IOPS SSD (io2/io1)
 
 ```
 io2 (推奨):
-
 - 最大: 64,000 IOPS、1,000 MB/s
-
 - 耐久性: 99.999%
-
 - Multi-Attach対応
-
 - より高いIOPS/GB比
 
 io1 (従来):
-
 - 最大: 64,000 IOPS、1,000 MB/s
-
 - 耐久性: 99.999%
-
 - Multi-Attach対応
-
 ```
 
 #### スループット最適化 HDD (st1)
 
 ```
 特徴:
-
 - 最大: 500 IOPS、500 MB/s
-
 - 大容量データ処理向け
-
 - 順次アクセス最適化
 
 用途:
-
 - ビッグデータ
-
 - データウェアハウス
-
 - ログ処理
-
 ```
 
 #### コールド HDD (sc1)
 
 ```
 特徴:
-
 - 最大: 250 IOPS、250 MB/s
-
 - 最低コスト
-
 - アクセス頻度が低いデータ
 
 用途:
-
 - アーカイブ
-
 - バックアップ
-
 - 災害復旧
-
 ```
 
 ### スナップショット
@@ -353,23 +310,15 @@ io1 (従来):
 #### 高速スナップショット復元 (FSR)
 
 ```
-
 特徴:
-
 - スナップショットから即座にフル性能
-
 - 追加料金が発生
-
 - AZ単位で有効化
 
 用途:
-
 - 本番環境の迅速復旧
-
 - 開発環境の高速構築
-
 - 災害復旧
-
 ```
 
 ### Multi-Attach
@@ -395,34 +344,25 @@ aws ec2 attach-volume \
     --volume-id vol-1234567890abcdef0 \
     --instance-id i-0987654321fedcba0 \
     --device /dev/sdf
-
 ```
 
 #### 注意点
 
 ```
 制限:
-
 - io1/io2のみ対応
-
 - 同一AZ内のみ
-
 - 最大16インスタンス
 
 要件:
-
 - クラスター対応ファイルシステム
-
 - アプリケーションレベルの調整
-
 - 適切な同期メカニズム
-
 ```
 
 ### 公式リソース
 
 - [EBS サービス紹介](https://aws.amazon.com/jp/ebs/)
-
 - [EBS Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_EBS.pdf)
 
 ---
@@ -439,42 +379,28 @@ aws ec2 attach-volume \
 
 ```
 特徴:
-
 - 最大7,000ファイル操作/秒
-
 - 低レイテンシ
-
 - 小〜中規模ワークロード向け
 
 用途:
-
 - Webサーバー
-
 - CMS
-
 - 一般的なファイル共有
-
 ```
 
 #### 最大 I/O モード
 
 ```
 特徴:
-
 - 7,000以上のファイル操作/秒
-
 - 高レイテンシ
-
 - 大規模並列ワークロード向け
 
 用途:
-
 - ビッグデータ分析
-
 - メディア処理
-
 - 科学計算
-
 ```
 
 ### スループットモード
@@ -483,36 +409,26 @@ aws ec2 attach-volume \
 
 ```
 設定例:
-
 - ファイルシステムサイズ: 100GB
-
 - プロビジョンドスループット: 500 MB/s
-
 - 料金: ストレージ + スループット
 
 計算:
 ベースライン = 100GB × 0.05 MB/s/GB = 5 MB/s
 追加必要: 500 - 5 = 495 MB/s
-
 ```
 
 #### バーストスループット
 
 ```
 仕組み:
-
 - ベースライン: 50 MB/s/TB
-
 - バーストクレジット制
-
 - 最大100 MB/s
 
 適用:
-
 - 断続的な高スループット
-
 - 予測可能なワークロード
-
 ```
 
 ### 暗号化
@@ -554,7 +470,6 @@ sudo mount -t efs fs-12345678:/ /mnt/efs
 
 # 永続化 (/etc/fstab)
 fs-12345678.efs.region.amazonaws.com:/ /mnt/efs efs defaults,_netdev 0 0
-
 ```
 
 #### ECS/Fargate での使用
@@ -593,7 +508,6 @@ fs-12345678.efs.region.amazonaws.com:/ /mnt/efs efs defaults,_netdev 0 0
 ### 公式リソース
 
 - [EFS サービス紹介](https://aws.amazon.com/jp/efs/)
-
 - [EFS Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_EFS.pdf)
 
 ---
@@ -609,22 +523,16 @@ fs-12345678.efs.region.amazonaws.com:/ /mnt/efs efs defaults,_netdev 0 0
 #### 特徴
 
 ```
-
 プロトコル: SMB
 認証: Active Directory統合
 パフォーマンス: 最大2GB/s、数百万IOPS
 容量: 32GB - 65TB
 
 機能:
-
 - DFS (Distributed File System)
-
 - VSS (Volume Shadow Copy)
-
 - データ重複排除
-
 - 暗号化
-
 ```
 
 #### 設定例
@@ -656,11 +564,8 @@ fs-12345678.efs.region.amazonaws.com:/ /mnt/efs efs defaults,_netdev 0 0
 S3統合: 透明なデータアクセス
 
 デプロイメントタイプ:
-
 - Scratch: 一時的、高性能
-
 - Persistent: 永続的、レプリケーション
-
 ```
 
 #### S3 統合設定
@@ -685,19 +590,14 @@ S3統合: 透明なデータアクセス
 #### 特徴
 
 ```
-
 プロトコル: NFS、SMB、iSCSI
 機能: スナップショット、クローン、重複排除
 統合: SnapMirror、SnapCenter
 
 利点:
-
 - エンタープライズ機能
-
 - 既存ONTAP環境との統合
-
 - 高い効率性
-
 ```
 
 ### FSx for OpenZFS
@@ -705,25 +605,19 @@ S3統合: 透明なデータアクセス
 #### 特徴
 
 ```
-
 プロトコル: NFS
 機能: スナップショット、圧縮、重複排除
 パフォーマンス: 最大4GB/s、160万IOPS
 
 利点:
-
 - 高いデータ効率
-
 - ポイントインタイム復旧
-
 - 低レイテンシ
-
 ```
 
 ### 公式リソース
 
 - [FSx サービス紹介](https://aws.amazon.com/jp/fsx/)
-
 - [FSx Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_FSx.pdf)
 
 ---
@@ -739,19 +633,14 @@ S3統合: 透明なデータアクセス
 #### File Gateway
 
 ```
-
 プロトコル: NFS、SMB
 用途: ファイル共有
 ストレージ: S3
 
 特徴:
-
 - ローカルキャッシュ
-
 - S3への透明なアクセス
-
 - メタデータ保持
-
 ```
 
 #### Volume Gateway
@@ -759,57 +648,42 @@ S3統合: 透明なデータアクセス
 ##### Stored Volumes
 
 ```
-
 容量: 1GB - 16TB (ボリューム単位)
 最大: 32ボリューム/ゲートウェイ
 プライマリデータ: オンプレミス
 バックアップ: S3 (スナップショット)
 
 用途:
-
 - 既存ストレージの拡張
-
 - 低レイテンシアクセス
-
 - 災害復旧
-
 ```
 
 ##### Cached Volumes
 
 ```
-
 容量: 1GB - 32TB (ボリューム単位)
 最大: 32ボリューム/ゲートウェイ
 プライマリデータ: S3
 キャッシュ: オンプレミス
 
 用途:
-
 - 頻繁アクセスデータのキャッシュ
-
 - ストレージコスト削減
-
 - スケーラビリティ
-
 ```
 
 #### Tape Gateway (VTL)
 
 ```
-
 プロトコル: iSCSI
 エミュレート: 物理テープライブラリ
 ストレージ: S3、Glacier
 
 特徴:
-
 - 既存バックアップソフト対応
-
 - 仮想テープ (100GB - 5TB)
-
 - 自動アーカイブ
-
 ```
 
 ### デプロイメント
@@ -817,47 +691,33 @@ S3統合: 透明なデータアクセス
 #### VM 形式
 
 ```
-
 サポート:
-
 - VMware vSphere
-
 - Microsoft Hyper-V
-
 - Linux KVM
 
 要件:
-
 - 4vCPU、16GB RAM (最小)
-
 - ローカルディスク (キャッシュ用)
-
 - ネットワーク帯域
-
 ```
 
 #### ハードウェアアプライアンス
 
 ```
-
 提供: Dell EMC
 モデル: PowerEdge R640
 用途: 高性能要件
 
 利点:
-
 - 事前設定済み
-
 - サポート統合
-
 - 予測可能な性能
-
 ```
 
 ### 公式リソース
 
 - [Storage Gateway サービス紹介](https://aws.amazon.com/jp/storagegateway/)
-
 - [Storage Gateway Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_StorageGateway.pdf)
 
 ---
@@ -873,49 +733,31 @@ S3統合: 透明なデータアクセス
 #### オンプレミス → AWS
 
 ```
-
 ソース:
-
 - NFS
-
 - SMB
-
 - HDFS
-
 - オブジェクトストレージ
 
 デスティネーション:
-
 - S3
-
 - EFS
-
 - FSx
-
 ```
 
 #### AWS → AWS
 
 ```
-
 パターン:
-
 - S3 → EFS
-
 - EFS → S3
-
 - S3 → FSx
-
 - FSx → S3
 
 用途:
-
 - データ移行
-
 - バックアップ
-
 - アーカイブ
-
 ```
 
 ### エージェント設定
@@ -931,7 +773,6 @@ S3統合: 透明なデータアクセス
 aws datasync create-agent \
     --agent-name "MyAgent" \
     --activation-key "ABCDE-12345-FGHIJ-67890"
-
 ```
 
 #### ネットワーク要件
@@ -942,13 +783,9 @@ aws datasync create-agent \
 NTP: 時刻同期必須
 
 最適化:
-
 - 専用線使用
-
 - 帯域幅制限設定
-
 - 並列転送調整
-
 ```
 
 ### タスク設定
@@ -978,7 +815,6 @@ NTP: 時刻同期必須
 ### 公式リソース
 
 - [DataSync サービス紹介](https://aws.amazon.com/jp/datasync/)
-
 - [DataSync Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_DataSync.pdf)
 
 ---
@@ -1011,20 +847,17 @@ NTP: 時刻同期必須
 #### 1TB データの場合
 
 ```
-
 S3 Standard: $23
 S3 Standard-IA: $12.5
 S3 Glacier: $4
 EBS gp3: $80
 EFS Standard: $300
 FSx Windows: $130-390
-
 ```
 
 ### 選択フローチャート
 
 ```
-
 データアクセスパターンは？
 ├─ 単一インスタンス → ブロックストレージ必要？
 │   ├─ Yes → EBS
@@ -1034,7 +867,6 @@ FSx Windows: $130-390
 │   ├─ SMB → FSx for Windows
 │   └─ 高性能 → FSx for Lustre
 └─ ハイブリッド → Storage Gateway
-
 ```
 
 ---

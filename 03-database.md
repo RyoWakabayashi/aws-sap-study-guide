@@ -3,19 +3,12 @@
 ## 目次
 
 1. [RDS (Relational Database Service)](#rds-relational-database-service)
-
 2. [Aurora](#aurora)
-
 3. [DynamoDB](#dynamodb)
-
 4. [DocumentDB](#documentdb)
-
 5. [Neptune](#neptune)
-
 6. [Redshift](#redshift)
-
 7. [ElastiCache](#elasticache)
-
 8. [サービス比較](#サービス比較)
 
 ---
@@ -42,50 +35,32 @@
 
 ```
 仕組み:
-
 - プライマリ: アクティブ
-
 - スタンバイ: 別AZで待機
-
 - 同期レプリケーション
-
 - 自動フェイルオーバー (1-2分)
 
 利点:
-
 - 高可用性
-
 - 自動バックアップ
-
 - メンテナンス時の無停止
-
 - データ損失なし (RPO = 0)
-
 ```
 
 #### Read Replica
 
 ```
 仕組み:
-
 - 非同期レプリケーション
-
 - 読み取り専用
-
 - 複数作成可能 (最大15個)
-
 - クロスリージョン対応
 
 利点:
-
 - 読み取り性能向上
-
 - 地理的分散
-
 - 分析ワークロード分離
-
 - 災害復旧
-
 ```
 
 ### バックアップ・復旧
@@ -110,7 +85,6 @@ aws rds restore-db-instance-to-point-in-time \
     --source-db-instance-identifier mydb-instance \
     --target-db-instance-identifier mydb-restored \
     --restore-time 2023-12-01T10:30:00.000Z
-
 ```
 
 ### パフォーマンス最適化
@@ -119,60 +93,41 @@ aws rds restore-db-instance-to-point-in-time \
 
 ```
 汎用 (T3/T4g):
-
 - バーストパフォーマンス
-
 - 軽量ワークロード
-
 - コスト効率
 
 メモリ最適化 (R5/R6i):
-
 - インメモリ処理
-
 - 大規模データセット
-
 - 高い同時接続数
 
 コンピューティング最適化 (C5):
-
 - CPU集約的処理
-
 - 複雑なクエリ
-
 ```
 
 #### ストレージ最適化
 
 ```
 gp3 (推奨):
-
 - 基準: 3,000 IOPS、125 MB/s
-
 - 独立調整可能
-
 - コスト効率
 
 io1/io2:
-
 - 高IOPS要件
-
 - 一貫した性能
-
 - ミッションクリティカル
 
 Magnetic:
-
 - 後方互換性のみ
-
 - 新規作成非推奨
-
 ```
 
 ### 公式リソース
 
 - [RDS サービス紹介](https://aws.amazon.com/jp/rds/)
-
 - [RDS Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_RDS.pdf)
 
 ---
@@ -189,46 +144,30 @@ Magnetic:
 
 ```
 特徴:
-
 - 分散ストレージ
-
 - 6つのコピー (3AZ × 2)
-
 - 自動修復
-
 - 最大128TB
 
 利点:
-
 - 高い耐久性 (99.999999999%)
-
 - 高速復旧
-
 - 自動スケーリング
-
 - バックアップ不要
-
 ```
 
 #### コンピューティング
 
 ```
 Writer:
-
 - 1つのプライマリインスタンス
-
 - 読み書き可能
-
 - 自動フェイルオーバー
 
 Reader:
-
 - 最大15個のリードレプリカ
-
 - 読み取り専用
-
 - 自動負荷分散
-
 ```
 
 ### Aurora Serverless
@@ -237,42 +176,28 @@ Reader:
 
 ```
 特徴:
-
 - ACU (Aurora Capacity Unit) ベース
-
 - 自動一時停止
-
 - コールドスタート有り
 
 制限:
-
 - VPC内のみ
-
 - 一部機能制限
-
 - パフォーマンス予測困難
-
 ```
 
 #### v2 (推奨)
 
 ```
 特徴:
-
 - 瞬時スケーリング
-
 - 常時稼働
-
 - 細かい容量調整
 
 利点:
-
 - 予測可能な性能
-
 - 機能制限なし
-
 - パブリックアクセス対応
-
 ```
 
 ### Global Database
@@ -281,19 +206,13 @@ Reader:
 
 ```
 プライマリリージョン:
-
 - Writer + Reader
-
 - 読み書き処理
 
 セカンダリリージョン:
-
 - Reader のみ (最大5リージョン)
-
 - 読み取り専用
-
 - 1秒未満のレプリケーション遅延
-
 ```
 
 #### 災害復旧
@@ -308,7 +227,6 @@ aws rds failover-global-cluster \
 aws rds remove-from-global-cluster \
     --global-cluster-identifier my-global-cluster \
     --db-cluster-identifier my-secondary-cluster
-
 ```
 
 ### パフォーマンス機能
@@ -316,48 +234,35 @@ aws rds remove-from-global-cluster \
 #### Aurora Parallel Query
 
 ```
-
 対象: 分析クエリ
 仕組み: ストレージレイヤーで並列処理
 効果: 最大100倍高速化
 
 適用条件:
-
 - 大きなテーブル
-
 - 集計クエリ
-
 - フルテーブルスキャン
-
 ```
 
 #### Aurora Machine Learning
 
 ```
-
 統合サービス:
-
 - SageMaker
-
 - Comprehend
 
 用途:
-
 - 異常検知
-
 - 感情分析
-
 - 予測分析
 
 例:
 SELECT comprehend_detect_sentiment('This is great!') as sentiment;
-
 ```
 
 ### 公式リソース
 
 - [Aurora サービス紹介](https://aws.amazon.com/jp/rds/aurora/)
-
 - [Aurora Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_Aurora.pdf)
 
 ---
@@ -373,7 +278,6 @@ SELECT comprehend_detect_sentiment('This is great!') as sentiment;
 #### 基本構造
 
 ```
-
 テーブル
 ├─ パーティションキー (必須)
 ├─ ソートキー (オプション)
@@ -383,29 +287,20 @@ SELECT comprehend_detect_sentiment('This is great!') as sentiment;
 PK: UserId
 SK: Timestamp
 Attributes: Message, Status, etc.
-
 ```
 
 #### キー設計パターン
 
 ```
-
 良い設計:
-
 - 均等分散: UserId + Random
-
 - 時系列: UserId + Timestamp
-
 - 階層: Country#Region#City
 
 避けるべき:
-
 - 単調増加: Timestamp のみ
-
 - 少数値: Status のみ
-
 - ホットパーティション
-
 ```
 
 ### 容量モード
@@ -413,45 +308,29 @@ Attributes: Message, Status, etc.
 #### オンデマンド
 
 ```
-
 特徴:
-
 - 自動スケーリング
-
 - 使用量ベース課金
-
 - 管理不要
 
 用途:
-
 - 予測困難なワークロード
-
 - 新しいアプリケーション
-
 - 断続的なトラフィック
-
 ```
 
 #### プロビジョンド
 
 ```
-
 特徴:
-
 - 事前容量設定
-
 - Auto Scaling対応
-
 - 予約容量割引
 
 用途:
-
 - 予測可能なワークロード
-
 - コスト最適化
-
 - 一定のトラフィック
-
 ```
 
 ### Global Tables
@@ -487,21 +366,14 @@ Attributes: Message, Status, etc.
 
 ```
 Last Writer Wins:
-
 - タイムスタンプベース
-
 - 自動解決
-
 - データ損失の可能性
 
 カスタム解決:
-
 - Lambda関数
-
 - ビジネスロジック
-
 - 複雑な制御
-
 ```
 
 ### インデックス
@@ -566,7 +438,6 @@ table.update(
         'StreamViewType': 'NEW_AND_OLD_IMAGES'
     }
 )
-
 ```
 
 #### Lambda 統合
@@ -583,13 +454,11 @@ def lambda_handler(event, context):
             old_image = record['dynamodb']['OldImage']
             new_image = record['dynamodb']['NewImage']
             process_updated_item(old_image, new_image)
-
 ```
 
 ### 公式リソース
 
 - [DynamoDB サービス紹介](https://aws.amazon.com/jp/dynamodb/)
-
 - [DynamoDB Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_DynamoDB.pdf)
 
 ---
@@ -608,26 +477,19 @@ MongoDB 互換のドキュメントデータベース。フルマネージド。
 レプリカ: 最大15個
 バックアップ: ポイントインタイム復旧
 暗号化: 保存時・転送時
-
 ```
 
 ### アーキテクチャ
 
 ```
 クラスター構成:
-
 - プライマリインスタンス (1個)
-
 - レプリカインスタンス (最大15個)
-
 - 分散ストレージ (3AZ × 2コピー)
 
 接続:
-
 - クラスターエンドポイント (書き込み)
-
 - リーダーエンドポイント (読み取り)
-
 ```
 
 ### 移行
@@ -642,13 +504,11 @@ mongorestore --host docdb-cluster.cluster-xxx.docdb.amazonaws.com:27017 \
     --ssl --sslCAFile rds-ca-2019-root.pem \
     --sslAllowInvalidHostnames \
     /backup
-
 ```
 
 ### 公式リソース
 
 - [DocumentDB サービス紹介](https://aws.amazon.com/jp/documentdb/)
-
 - [DocumentDB Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_DocumentDB.pdf)
 
 ---
@@ -664,55 +524,37 @@ mongorestore --host docdb-cluster.cluster-xxx.docdb.amazonaws.com:27017 \
 ```
 
 Property Graph (Gremlin):
-
 - 頂点 (Vertex)
-
 - 辺 (Edge)
-
 - プロパティ
 
 RDF (SPARQL):
-
 - トリプル (Subject-Predicate-Object)
-
 - オントロジー
-
 ```
 
 ### 用途
 
 ```
-
 ソーシャルネットワーク:
-
 - 友達関係
-
 - 影響度分析
-
 - レコメンデーション
 
 不正検知:
-
 - 取引パターン
-
 - 異常検知
-
 - リスク評価
 
 知識グラフ:
-
 - 情報関連付け
-
 - セマンティック検索
-
 - AI/ML統合
-
 ```
 
 ### 公式リソース
 
 - [Neptune サービス紹介](https://aws.amazon.com/jp/neptune/)
-
 - [Neptune Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_Neptune.pdf)
 
 ---
@@ -726,64 +568,45 @@ RDF (SPARQL):
 ### アーキテクチャ
 
 ```
-
 リーダーノード:
-
 - クエリ計画
-
 - 結果集約
-
 - クライアント接続
 
 コンピューティングノード:
-
 - データ処理
-
 - ローカルストレージ
-
 - 並列実行
-
 ```
 
 ### ノードタイプ
 
 ```
+- ra3.xlplus: 4vCPU, 32GB RAM, マネージドストレージ
+- ra3.4xlarge: 12vCPU, 96GB RAM, マネージドストレージ
+- ra3.16xlarge: 48vCPU, 384GB RAM, マネージドストレージ
 
-ra3.xlplus: 4vCPU, 32GB RAM, マネージドストレージ
-ra3.4xlarge: 12vCPU, 96GB RAM, マネージドストレージ
-ra3.16xlarge: 48vCPU, 384GB RAM, マネージドストレージ
-
-dc2.large: 2vCPU, 15GB RAM, 160GB SSD
-dc2.8xlarge: 32vCPU, 244GB RAM, 2.56TB SSD
-
+- dc2.large: 2vCPU, 15GB RAM, 160GB SSD
+- dc2.8xlarge: 32vCPU, 244GB RAM, 2.56TB SSD
 ```
 
 ### Redshift Serverless
 
 ```
-
 特徴:
-
 - 自動スケーリング
-
 - RPU (Redshift Processing Unit) ベース
-
 - 管理不要
 
 用途:
-
 - 断続的なワークロード
-
 - 開発・テスト
-
 - 予測困難な負荷
-
 ```
 
 ### 公式リソース
 
 - [Redshift サービス紹介](https://aws.amazon.com/jp/redshift/)
-
 - [Redshift Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_Redshift.pdf)
 
 ---
@@ -824,7 +647,6 @@ dc2.8xlarge: 32vCPU, 244GB RAM, 2.56TB SSD
 ### 公式リソース
 
 - [ElastiCache サービス紹介](https://aws.amazon.com/jp/elasticache/)
-
 - [ElastiCache Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_ElastiCache.pdf)
 
 ---

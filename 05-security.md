@@ -3,19 +3,12 @@
 ## 目次
 
 1. [IAM (Identity and Access Management)](#iam-identity-and-access-management)
-
 2. [AWS WAF](#aws-waf)
-
 3. [AWS Shield](#aws-shield)
-
 4. [GuardDuty](#guardduty)
-
 5. [Security Hub](#security-hub)
-
 6. [KMS (Key Management Service)](#kms-key-management-service)
-
 7. [Secrets Manager](#secrets-manager)
-
 8. [Certificate Manager](#certificate-manager)
 
 ---
@@ -172,7 +165,6 @@ response = sts_client.assume_role(
 )
 
 credentials = response['Credentials']
-
 ```
 
 ### Permission Boundary
@@ -200,7 +192,6 @@ credentials = response['Credentials']
 ### 公式リソース
 
 - [IAM サービス紹介](https://aws.amazon.com/jp/iam/)
-
 - [IAM Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_IAM.pdf)
 
 ---
@@ -344,7 +335,6 @@ Web アプリケーションファイアウォール。SQL インジェクショ
 ### 公式リソース
 
 - [WAF サービス紹介](https://aws.amazon.com/jp/waf/)
-
 - [WAF Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_WAF.pdf)
 
 ---
@@ -358,53 +348,33 @@ DDoS 攻撃からの保護サービス。Standard（無料）と Advanced（有�
 ### Shield Standard
 
 ```
-
 保護対象:
-
 - CloudFront
-
 - Route 53
-
 - ELB
-
 - Global Accelerator
 
 機能:
-
 - Layer 3/4 DDoS保護
-
 - 自動検知・軽減
-
 - 追加料金なし
-
 ```
 
 ### Shield Advanced
 
 ```
-
 追加保護:
-
 - EC2
-
 - ELB
-
 - CloudFront
-
 - Route 53
-
 - Global Accelerator
 
 追加機能:
-
 - 24/7 DRTサポート
-
 - 高度な攻撃診断
-
 - コスト保護
-
 - リアルタイム通知
-
 ```
 
 ### DDoS Response Team (DRT)
@@ -412,23 +382,15 @@ DDoS 攻撃からの保護サービス。Standard（無料）と Advanced（有�
 #### サポート内容
 
 ```
-
 事前準備:
-
 - アーキテクチャレビュー
-
 - 最適化提案
-
 - プレイブック作成
 
 攻撃時対応:
-
 - 攻撃分析
-
 - 軽減策実装
-
 - リアルタイムサポート
-
 ```
 
 ### 設定例
@@ -450,7 +412,6 @@ DDoS 攻撃からの保護サービス。Standard（無料）と Advanced（有�
 ### 公式リソース
 
 - [Shield サービス紹介](https://aws.amazon.com/jp/shield/)
-
 - [Shield Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_Shield.pdf)
 
 ---
@@ -465,29 +426,20 @@ DDoS 攻撃からの保護サービス。Standard（無料）と Advanced（有�
 
 ```
 VPC Flow Logs:
-
 - ネットワークトラフィック分析
-
 - 異常な通信パターン検知
 
 DNS Logs:
-
 - 悪意のあるドメインアクセス
-
 - DGAドメイン検知
 
 CloudTrail Event Logs:
-
 - API呼び出し分析
-
 - 異常な管理操作検知
 
 S3 Data Events:
-
 - オブジェクトレベル操作
-
 - データ漏洩検知
-
 ```
 
 ### 脅威タイプ
@@ -496,57 +448,39 @@ S3 Data Events:
 
 ```
 例:
-
 - Recon:EC2/PortProbeUnprotectedPort
-
 - Recon:EC2/Portscan
 
 説明:
-
 - ポートスキャン
-
 - 偵察活動
-
 - 脆弱性調査
-
 ```
 
 #### Instance Compromise
 
 ```
 例:
-
 - Trojan:EC2/BlackholeTraffic
-
 - Backdoor:EC2/C&CActivity.B
 
 説明:
-
 - マルウェア感染
-
 - C&C通信
-
 - データ窃取
-
 ```
 
 #### Account Compromise
 
 ```
 例:
-
 - UnauthorizedAPICall:IAMUser/InstanceCredentialsExfiltration
-
 - Stealth:IAMUser/CloudTrailLoggingDisabled
 
 説明:
-
 - 認証情報漏洩
-
 - 権限昇格
-
 - ログ無効化
-
 ```
 
 ### 設定
@@ -635,13 +569,11 @@ def block_suspicious_ip(detail):
             }
         ]
     )
-
 ```
 
 ### 公式リソース
 
 - [GuardDuty サービス紹介](https://aws.amazon.com/jp/guardduty/)
-
 - [GuardDuty Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_GuardDuty.pdf)
 
 ---
@@ -655,31 +587,19 @@ def block_suspicious_ip(detail):
 ### 統合サービス
 
 ```
-
 AWS サービス:
-
 - GuardDuty
-
 - Inspector
-
 - Macie
-
 - IAM Access Analyzer
-
 - Systems Manager Patch Manager
 
 サードパーティ:
-
 - Splunk
-
 - IBM QRadar
-
 - Rapid7
-
 - Tenable
-
 - Trend Micro
-
 ```
 
 ### セキュリティ標準
@@ -687,61 +607,38 @@ AWS サービス:
 #### AWS Foundational Security Standard
 
 ```
-
 カテゴリ:
-
 - IAM
-
 - EC2
-
 - S3
-
 - RDS
-
 - Lambda
-
 - CloudTrail
-
 - Config
-
 ```
 
 #### CIS AWS Foundations Benchmark
 
 ```
-
 レベル:
-
 - Level 1: 基本的なセキュリティ
-
 - Level 2: 高度なセキュリティ
 
 チェック項目:
-
 - パスワードポリシー
-
 - MFA設定
-
 - ログ設定
-
 - ネットワーク設定
-
 ```
 
 #### PCI DSS
 
 ```
-
 要件:
-
 - カード会員データ保護
-
 - 暗号化
-
 - アクセス制御
-
 - 監視・テスト
-
 ```
 
 ### カスタムインサイト
@@ -790,13 +687,11 @@ def lambda_handler(event, context):
             remediate_security_group(finding)
 
     return {'statusCode': 200}
-
 ```
 
 ### 公式リソース
 
 - [Security Hub サービス紹介](https://aws.amazon.com/jp/security-hub/)
-
 - [Security Hub Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_SecurityHub.pdf)
 
 ---
@@ -839,23 +734,15 @@ def lambda_handler(event, context):
 
 ```
 特徴:
-
 - AWS サービス専用
-
 - 自動ローテーション
-
 - 削除不可
-
 - 無料
 
 例:
-
 - aws/s3
-
 - aws/rds
-
 - aws/lambda
-
 ```
 
 ### キーローテーション
@@ -887,7 +774,6 @@ kms.update_alias(
     AliasName='alias/my-app-key',
     TargetKeyId=new_key['KeyMetadata']['KeyId']
 )
-
 ```
 
 ### 暗号化コンテキスト
@@ -917,7 +803,6 @@ decrypted = kms.decrypt(
         'Project': 'Budget2024'
     }
 )
-
 ```
 
 ### CloudHSM
@@ -935,7 +820,6 @@ decrypted = kms.decrypt(
 ### 公式リソース
 
 - [KMS サービス紹介](https://aws.amazon.com/jp/kms/)
-
 - [KMS Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_KMS.pdf)
 
 ---
@@ -1017,7 +901,6 @@ def create_secret(secret_arn, token):
             'password': new_password
         })
     )
-
 ```
 
 ### アプリケーション統合
@@ -1052,13 +935,11 @@ connection = mysql.connector.connect(
     password=db_credentials['password'],
     database=db_credentials['dbname']
 )
-
 ```
 
 ### 公式リソース
 
 - [Secrets Manager サービス紹介](https://aws.amazon.com/jp/secrets-manager/)
-
 - [Secrets Manager Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_SecretsManager.pdf)
 
 ---
@@ -1074,53 +955,33 @@ SSL/TLS 証明書の管理サービス。自動更新、AWS 統合。
 #### パブリック証明書
 
 ```
-
 特徴:
-
 - 無料
-
 - 自動更新
-
 - AWS統合のみ
-
 - DV (Domain Validation)
 
 対応サービス:
-
 - CloudFront
-
 - ALB/NLB
-
 - API Gateway
-
 - CloudFormation
-
 ```
 
 #### プライベート証明書
 
 ```
-
 特徴:
-
 - 有料
-
 - 内部使用
-
 - カスタムCA
-
 - 組織検証可能
 
 用途:
-
 - 内部API
-
 - マイクロサービス
-
 - VPN
-
 - コード署名
-
 ```
 
 ### ドメイン検証
@@ -1180,7 +1041,6 @@ Resources:
 ### 公式リソース
 
 - [Certificate Manager サービス紹介](https://aws.amazon.com/jp/certificate-manager/)
-
 - [Certificate Manager Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_CertificateManager.pdf)
 
 ---
@@ -1191,83 +1051,55 @@ Resources:
 
 ```
 レイヤー1: ネットワーク
-
 - VPC、セキュリティグループ
-
 - WAF、Shield
 
 レイヤー2: アプリケーション
-
 - 入力検証
-
 - 認証・認可
 
 レイヤー3: データ
-
 - 暗号化（保存時・転送時）
-
 - アクセス制御
 
 レイヤー4: 監視
-
 - CloudTrail、GuardDuty
-
 - Security Hub
-
 ```
 
 ### ゼロトラストアーキテクチャ
 
 ```
 原則:
-
 - 信頼しない、常に検証
-
 - 最小権限アクセス
-
 - 継続的監視
 
 実装:
-
 - IAM ロールベースアクセス
-
 - MFA必須
-
 - ネットワークセグメンテーション
-
 - 暗号化通信
-
 ```
 
 ### インシデント対応
 
 ```
 準備:
-
 - プレイブック作成
-
 - 連絡先リスト
-
 - 自動化スクリプト
 
 検知:
-
 - GuardDuty、Security Hub
-
 - CloudWatch アラーム
-
 - サードパーティツール
 
 対応:
-
 - 影響範囲特定
-
 - 封じ込め
-
 - 根本原因分析
-
 - 復旧・改善
-
 ```
 
 ---

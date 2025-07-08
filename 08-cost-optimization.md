@@ -3,15 +3,10 @@
 ## 目次
 
 1. [コスト管理の基本](#コスト管理の基本)
-
 2. [EC2 コスト最適化](#ec2-コスト最適化)
-
 3. [ストレージコスト最適化](#ストレージコスト最適化)
-
 4. [データ転送コスト最適化](#データ転送コスト最適化)
-
 5. [監視・分析ツール](#監視分析ツール)
-
 6. [コスト最適化戦略](#コスト最適化戦略)
 
 ---
@@ -24,50 +19,33 @@
 
 ```
 原則:
-
 - 使った分だけ支払い
-
 - 初期費用なし
-
 - 長期契約不要
 
 メリット:
-
 - 柔軟性
-
 - 予測可能性
-
 - スケーラビリティ
-
 ```
 
 #### 料金要素
 
 ```
 コンピューティング:
-
 - インスタンス時間
-
 - CPU/メモリ使用量
-
 - リクエスト数
 
 ストレージ:
-
 - 保存容量
-
 - アクセス頻度
-
 - データ転送量
 
 ネットワーク:
-
 - データ転送量
-
 - 帯域幅
-
 - 地理的距離
-
 ```
 
 ### Cost and Usage Report
@@ -102,7 +80,6 @@ FROM cur_table
 WHERE line_item_usage_start_date >= DATE('2023-01-01')
 GROUP BY 1, 2
 ORDER BY 1, 3 DESC;
-
 -- サービス別コスト
 SELECT
     product_product_name,
@@ -112,13 +89,11 @@ FROM cur_table
 WHERE line_item_usage_start_date >= DATE_TRUNC('month', CURRENT_DATE)
 GROUP BY 1
 ORDER BY 2 DESC;
-
 ```
 
 ### 公式リソース
 
 - [AWS Pricing](https://aws.amazon.com/pricing/)
-
 - [AWS Cost Management](https://aws.amazon.com/aws-cost-management/)
 
 ---
@@ -131,104 +106,73 @@ ORDER BY 2 DESC;
 
 ```
 特徴:
-
 - 時間単位課金
-
 - 最小利用時間なし
-
 - 予約不要
 
 適用場面:
-
 - 予測不可能なワークロード
-
 - 短期間の使用
-
 - 開発・テスト環境
-
 - 新しいアプリケーション
 
 コスト例 (m5.large):
 $0.096/時間 × 24時間 × 30日 = $69.12/月
-
 ```
 
 #### リザーブドインスタンス
 
 ```
 標準RI:
-
 - 1年/3年契約
-
 - 最大75%割引
-
 - インスタンスタイプ固定
-
 - AZ固定
 
 コンバーティブルRI:
-
 - インスタンスタイプ変更可能
-
 - 最大54%割引
-
 - より柔軟性が高い
 
 コスト例 (m5.large, 1年標準RI):
 $0.058/時間 × 24時間 × 30日 = $41.76/月
 節約: $27.36/月 (40%削減)
-
 ```
 
 #### Savings Plans
 
 ```
 Compute Savings Plans:
-
 - EC2、Lambda、Fargate対応
-
 - 最大66%割引
-
 - インスタンスファミリー変更可能
 
 EC2 Instance Savings Plans:
-
 - EC2専用
-
 - 最大72%割引
-
 - より高い割引率
 
 コスト例 (1年Compute Savings Plans):
 $50/月のコミット → 最大66%割引
 実質コスト: $34/月
-
 ```
 
 #### スポットインスタンス
 
 ```
 特徴:
-
 - 最大90%割引
-
 - 2分前通知で中断
-
 - 需要と供給で価格変動
 
 適用場面:
-
 - バッチ処理
-
 - CI/CD
-
 - 障害耐性のあるワークロード
-
 - 分析処理
 
 コスト例 (m5.large):
 平均 $0.025/時間 (オンデマンドの約25%)
-
 ```
 
 ### Right Sizing
@@ -311,45 +255,30 @@ def generate_recommendation(instance_id, current_type, cpu_metrics, memory_metri
             'recommendation': 'Current size appropriate',
             'reason': f'CPU utilization within normal range: avg={avg_cpu:.1f}%'
         }
-
 ```
 
 #### インスタンスタイプ選択指針
 
 ```
-
 CPU集約的ワークロード:
-
 - C5, C6i インスタンス
-
 - 高いCPU性能
-
 - 低いメモリ/CPU比
 
 メモリ集約的ワークロード:
-
 - R5, R6i インスタンス
-
 - 高いメモリ容量
-
 - インメモリデータベース
 
 バランス型ワークロード:
-
 - M5, M6i インスタンス
-
 - CPU/メモリのバランス
-
 - 一般的なアプリケーション
 
 ストレージ集約的ワークロード:
-
 - I3, I4i インスタンス
-
 - 高IOPS SSD
-
 - データベース、分析
-
 ```
 
 ### Auto Scaling 最適化
@@ -480,15 +409,12 @@ def main():
 def cleanup_and_exit():
     # データ保存、接続クローズ等
     print('Cleanup completed')
-
 ```
 
 ### 公式リソース
 
 - [EC2 Pricing](https://aws.amazon.com/ec2/pricing/)
-
 - [EC2 Spot Instances](https://aws.amazon.com/ec2/spot/)
-
 - [Savings Plans](https://aws.amazon.com/savingsplans/)
 
 ---
@@ -560,7 +486,6 @@ def recommend_storage_class(last_modified, access_frequency, size):
         return 'DEEP_ARCHIVE'
 
     return 'STANDARD'
-
 ```
 
 #### ライフサイクル管理
@@ -713,7 +638,6 @@ def calculate_gp2_to_gp3_savings(size_gb):
         'monthly': monthly_savings,
         'annual': annual_savings
     }
-
 ```
 
 #### 未使用ボリューム検出
@@ -758,7 +682,6 @@ def calculate_volume_cost(volume):
         return storage_cost + iops_cost
 
     return 0
-
 ```
 
 ### データ転送コスト最適化
@@ -807,7 +730,6 @@ def calculate_cloudfront_cost(transfer_gb):
         return (transfer_gb - 1) * 0.085  # $0.085/GB
     else:
         return 10239 * 0.085 + (transfer_gb - 10240) * 0.080
-
 ```
 
 #### VPC Endpoint 活用
@@ -849,9 +771,7 @@ Resources:
 ### 公式リソース
 
 - [S3 Pricing](https://aws.amazon.com/s3/pricing/)
-
 - [EBS Pricing](https://aws.amazon.com/ebs/pricing/)
-
 - [CloudFront Pricing](https://aws.amazon.com/cloudfront/pricing/)
 
 ---

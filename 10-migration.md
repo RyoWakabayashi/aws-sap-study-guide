@@ -3,15 +3,10 @@
 ## 目次
 
 1. [移行の基本概念](#移行の基本概念)
-
 2. [6 つの R 戦略](#6-つの-r-戦略)
-
 3. [アプリケーション移行](#アプリケーション移行)
-
 4. [データベース移行](#データベース移行)
-
 5. [データ移行](#データ移行)
-
 6. [移行計画・実行](#移行計画実行)
 
 ---
@@ -24,58 +19,38 @@
 
 ```
 コスト削減:
-
 - CapEx から OpEx への転換
-
 - インフラ運用コスト削減
-
 - ライセンス費用最適化
 
 俊敏性向上:
-
 - 迅速なリソース調達
-
 - 自動スケーリング
-
 - グローバル展開
 
 イノベーション促進:
-
 - 最新技術へのアクセス
-
 - AI/ML サービス活用
-
 - サーバーレス技術
-
 ```
 
 #### 技術要因
 
 ```
 レガシーシステム:
-
 - 老朽化したハードウェア
-
 - サポート終了OS/ミドルウェア
-
 - 保守性の低下
 
 可用性・信頼性:
-
 - 単一障害点の排除
-
 - 災害復旧能力向上
-
 - SLA改善
 
 セキュリティ:
-
 - 最新セキュリティ機能
-
 - コンプライアンス対応
-
 - 脅威対策強化
-
 ```
 
 ### 移行の課題
@@ -84,64 +59,43 @@
 
 ```
 アプリケーション依存関係:
-
 - 複雑な相互依存
-
 - レガシー技術
-
 - カスタマイズ部分
 
 データ移行:
-
 - 大容量データ
-
 - ダウンタイム制約
-
 - データ整合性
 
 パフォーマンス:
-
 - ネットワークレイテンシ
-
 - 処理能力差異
-
 - 最適化不足
-
 ```
 
 #### 組織的課題
 
 ```
 スキル不足:
-
 - クラウド技術知識
-
 - 運用ノウハウ
-
 - セキュリティ理解
 
 変更管理:
-
 - 組織文化
-
 - プロセス変更
-
 - 抵抗勢力
 
 ガバナンス:
-
 - 責任分界
-
 - 承認プロセス
-
 - コンプライアンス
-
 ```
 
 ### 公式リソース
 
 - [AWS Migration Hub](https://aws.amazon.com/migration-hub/)
-
 - [AWS Cloud Adoption Framework](https://aws.amazon.com/professional-services/CAF/)
 
 ---
@@ -158,29 +112,19 @@ AWS が提唱するクラウド移行の 6 つの戦略（6R）。
 
 ```
 アプローチ:
-
 - 既存システムをそのままクラウドに移行
-
 - 最小限の変更
-
 - 迅速な移行
 
 利点:
-
 - 短期間での移行
-
 - 低リスク
-
 - 即座にクラウドメリット享受
 
 欠点:
-
 - クラウドネイティブ機能未活用
-
 - 最適化不足
-
 - 長期的コスト効率低下
-
 ```
 
 #### 実装例
@@ -198,7 +142,6 @@ aws mgn start-test --source-server-id s-1234567890abcdef0
 
 # 4. カットオーバー実行
 aws mgn start-cutover --source-server-id s-1234567890abcdef0
-
 ```
 
 ### 2. Replatform (Lift, Tinker, and Shift)
@@ -206,23 +149,15 @@ aws mgn start-cutover --source-server-id s-1234567890abcdef0
 #### 特徴
 
 ```
-
 アプローチ:
-
 - 基本アーキテクチャは維持
-
 - クラウドサービスを部分活用
-
 - 段階的最適化
 
 例:
-
 - オンプレミスDB → RDS
-
 - 自前ロードバランサー → ELB
-
 - 物理サーバー → EC2
-
 ```
 
 #### 実装例
@@ -270,21 +205,14 @@ Resources:
 
 ```
 アプローチ:
-
 - 既存ソフトウェアを廃止
-
 - SaaSソリューションに移行
-
 - ライセンス体系変更
 
 例:
-
 - オンプレミスCRM → Salesforce
-
 - 自社メールサーバー → Office 365
-
 - オンプレミスERP → SAP on AWS
-
 ```
 
 #### 移行計画例
@@ -330,7 +258,6 @@ def create_repurchase_plan():
     }
 
     return migration_plan
-
 ```
 
 ### 4. Refactor (Re-architect)
@@ -338,23 +265,15 @@ def create_repurchase_plan():
 #### 特徴
 
 ```
-
 アプローチ:
-
 - アーキテクチャを根本的に変更
-
 - クラウドネイティブ設計
-
 - 最大限のクラウドメリット活用
 
 例:
-
 - モノリス → マイクロサービス
-
 - 従来型 → サーバーレス
-
 - RDBMS → NoSQL
-
 ```
 
 #### 実装例
@@ -434,23 +353,15 @@ Resources:
 
 ```
 アプローチ:
-
 - 不要なシステムを廃止
-
 - 重複機能の統合
-
 - コスト削減
 
 判断基準:
-
 - 利用率が低い
-
 - 代替手段がある
-
 - 保守コストが高い
-
 - ビジネス価値が低い
-
 ```
 
 #### 廃止計画例
@@ -494,7 +405,6 @@ def create_retirement_plan():
         'total_annual_savings': total_savings,
         'timeline': '6 months'
     }
-
 ```
 
 ### 6. Retain
@@ -502,25 +412,16 @@ def create_retirement_plan():
 #### 特徴
 
 ```
-
 アプローチ:
-
 - 現状維持
-
 - 移行を延期
-
 - 段階的移行の一部
 
 理由:
-
 - 技術的制約
-
 - コンプライアンス要件
-
 - ビジネス継続性
-
 - ROI不足
-
 ```
 
 #### 保持判断例
@@ -552,7 +453,6 @@ def retention_analysis():
     }
 
     return systems
-
 ```
 
 ---
@@ -565,11 +465,8 @@ def retention_analysis():
 
 ```
 概念:
-
 - 新システムで既存機能を段階的に置換
-
 - 古いシステムを徐々に「絞め殺す」
-
 - リスク分散、段階的移行
 
 実装:
@@ -579,28 +476,20 @@ def retention_analysis():
 2. 機能単位で新システムに移行
 
 3. 古いシステムの機能を段階的に停止
-
 ```
 
 #### Database-per-Service Pattern
 
 ```
 概念:
-
 - マイクロサービス毎に専用データベース
-
 - データの独立性確保
-
 - 技術選択の自由度
 
 課題:
-
 - データ整合性
-
 - トランザクション管理
-
 - データ結合の複雑化
-
 ```
 
 ### AWS Application Migration Service
@@ -631,7 +520,6 @@ aws mgn create-replication-configuration-template \
 aws mgn create-launch-configuration-template \
     --launch-template-name "Migration-Template" \
     --launch-template-data file://launch-template.json
-
 ```
 
 ### コンテナ化移行
@@ -661,7 +549,6 @@ sudo app2container generate app-deployment --application-id java-app-12345
 
 # 7. デプロイ
 sudo app2container deploy --application-id java-app-12345
-
 ```
 
 ---
@@ -676,42 +563,28 @@ sudo app2container deploy --application-id java-app-12345
 
 ```
 Oracle → Oracle on RDS:
-
 - 構造・データ型互換
-
 - 最小限の変更
-
 - 高い成功率
 
 MySQL → Aurora MySQL:
-
 - MySQL互換性活用
-
 - 性能向上
-
 - 管理負荷軽減
-
 ```
 
 ##### 異種データベース移行
 
 ```
 Oracle → PostgreSQL:
-
 - Schema Conversion Tool使用
-
 - データ型変換
-
 - ストアドプロシージャ変換
 
 SQL Server → Aurora MySQL:
-
 - アプリケーション変更必要
-
 - パフォーマンステスト重要
-
 - 段階的移行推奨
-
 ```
 
 #### DMS 設定例
@@ -774,7 +647,6 @@ SQL Server → Aurora MySQL:
 
 # 7. スクリプト生成・実行
 # DDLスクリプト生成・実行
-
 ```
 
 #### 変換例
@@ -789,7 +661,6 @@ CREATE TABLE employees (
     dept_id NUMBER(10),
     CONSTRAINT fk_dept FOREIGN KEY (dept_id) REFERENCES departments(dept_id)
 );
-
 -- PostgreSQL (変換後)
 CREATE TABLE employees (
     emp_id INTEGER PRIMARY KEY,
@@ -799,7 +670,6 @@ CREATE TABLE employees (
     dept_id INTEGER,
     CONSTRAINT fk_dept FOREIGN KEY (dept_id) REFERENCES departments(dept_id)
 );
-
 ```
 
 ### データベース移行戦略
@@ -858,7 +728,6 @@ def minimal_downtime_migration():
     ]
 
     return steps
-
 ```
 
 ---

@@ -3,19 +3,12 @@
 ## 目次
 
 1. [VPC (Virtual Private Cloud)](#vpc-virtual-private-cloud)
-
 2. [ロードバランサー](#ロードバランサー)
-
 3. [CloudFront](#cloudfront)
-
 4. [Route 53](#route-53)
-
 5. [Direct Connect](#direct-connect)
-
 6. [VPN](#vpn)
-
 7. [Transit Gateway](#transit-gateway)
-
 8. [API Gateway](#api-gateway)
 
 ---
@@ -32,11 +25,8 @@ AWS 内の仮想ネットワーク。完全に分離された環境を提供。
 
 ```
 推奨CIDR範囲:
-
 - 10.0.0.0/8 (10.0.0.0 - 10.255.255.255)
-
 - 172.16.0.0/12 (172.16.0.0 - 172.31.255.255)
-
 - 192.168.0.0/16 (192.168.0.0 - 192.168.255.255)
 
 例:
@@ -44,7 +34,6 @@ VPC: 10.0.0.0/16 (65,536 IP)
 ├─ Public Subnet: 10.0.1.0/24 (256 IP)
 ├─ Private Subnet: 10.0.2.0/24 (256 IP)
 └─ Database Subnet: 10.0.3.0/24 (256 IP)
-
 ```
 
 #### サブネット設計
@@ -74,19 +63,13 @@ VPC: 10.0.0.0/16 (65,536 IP)
 #### ルートテーブル
 
 ```
-
 パブリックルートテーブル:
-
 - 0.0.0.0/0 → Internet Gateway
-
 - 10.0.0.0/16 → Local
 
 プライベートルートテーブル:
-
 - 0.0.0.0/0 → NAT Gateway
-
 - 10.0.0.0/16 → Local
-
 ```
 
 #### NAT Gateway vs NAT Instance
@@ -158,25 +141,16 @@ VPC: 10.0.0.0/16 (65,536 IP)
 #### VPC Peering
 
 ```
-
 特徴:
-
 - 1対1接続
-
 - 同一リージョン/クロスリージョン
-
 - 推移的ルーティング不可
-
 - 帯域幅制限なし
 
 制限:
-
 - CIDR重複不可
-
 - セキュリティグループ参照制限
-
 - DNS解決設定必要
-
 ```
 
 #### VPC Endpoints
@@ -184,47 +158,32 @@ VPC: 10.0.0.0/16 (65,536 IP)
 ##### Gateway Endpoint
 
 ```
-
 対象サービス:
-
 - S3
-
 - DynamoDB
 
 特徴:
-
 - 無料
-
 - ルートテーブル設定
-
 - 同一リージョンのみ
-
 ```
 
 ##### Interface Endpoint
 
 ```
-
 対象サービス:
-
 - EC2、ECS、Lambda等
-
 - 多数のAWSサービス
 
 特徴:
-
 - ENI作成
-
 - 時間課金
-
 - DNS名提供
-
 ```
 
 ### 公式リソース
 
 - [VPC サービス紹介](https://aws.amazon.com/jp/vpc/)
-
 - [VPC Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_VPC.pdf)
 
 ---
@@ -236,13 +195,11 @@ VPC: 10.0.0.0/16 (65,536 IP)
 #### 特徴
 
 ```
-
 レイヤー: 7 (HTTP/HTTPS)
 ターゲット: EC2、IP、Lambda、ECS
 機能: パスベース、ホストベースルーティング
 SSL終端: 対応
 WebSocket: 対応
-
 ```
 
 #### ルーティング設定
@@ -294,28 +251,20 @@ WebSocket: 対応
 レイテンシ: 超低レイテンシ
 IP: 静的IP対応
 SSL: パススルー/終端両対応
-
 ```
 
 #### 用途
 
 ```
 高性能要件:
-
 - ゲームサーバー
-
 - IoTアプリケーション
-
 - リアルタイム通信
 
 静的IP要件:
-
 - ホワイトリスト
-
 - DNS設定
-
 - ファイアウォール設定
-
 ```
 
 ### Gateway Load Balancer (GWLB)
@@ -327,7 +276,6 @@ SSL: パススルー/終端両対応
 プロトコル: GENEVE
 用途: サードパーティアプライアンス
 機能: トラフィック分散・検査
-
 ```
 
 #### アーキテクチャ
@@ -343,7 +291,6 @@ Gateway Load Balancer
 (Firewall, IDS/IPS, DLP)
     ↓
 アプリケーション
-
 ```
 
 ### ターゲットグループ
@@ -367,7 +314,6 @@ Gateway Load Balancer
 ### 公式リソース
 
 - [ELB サービス紹介](https://aws.amazon.com/jp/elasticloadbalancing/)
-
 - [ELB Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_ELB.pdf)
 
 ---
@@ -463,12 +409,10 @@ Gateway Load Balancer
 #### 実行タイミング
 
 ```
-
 Viewer Request: CloudFront → オリジン (リクエスト変更)
 Origin Request: CloudFront → オリジン (オリジンリクエスト変更)
 Origin Response: オリジン → CloudFront (レスポンス変更)
 Viewer Response: CloudFront → ビューワー (最終レスポンス変更)
-
 ```
 
 #### 使用例
@@ -493,7 +437,6 @@ exports.handler = (event, context, callback) => {
 ### 公式リソース
 
 - [CloudFront サービス紹介](https://aws.amazon.com/jp/cloudfront/)
-
 - [CloudFront Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_CloudFront.pdf)
 
 ---
@@ -544,7 +487,6 @@ exports.handler = (event, context, callback) => {
   "Weight": 30,
   "ResourceRecords": [{"Value": "192.0.2.2"}]
 }
-
 ```
 
 #### Latency-based Routing
@@ -564,7 +506,6 @@ exports.handler = (event, context, callback) => {
   "Region": "eu-west-1",
   "ResourceRecords": [{"Value": "192.0.2.2"}]
 }
-
 ```
 
 #### Failover Routing
@@ -585,7 +526,6 @@ exports.handler = (event, context, callback) => {
   "Failover": "SECONDARY",
   "ResourceRecords": [{"Value": "192.0.2.2"}]
 }
-
 ```
 
 ### ヘルスチェック
@@ -621,7 +561,6 @@ exports.handler = (event, context, callback) => {
 ### 公式リソース
 
 - [Route 53 サービス紹介](https://aws.amazon.com/jp/route53/)
-
 - [Route 53 Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_Route53.pdf)
 
 ---
@@ -641,7 +580,6 @@ exports.handler = (event, context, callback) => {
 提供: AWS Direct Connect パートナー
 用途: 大容量、安定した接続
 コスト: 高
-
 ```
 
 #### Hosted Connection
@@ -651,7 +589,6 @@ exports.handler = (event, context, callback) => {
 提供: AWS Direct Connect パートナー
 用途: 中小規模、柔軟性
 コスト: 中
-
 ```
 
 ### Virtual Interface (VIF)
@@ -700,23 +637,15 @@ exports.handler = (event, context, callback) => {
 #### 設定
 
 ```
-
 機能:
-
 - 複数VPCとの接続
-
 - クロスリージョン接続
-
 - Transit Gateway統合
 
 制限:
-
 - 最大10個のVPC
-
 - 同一アカウント内
-
 - BGPルーティング
-
 ```
 
 ### 冗長化
@@ -724,26 +653,20 @@ exports.handler = (event, context, callback) => {
 #### 冗長構成
 
 ```
-
 推奨構成:
-
 - 複数のDirect Connect ロケーション
-
 - 複数の接続
-
 - VPN バックアップ
 
 例:
 Primary: Direct Connect (東京)
 Secondary: Direct Connect (大阪)
 Backup: VPN over Internet
-
 ```
 
 ### 公式リソース
 
 - [Direct Connect サービス紹介](https://aws.amazon.com/jp/directconnect/)
-
 - [Direct Connect Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_DirectConnect.pdf)
 
 ---
@@ -775,19 +698,13 @@ Backup: VPN over Internet
 
 ```
 Customer Gateway:
-
 - BGP ASN: 65000
-
 - IP Address: 203.0.113.12
 
 VPN Gateway:
-
 - BGP ASN: 64512 (Amazon側)
-
 - Tunnel 1: 169.254.10.1/30
-
 - Tunnel 2: 169.254.10.5/30
-
 ```
 
 ### Client VPN
@@ -816,7 +733,6 @@ VPN Gateway:
 ### 公式リソース
 
 - [VPN サービス紹介](https://aws.amazon.com/jp/vpn/)
-
 - [VPN Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_VPN.pdf)
 
 ---
@@ -893,13 +809,11 @@ aws ec2 create-route \
     --route-table-id tgw-rtb-12345678 \
     --destination-cidr-block 10.1.0.0/16 \
     --transit-gateway-attachment-id tgw-attach-12345678
-
 ```
 
 ### 公式リソース
 
 - [Transit Gateway サービス紹介](https://aws.amazon.com/jp/transit-gateway/)
-
 - [Transit Gateway Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_TransitGateway.pdf)
 
 ---
@@ -916,47 +830,31 @@ RESTful API、WebSocket API のマネージドサービス。
 
 ```
 特徴:
-
 - フル機能
-
 - リクエスト/レスポンス変換
-
 - 認証・認可
-
 - キャッシュ
-
 - SDK生成
-
 ```
 
 #### HTTP API
 
 ```
 特徴:
-
 - 高性能、低コスト
-
 - JWT認証
-
 - CORS対応
-
 - 基本機能のみ
-
 ```
 
 #### WebSocket API
 
 ```
 特徴:
-
 - 双方向通信
-
 - リアルタイム
-
 - 接続管理
-
 - ルーティング
-
 ```
 
 ### 統合タイプ
@@ -1025,13 +923,11 @@ def generate_policy(principal_id, effect, resource):
             ]
         }
     }
-
 ```
 
 ### 公式リソース
 
 - [API Gateway サービス紹介](https://aws.amazon.com/jp/api-gateway/)
-
 - [API Gateway Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_APIGateway.pdf)
 
 ---
@@ -1044,25 +940,18 @@ def generate_policy(principal_id, effect, resource):
 Internet Gateway
     ↓
 Public Subnet (Web Tier)
-
 - ALB
-
 - NAT Gateway
 
     ↓
 Private Subnet (App Tier)
-
 - EC2 Instances
-
 - Auto Scaling
 
     ↓
 Private Subnet (DB Tier)
-
 - RDS Multi-AZ
-
 - ElastiCache
-
 ```
 
 ### ハイブリッドクラウド
@@ -1075,13 +964,9 @@ Direct Connect / VPN
 Transit Gateway
     ↓
 Multiple VPCs
-
 - Production VPC
-
 - Development VPC
-
 - Shared Services VPC
-
 ```
 
 ### マルチリージョン
@@ -1096,7 +981,6 @@ Secondary Region (us-west-2)
 ├─ DR VPC
 ├─ RDS Read Replica
 └─ Route 53 (Secondary)
-
 ```
 
 ---

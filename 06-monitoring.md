@@ -3,15 +3,10 @@
 ## 目次
 
 1. [CloudWatch](#cloudwatch)
-
 2. [X-Ray](#x-ray)
-
 3. [CloudTrail](#cloudtrail)
-
 4. [Config](#config)
-
 5. [Systems Manager](#systems-manager)
-
 6. [監視戦略](#監視戦略)
 
 ---
@@ -28,35 +23,22 @@ AWS リソースとアプリケーションの監視サービス。メトリク�
 
 ```
 EC2:
-
 - CPUUtilization
-
 - NetworkIn/Out
-
 - DiskReadOps/WriteOps
-
 - StatusCheckFailed
 
 RDS:
-
 - DatabaseConnections
-
 - ReadLatency/WriteLatency
-
 - FreeableMemory
-
 - CPUUtilization
 
 S3:
-
 - BucketSizeBytes
-
 - NumberOfObjects
-
 - AllRequests
-
 - 4xxErrors/5xxErrors
-
 ```
 
 #### カスタムメトリクス
@@ -89,7 +71,6 @@ cloudwatch.put_metric_data(
         }
     ]
 )
-
 ```
 
 ### CloudWatch Logs
@@ -149,18 +130,15 @@ fields @timestamp, @message
 | filter @message like /ERROR/
 | stats count() by bin(5m)
 | sort @timestamp desc
-
 -- レスポンス時間の分析
 fields @timestamp, @duration
 | filter @type = "REPORT"
 | stats avg(@duration), max(@duration), min(@duration) by bin(5m)
-
 -- 特定IPからのアクセス
 fields @timestamp, @message
 | filter @message like /192.168.1.100/
 | sort @timestamp desc
 | limit 100
-
 ```
 
 ### アラーム設定
@@ -242,7 +220,6 @@ fields @timestamp, @message
 ### 公式リソース
 
 - [CloudWatch サービス紹介](https://aws.amazon.com/jp/cloudwatch/)
-
 - [CloudWatch Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_CloudWatch.pdf)
 
 ---
@@ -282,7 +259,6 @@ def lambda_handler(event, context):
 def query_database():
     # データベースクエリ処理
     pass
-
 ```
 
 #### ECS 統合
@@ -327,31 +303,20 @@ def query_database():
 #### 分析項目
 
 ```
-
 レスポンス時間:
-
 - 平均、P50、P90、P99
-
 - 時系列変化
-
 - サービス間比較
 
 エラー率:
-
 - HTTP 4xx/5xx
-
 - 例外発生率
-
 - タイムアウト
 
 スループット:
-
 - リクエスト数/秒
-
 - 同時実行数
-
 - キューイング時間
-
 ```
 
 ### アノテーション・メタデータ
@@ -369,7 +334,6 @@ xray_recorder.put_metadata('request_details', {
     'body': request.body,
     'user_agent': request.user_agent
 })
-
 ```
 
 ### サンプリング
@@ -407,7 +371,6 @@ xray_recorder.put_metadata('request_details', {
 ### 公式リソース
 
 - [X-Ray サービス紹介](https://aws.amazon.com/jp/xray/)
-
 - [X-Ray Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_XRay.pdf)
 
 ---
@@ -469,25 +432,16 @@ AWS API 呼び出しの記録・監査サービス。ガバナンス、コンプ
 #### 異常検知
 
 ```
-
 検知対象:
-
 - API呼び出し頻度の異常
-
 - エラー率の急増
-
 - 新しいユーザーアクティビティ
-
 - 地理的異常
 
 通知:
-
 - CloudWatch Events
-
 - SNS
-
 - Lambda
-
 ```
 
 ### ログ分析
@@ -500,18 +454,15 @@ fields @timestamp, sourceIPAddress, userIdentity.type, eventName, errorCode
 | filter errorCode exists
 | stats count() by errorCode
 | sort count desc
-
 -- 特定ユーザーのアクティビティ
 fields @timestamp, eventName, sourceIPAddress
 | filter userIdentity.userName = "suspicious-user"
 | sort @timestamp desc
-
 -- 管理者権限の使用
 fields @timestamp, userIdentity.userName, eventName
 | filter eventName like /Create|Delete|Put/
 | filter userIdentity.type = "IAMUser"
 | sort @timestamp desc
-
 ```
 
 ### セキュリティ分析
@@ -546,13 +497,11 @@ def detect_api_burst():
     | limit 10
     """
     # CloudWatch Logs Insightsで実行
-
 ```
 
 ### 公式リソース
 
 - [CloudTrail サービス紹介](https://aws.amazon.com/jp/cloudtrail/)
-
 - [CloudTrail Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_CloudTrail.pdf)
 
 ---
@@ -651,7 +600,6 @@ def evaluate_ec2_instance(config_item):
         'compliance_type': 'COMPLIANT',
         'annotation': 'All required tags present'
     }
-
 ```
 
 ### 修復アクション
@@ -694,7 +642,6 @@ def evaluate_ec2_instance(config_item):
 ### 公式リソース
 
 - [Config サービス紹介](https://aws.amazon.com/jp/config/)
-
 - [Config Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_Config.pdf)
 
 ---
@@ -740,13 +687,11 @@ response = ssm.get_parameter(
     Name='/myapp/database/host',
     WithDecryption=True
 )
-
 ```
 
 #### 階層構造
 
 ```
-
 /myapp/
 ├── database/
 │   ├── host
@@ -759,7 +704,6 @@ response = ssm.get_parameter(
 └── cache/
     ├── host
     └── port
-
 ```
 
 ### Session Manager
@@ -875,7 +819,6 @@ mainSteps:
 ### 公式リソース
 
 - [Systems Manager サービス紹介](https://aws.amazon.com/jp/systems-manager/)
-
 - [Systems Manager Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_SystemsManager.pdf)
 
 ---
@@ -888,67 +831,44 @@ mainSteps:
 
 ```
 メトリクス:
-
 - CPU、メモリ、ディスク使用率
-
 - ネットワークトラフィック
-
 - システム負荷
 
 ツール:
-
 - CloudWatch標準メトリクス
-
 - CloudWatch Agent
-
 - カスタムメトリクス
-
 ```
 
 #### アプリケーション監視
 
 ```
 メトリクス:
-
 - レスポンス時間
-
 - エラー率
-
 - スループット
-
 - ビジネスメトリクス
 
 ツール:
-
 - X-Ray
-
 - カスタムメトリクス
-
 - APMツール
-
 ```
 
 #### ログ監視
 
 ```
 対象:
-
 - アプリケーションログ
-
 - システムログ
-
 - セキュリティログ
-
 - 監査ログ
 
 ツール:
-
 - CloudWatch Logs
-
 - CloudWatch Insights
-
 - 外部ログ分析ツール
-
 ```
 
 ### アラート戦略
@@ -957,58 +877,38 @@ mainSteps:
 
 ```
 Critical (P1):
-
 - サービス停止
-
 - セキュリティ侵害
-
 - データ損失
 
 High (P2):
-
 - 性能劣化
-
 - 部分的障害
-
 - 容量不足
 
 Medium (P3):
-
 - 警告レベル
-
 - 予防的アラート
-
 - 設定変更
 
 Low (P4):
-
 - 情報提供
-
 - 定期レポート
-
 - 統計情報
-
 ```
 
 #### 通知チャネル
 
 ```
 即座通知:
-
 - SMS
-
 - 電話
-
 - Slack/Teams
 
 遅延許容:
-
 - Email
-
 - チケットシステム
-
 - ダッシュボード
-
 ```
 
 ### ダッシュボード設計
@@ -1017,29 +917,19 @@ Low (P4):
 
 ```
 Level 1: 概要ダッシュボード
-
 - 全体的な健全性
-
 - 主要KPI
-
 - 重要アラート
 
 Level 2: サービス別ダッシュボード
-
 - サービス固有メトリクス
-
 - 依存関係
-
 - パフォーマンス詳細
 
 Level 3: 詳細ダッシュボード
-
 - トラブルシューティング
-
 - 詳細分析
-
 - 履歴データ
-
 ```
 
 ---

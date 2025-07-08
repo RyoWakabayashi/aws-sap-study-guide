@@ -3,19 +3,12 @@
 ## 目次
 
 1. [EC2 (Elastic Compute Cloud)](#ec2-elastic-compute-cloud)
-
 2. [ECS (Elastic Container Service)](#ecs-elastic-container-service)
-
 3. [EKS (Elastic Kubernetes Service)](#eks-elastic-kubernetes-service)
-
 4. [Lambda](#lambda)
-
 5. [Fargate](#fargate)
-
 6. [Batch](#batch)
-
 7. [Auto Scaling](#auto-scaling)
-
 8. [サービス比較](#サービス比較)
 
 ---
@@ -64,71 +57,47 @@
 
 ```
 特徴:
-
 - 時間単位課金
-
 - 最小利用時間なし
-
 - 予約不要
 
 用途:
-
 - 予測不可能なワークロード
-
 - 短期間の使用
-
 - 開発・テスト環境
-
 ```
 
 #### リザーブドインスタンス
 
 ```
 標準リザーブドインスタンス:
-
 - 1年/3年契約
-
 - 最大75%割引
-
 - インスタンスタイプ固定
 
 コンバーティブルリザーブドインスタンス:
-
 - インスタンスタイプ変更可能
-
 - 最大54%割引
-
 - より柔軟性が高い
-
 ```
 
 #### スポットインスタンス
 
 ```
 特徴:
-
 - 最大90%割引
-
 - 2分前通知で中断
-
 - 需要と供給で価格変動
 
 用途:
-
 - バッチ処理
-
 - CI/CD
-
 - 障害耐性のあるワークロード
 
 スポットフリート:
-
 - 複数のインスタンスタイプ指定
-
 - 自動的に最安値選択
-
 - 中断リスクの分散
-
 ```
 
 ### プレイスメントグループ
@@ -137,67 +106,46 @@
 
 ```
 特徴:
-
 - 単一AZ内の物理的近接配置
-
 - 10Gbps ネットワーク性能
-
 - 低レイテンシ
 
 用途:
-
 - HPC (High Performance Computing)
-
 - 分散データベース
-
 ```
 
 #### パーティションプレイスメントグループ
 
 ```
 特徴:
-
 - 異なるハードウェアラックに分散
-
 - 最大7パーティション/AZ
-
 - 障害分離
 
 用途:
-
 - Hadoop
-
 - Cassandra
-
 - Kafka
-
 ```
 
 #### スプレッドプレイスメントグループ
 
 ```
 特徴:
-
 - 異なる物理ハードウェアに配置
-
 - 最大7インスタンス/AZ
-
 - 最大の障害分離
 
 用途:
-
 - 重要なアプリケーション
-
 - 高可用性要件
-
 ```
 
 ### 公式リソース
 
 - [EC2 サービス紹介](https://aws.amazon.com/jp/ec2/)
-
 - [EC2 Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_EC2.pdf)
-
 - [EC2 インスタンスタイプ](https://aws.amazon.com/jp/ec2/instance-types/)
 
 ---
@@ -214,49 +162,35 @@ Docker コンテナのオーケストレーションサービス。AWS 独自の
 
 ```
 特徴:
-
 - EC2インスタンス上でコンテナ実行
-
 - インスタンス管理が必要
-
 - より細かい制御が可能
 
 用途:
-
 - 既存のEC2環境との統合
-
 - カスタムAMI使用
-
 - GPU使用ワークロード
-
 ```
 
 #### Fargate 起動タイプ
 
 ```
 特徴:
-
 - サーバーレスコンテナ実行
-
 - インスタンス管理不要
-
 - vCPU/メモリ単位課金
 
 用途:
-
 - 運用負荷軽減
-
 - 短期間のタスク
-
 - マイクロサービス
-
 ```
 
 ### タスク定義
 
 #### 基本構成
 
-````json
+```json
 {
   "family": "web-app",
   "networkMode": "awsvpc",
@@ -283,7 +217,6 @@ Docker コンテナのオーケストレーションサービス。AWS 独自の
     }
   ]
 }
-
 ```
 
 #### リソース制限
@@ -307,8 +240,7 @@ Docker コンテナのオーケストレーションサービス。AWS 独自の
     }
   ]
 }
-
-````
+```
 
 ### サービス設定
 
@@ -338,29 +270,20 @@ Docker コンテナのオーケストレーションサービス。AWS 独自の
 ```
 
 特徴:
-
 - 各タスクに専用 ENI
-
 - セキュリティグループ適用可能
-
 - VPC 内での通信
 
 利点:
-
 - ネットワーク分離
-
 - 詳細な制御
-
 - 監視の容易さ
-
 ```
 
 ### 公式リソース
 
 - [ECS サービス紹介](https://aws.amazon.com/jp/ecs/)
-
 - [ECS Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200804_BlackBelt_ECS.pdf)
-
 - [ECS ベストプラクティス](https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/)
 
 ---
@@ -376,47 +299,31 @@ Docker コンテナのオーケストレーションサービス。AWS 独自の
 #### コントロールプレーン
 
 ```
-
 AWS 管理:
-
 - Kubernetes API Server
-
 - etcd
-
 - Controller Manager
-
 - Scheduler
 
 特徴:
-
 - 高可用性 (Multi-AZ)
-
 - 自動パッチ適用
-
 - バックアップ・復旧
-
 ```
 
 #### ワーカーノード
 
 ```
-
 管理オプション:
 
 1. マネージドノードグループ
-
 2. セルフマネージドノード
-
 3. Fargate
 
 選択基準:
-
 - 運用負荷
-
 - カスタマイズ要件
-
 - コスト
-
 ```
 
 ### ノードグループ比較
@@ -464,39 +371,27 @@ spec:
 #### 重要な Add-ons
 
 ```
-
 AWS Load Balancer Controller:
-
 - ALB/NLB 統合
-
 - Ingress/Service 対応
 
 EBS CSI Driver:
-
 - 永続ボリューム
-
 - 動的プロビジョニング
 
 EFS CSI Driver:
-
 - 共有ファイルシステム
-
 - ReadWriteMany 対応
 
 Cluster Autoscaler:
-
 - ノード自動スケーリング
-
 - コスト最適化
-
 ```
 
 ### 公式リソース
 
 - [EKS サービス紹介](https://aws.amazon.com/jp/eks/)
-
 - [EKS Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200825_BlackBelt_EKS.pdf)
-
 - [EKS ベストプラクティス](https://aws.github.io/aws-eks-best-practices/)
 
 ---
@@ -512,36 +407,25 @@ Cluster Autoscaler:
 #### ランタイム
 
 ```
-
 サポート言語:
-
 - Python 3.8, 3.9, 3.10, 3.11
-
 - Node.js 16.x, 18.x
-
 - Java 8, 11, 17
-
 - .NET Core 3.1, 6
-
 - Go 1.x
-
 - Ruby 2.7, 3.2
-
 - カスタムランタイム (Provided)
-
 ```
 
 #### リソース制限
 
 ```
-
 メモリ: 128MB - 10,240MB (1MB 単位)
 CPU: メモリに比例 (1,769MB で 1vCPU)
 実行時間: 最大 15 分
 一時ディスク: 512MB - 10,240MB
 環境変数: 4KB
 ペイロード: 6MB (同期), 256KB (非同期)
-
 ```
 
 ### イベントソース
@@ -549,57 +433,38 @@ CPU: メモリに比例 (1,769MB で 1vCPU)
 #### 同期実行
 
 ```
-
 API Gateway:
-
 - REST API
-
 - HTTP API
-
 - WebSocket API
 
 Application Load Balancer:
-
 - HTTP(S)リクエスト
-
 - パスベースルーティング
 
 直接呼び出し:
-
 - AWS SDK
-
 - AWS CLI
-
 ```
 
 #### 非同期実行
 
 ```
-
 S3:
-
 - オブジェクト作成/削除
-
 - バケット通知
 
 SNS:
-
 - メッセージ配信
-
 - ファンアウトパターン
 
 EventBridge:
-
 - スケジュール実行
-
 - カスタムイベント
 
 SQS:
-
 - メッセージ処理
-
 - バッチ処理
-
 ```
 
 ### パフォーマンス最適化
@@ -621,12 +486,11 @@ def lambda_handler(event, context):
         'statusCode': 200,
         'body': json.dumps(response['Item'])
     }
-
 ```
 
 #### Provisioned Concurrency
 
-````yaml
+```yaml
 # SAM Template例
 Resources:
   MyFunction:
@@ -637,7 +501,6 @@ Resources:
       Runtime: python3.9
       ProvisionedConcurrencyConfig:
         ProvisionedConcurrencyLevel: 10
-
 ```
 
 ### エラーハンドリング
@@ -657,15 +520,12 @@ Resources:
     }
   }
 }
-
-````
+```
 
 ### 公式リソース
 
 - [Lambda サービス紹介](https://aws.amazon.com/jp/lambda/)
-
 - [Lambda Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_Lambda.pdf)
-
 - [Lambda ベストプラクティス](https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html)
 
 ---
@@ -682,49 +542,34 @@ Resources:
 
 ```
 利点:
-
 - インフラ管理不要
-
 - 自動スケーリング
-
 - セキュリティパッチ自動適用
 
 制限:
-
 - カスタマイズ制限
-
 - 特定のインスタンスタイプ不可
-
 - GPU未対応
-
 ```
 
 #### リソース設定
 
 ```
 CPU/メモリ組み合わせ:
-
 - 0.25 vCPU: 0.5GB, 1GB, 2GB
-
 - 0.5 vCPU: 1GB - 4GB
-
 - 1 vCPU: 2GB - 8GB
-
 - 2 vCPU: 4GB - 16GB
-
 - 4 vCPU: 8GB - 30GB
-
 - 8 vCPU: 16GB - 60GB
-
 - 16 vCPU: 32GB - 120GB
-
 ```
 
 ### ECS on Fargate
 
 #### タスク定義例
 
-````json
+```json
 {
   "family": "fargate-task",
   "networkMode": "awsvpc",
@@ -746,7 +591,6 @@ CPU/メモリ組み合わせ:
     }
   ]
 }
-
 ```
 
 ### EKS on Fargate
@@ -769,13 +613,11 @@ fargateProfiles:
 
         labels:
           k8s-app: kube-dns
-
-````
+```
 
 ### 公式リソース
 
 - [Fargate サービス紹介](https://aws.amazon.com/jp/fargate/)
-
 - [Fargate Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200804_BlackBelt_Fargate.pdf)
 
 ---
@@ -790,7 +632,7 @@ fargateProfiles:
 
 #### Job Definition
 
-````json
+```json
 {
   "jobDefinitionName": "batch-job",
   "type": "container",
@@ -807,7 +649,6 @@ fargateProfiles:
     "attemptDurationSeconds": 3600
   }
 }
-
 ```
 
 #### Compute Environment
@@ -827,8 +668,7 @@ fargateProfiles:
     "bidPercentage": 50
   }
 }
-
-````
+```
 
 ### 使用パターン
 
@@ -836,48 +676,33 @@ fargateProfiles:
 
 ```
 用途:
-
 - 気象シミュレーション
-
 - 金融リスク計算
-
 - 機械学習トレーニング
 
 特徴:
-
 - 大量の並列処理
-
 - 長時間実行
-
 - 高性能インスタンス使用
-
 ```
 
 #### データ処理
 
 ```
 用途:
-
 - ログ解析
-
 - ETL処理
-
 - 画像/動画変換
 
 特徴:
-
 - スケジュール実行
-
 - 依存関係管理
-
 - エラーハンドリング
-
 ```
 
 ### 公式リソース
 
 - [Batch サービス紹介](https://aws.amazon.com/jp/batch/)
-
 - [Batch Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200825_BlackBelt_Batch.pdf)
 
 ---
@@ -888,7 +713,7 @@ fargateProfiles:
 
 #### 起動テンプレート
 
-````json
+```json
 {
   "LaunchTemplateName": "web-server-template",
   "LaunchTemplateData": {
@@ -912,7 +737,6 @@ fargateProfiles:
     ]
   }
 }
-
 ```
 
 #### スケーリングポリシー
@@ -928,12 +752,11 @@ fargateProfiles:
   "ScaleOutCooldown": 300,
   "ScaleInCooldown": 300
 }
-
-````
+```
 
 ##### ステップスケーリング
 
-````json
+```json
 {
   "AdjustmentType": "ChangeInCapacity",
   "StepAdjustments": [
@@ -949,36 +772,24 @@ fargateProfiles:
   ],
   "Cooldown": 300
 }
-
 ```
 
 ### Application Auto Scaling
 
 #### 対応サービス
 
-````
-
+```
 - DynamoDB (テーブル/GSI)
-
 - ECS (サービス)
-
 - EC2 Spot Fleet
-
 - EMR (クラスター)
-
 - AppStream 2.0 (フリート)
-
 - Aurora (レプリカ)
-
 - SageMaker (エンドポイント)
-
 - Lambda (プロビジョンド同時実行数)
-
 - Comprehend (ドキュメント分類)
-
 - Keyspaces (テーブル)
-
-````
+```
 
 #### DynamoDB Auto Scaling例
 
@@ -998,13 +809,11 @@ fargateProfiles:
     }
   ]
 }
-
-````
+```
 
 ### 公式リソース
 
 - [Auto Scaling サービス紹介](https://aws.amazon.com/jp/autoscaling/)
-
 - [Auto Scaling Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_AutoScaling.pdf)
 
 ---
@@ -1035,7 +844,6 @@ $0.0000166667 × 100万 = $16.67/月
 
 Fargate (0.25vCPU, 0.5GB, 24時間):
 ($0.04048 + $0.004445) × 24 × 30 = $32.36/月
-
 ```
 
 ### パフォーマンス比較
@@ -1063,7 +871,6 @@ Fargate (0.25vCPU, 0.5GB, 24時間):
     └─ No → バッチ処理？
         ├─ Yes → Batch
         └─ No → EC2
-
 ```
 
 ---
@@ -1074,56 +881,41 @@ Fargate (0.25vCPU, 0.5GB, 24時間):
 
 ```
 要件:
-
 - Web層: Auto Scaling対応
-
 - App層: コンテナ化
-
 - DB層: 高可用性
 
 解答例:
-
 - Web層: ALB + EC2 Auto Scaling
-
 - App層: ECS Fargate
-
 - DB層: RDS Multi-AZ
-
 ```
 
 ### 演習 2: サーバーレス処理
 
 ```
 要件:
-
 - S3アップロード時に画像リサイズ
-
 - 処理結果をDynamoDBに保存
-
 - エラー時は管理者に通知
 
 解答例:
 S3 → Lambda (画像処理) → DynamoDB
      ↓ (エラー時)
     SNS → Email
-
 ```
 
 ### 演習 3: バッチ処理基盤
 
 ```
 要件:
-
 - 大量データの並列処理
-
 - スポットインスタンス活用
-
 - 処理完了時に通知
 
 解答例:
 EventBridge → Batch → SNS
 (スケジュール)  (並列処理) (通知)
-
 ```
 
 ---
@@ -1145,11 +937,8 @@ EventBridge → Batch → SNS
 ### 試験対策
 
 - 各サービスの特徴と制限を理解
-
 - コスト計算ができるようになる
-
 - アーキテクチャ図から適切なサービスを選択
-
 - パフォーマンス要件に応じた設定を理解
 
 ---
