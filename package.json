@@ -1,0 +1,26 @@
+{
+  "name": "aws-sap-study-guide",
+  "version": "1.0.0",
+  "description": "AWS Solution Architect Professional 試験対策ガイド",
+  "scripts": {
+    "lint:md": "markdownlint \"**/*.md\" --ignore node_modules",
+    "lint:md:fix": "markdownlint \"**/*.md\" --ignore node_modules --fix",
+    "lint:md:output": "markdownlint \"**/*.md\" --ignore node_modules --output markdownlint-results.txt",
+    "test": "npm run lint:md"
+  },
+  "keywords": [
+    "aws",
+    "solution-architect",
+    "professional",
+    "certification",
+    "study-guide"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "markdownlint-cli": "^0.45.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
