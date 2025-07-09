@@ -1,168 +1,217 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AWS Solution Architect Professional 試験対策クイズ</title>
-    <meta name="description" content="AWS Solution Architect Professional試験対策のためのインタラクティブクイズゲーム">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#667eea">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="AWS SAP Quiz">
-</head>
-<body>
+    <meta
+      name="description"
+      content="AWS Solution Architect Professional試験対策のためのインタラクティブクイズゲーム"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#667eea" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="AWS SAP Quiz" />
+  </head>
+  <body>
     <div class="container">
-        <header>
-            <h1>AWS SAP 試験対策クイズ</h1>
-            <p>AWS Solution Architect Professional 試験に向けたサービス特徴クイズ</p>
-        </header>
+      <header>
+        <h1>AWS SAP 試験対策クイズ</h1>
+        <p>
+          AWS Solution Architect Professional 試験に向けたサービス特徴クイズ
+        </p>
+      </header>
 
-        <div id="start-screen" class="screen active">
-            <div class="card">
-                <h2>クイズを開始しましょう</h2>
-                <p>10問のランダムクイズに挑戦して、AWSサービスの知識を確認しましょう。</p>
-                <div class="stats">
-                    <div class="stat-item">
-                        <span id="total-questions" class="stat-number">-</span>
-                        <span class="stat-label">問題数</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">10</span>
-                        <span class="stat-label">出題数/回</span>
-                    </div>
-                    <div class="stat-item">
-                        <span id="total-categories" class="stat-number">-</span>
-                        <span class="stat-label">カテゴリ</span>
-                    </div>
-                </div>
-                
-                <div class="category-selection">
-                    <div class="category-toggle" id="category-toggle">
-                        <h3>カテゴリを選択 <span class="toggle-icon">▼</span></h3>
-                        <p class="category-instruction">複数選択可能です。選択しない場合は全カテゴリから出題されます。</p>
-                    </div>
-                    <div id="category-content" class="category-content collapsed">
-                        <div id="category-checkboxes" class="category-checkboxes">
-                            <!-- カテゴリチェックボックスがJavaScriptで動的に生成されます -->
-                        </div>
-                        <div class="category-actions">
-                            <button id="select-all-btn" class="btn btn-secondary">全て選択</button>
-                            <button id="clear-all-btn" class="btn btn-secondary">全て解除</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <button id="start-btn" class="btn btn-primary">クイズ開始</button>
+      <div id="start-screen" class="screen active">
+        <div class="card">
+          <h2>クイズを開始しましょう</h2>
+          <p>ランダムクイズに挑戦して、AWSサービスの知識を確認しましょう。</p>
+          <div class="stats">
+            <div class="stat-item">
+              <span id="total-questions" class="stat-number">-</span>
+              <span class="stat-label">問題数</span>
             </div>
-        </div>
+            <div class="stat-item">
+              <span id="total-categories" class="stat-number">-</span>
+              <span class="stat-label">カテゴリ</span>
+            </div>
+          </div>
 
-        <div id="quiz-screen" class="screen">
-            <div class="quiz-header">
-                <div class="progress-bar">
-                    <div id="progress" class="progress-fill"></div>
-                </div>
-                <div class="quiz-info">
-                    <div class="quiz-info-left">
-                        <span id="question-counter">1 / 10</span>
-                        <span id="category-badge" class="category-badge">カテゴリ</span>
-                        <span id="streak-counter" class="streak-counter">🔥 0</span>
-                    </div>
-                    <div class="quiz-info-right">
-                        <button id="next-btn" class="btn btn-primary btn-compact" style="display: none;">次の問題</button>
-                        <div id="timer" class="timer">
-                            <span id="timer-text">30</span>
-                            <div id="timer-circle" class="timer-circle">
-                                <svg class="timer-svg" viewBox="0 0 36 36">
-                                    <path class="timer-bg" d="M18 2.0845
+          <div class="category-selection">
+            <div class="category-toggle" id="category-toggle">
+              <h3>カテゴリを選択 <span class="toggle-icon">▼</span></h3>
+              <p class="category-instruction">
+                複数選択可能です。選択しない場合は全カテゴリから出題されます。
+              </p>
+            </div>
+            <div id="category-content" class="category-content collapsed">
+              <div id="category-checkboxes" class="category-checkboxes">
+                <!-- カテゴリチェックボックスがJavaScriptで動的に生成されます -->
+              </div>
+              <div class="category-actions">
+                <button id="select-all-btn" class="btn btn-secondary">
+                  全て選択
+                </button>
+                <button id="clear-all-btn" class="btn btn-secondary">
+                  全て解除
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="question-count-selection">
+            <h3>問題数を選択</h3>
+            <div class="question-count-options">
+              <label class="question-count-option">
+                <input type="radio" name="question-count" value="10" checked />
+                <span class="option-label">10問</span>
+                <span class="option-description">短時間で集中学習</span>
+              </label>
+              <label class="question-count-option">
+                <input type="radio" name="question-count" value="30" />
+                <span class="option-label">30問</span>
+                <span class="option-description">しっかり学習</span>
+              </label>
+              <label class="question-count-option">
+                <input type="radio" name="question-count" value="50" />
+                <span class="option-label">50問</span>
+                <span class="option-description">本格的な試験対策</span>
+              </label>
+            </div>
+          </div>
+
+          <button id="start-btn" class="btn btn-primary">クイズ開始</button>
+        </div>
+      </div>
+
+      <div id="quiz-screen" class="screen">
+        <div class="quiz-header">
+          <div class="progress-bar">
+            <div id="progress" class="progress-fill"></div>
+          </div>
+          <div class="quiz-info">
+            <div class="quiz-info-left">
+              <span id="question-counter">1 / 10</span>
+              <span id="category-badge" class="category-badge">カテゴリ</span>
+              <span id="streak-counter" class="streak-counter">🔥 0</span>
+            </div>
+            <div class="quiz-info-right">
+              <button
+                id="next-btn"
+                class="btn btn-primary btn-compact"
+                style="display: none"
+              >
+                次の問題
+              </button>
+              <div id="timer" class="timer">
+                <span id="timer-text">30</span>
+                <div id="timer-circle" class="timer-circle">
+                  <svg class="timer-svg" viewBox="0 0 36 36">
+                    <path
+                      class="timer-bg"
+                      d="M18 2.0845
                                         a 15.9155 15.9155 0 0 1 0 31.831
-                                        a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                                    <path id="timer-progress" class="timer-progress" d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                    <path
+                      id="timer-progress"
+                      class="timer-progress"
+                      d="M18 2.0845
                                         a 15.9155 15.9155 0 0 1 0 31.831
-                                        a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
+                                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                  </svg>
                 </div>
+              </div>
             </div>
-
-            <div class="quiz-content">
-                <div class="question-card">
-                    <h2 id="question-text">質問がここに表示されます</h2>
-                    <div id="options-container" class="options">
-                        <!-- 選択肢がJavaScriptで動的に生成されます -->
-                    </div>
-                    <div id="explanation-container" class="explanation-container" style="display: none;">
-                        <div class="explanation-content">
-                            <h3 class="explanation-title">解説</h3>
-                            <p id="explanation-text"></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
 
-        <div id="result-screen" class="screen">
-            <div class="card">
-                <h2>クイズ結果</h2>
-                <div class="result-summary">
-                    <div class="score-circle">
-                        <span id="final-score">0</span>
-                        <span class="score-total">/ 10</span>
-                    </div>
-                    <div class="result-details">
-                        <div class="result-item">
-                            <span class="result-label">正答率</span>
-                            <span id="accuracy" class="result-value">0%</span>
-                        </div>
-                        <div class="result-item">
-                            <span class="result-label">正解数</span>
-                            <span id="correct-count" class="result-value">0</span>
-                        </div>
-                        <div class="result-item">
-                            <span class="result-label">不正解数</span>
-                            <span id="incorrect-count" class="result-value">0</span>
-                        </div>
-                        <div class="result-item">
-                            <span class="result-label">時間切れ</span>
-                            <span id="timeout-count" class="result-value">0</span>
-                        </div>
-                        <div class="result-item">
-                            <span class="result-label">最大連続正解</span>
-                            <span id="max-streak" class="result-value">🔥 0</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div id="performance-message" class="performance-message">
-                    <!-- パフォーマンスメッセージがここに表示されます -->
-                </div>
-
-                <div class="result-actions">
-                    <button id="retry-btn" class="btn btn-primary">もう一度挑戦</button>
-                    <button id="review-btn" class="btn btn-secondary">解答を確認</button>
-                </div>
+        <div class="quiz-content">
+          <div class="question-card">
+            <h2 id="question-text">質問がここに表示されます</h2>
+            <div id="options-container" class="options">
+              <!-- 選択肢がJavaScriptで動的に生成されます -->
             </div>
+            <div
+              id="explanation-container"
+              class="explanation-container"
+              style="display: none"
+            >
+              <div class="explanation-content">
+                <h3 class="explanation-title">解説</h3>
+                <p id="explanation-text"></p>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div id="review-screen" class="screen">
-            <div class="review-header">
-                <h2>解答確認</h2>
-                <button id="back-to-result-btn" class="btn btn-secondary">結果に戻る</button>
+      <div id="result-screen" class="screen">
+        <div class="card">
+          <h2>クイズ結果</h2>
+          <div class="result-summary">
+            <div class="score-circle">
+              <span id="final-score">0</span>
+              <span id="score-total" class="score-total">/ 10</span>
             </div>
-            <div id="review-content" class="review-content">
-                <!-- 解答確認内容がJavaScriptで動的に生成されます -->
+            <div class="result-details">
+              <div class="result-item">
+                <span class="result-label">正答率</span>
+                <span id="accuracy" class="result-value">0%</span>
+              </div>
+              <div class="result-item">
+                <span class="result-label">正解数</span>
+                <span id="correct-count" class="result-value">0</span>
+              </div>
+              <div class="result-item">
+                <span class="result-label">不正解数</span>
+                <span id="incorrect-count" class="result-value">0</span>
+              </div>
+              <div class="result-item">
+                <span class="result-label">時間切れ</span>
+                <span id="timeout-count" class="result-value">0</span>
+              </div>
+              <div class="result-item">
+                <span class="result-label">最大連続正解</span>
+                <span id="max-streak" class="result-value">🔥 0</span>
+              </div>
             </div>
+          </div>
+
+          <div id="performance-message" class="performance-message">
+            <!-- パフォーマンスメッセージがここに表示されます -->
+          </div>
+
+          <div class="result-actions">
+            <button id="retry-btn" class="btn btn-primary">もう一度挑戦</button>
+            <button id="review-btn" class="btn btn-secondary">
+              解答を確認
+            </button>
+          </div>
         </div>
+      </div>
+
+      <div id="review-screen" class="screen">
+        <div class="review-header">
+          <h2>解答確認</h2>
+          <button id="back-to-result-btn" class="btn btn-secondary">
+            結果に戻る
+          </button>
+        </div>
+        <div id="review-content" class="review-content">
+          <!-- 解答確認内容がJavaScriptで動的に生成されます -->
+        </div>
+      </div>
     </div>
 
     <footer>
-        <p>&copy; 2024 AWS SAP Study Guide - MIT License</p>
+      <p>&copy; 2024 AWS SAP Study Guide - MIT License</p>
     </footer>
 
     <script src="questions.js"></script>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>

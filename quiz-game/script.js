@@ -101,6 +101,9 @@ class QuizGame {
     this.selectAllBtn = document.getElementById('select-all-btn')
     this.clearAllBtn = document.getElementById('clear-all-btn')
 
+    // Question count selection elements
+    this.questionCountRadios = document.querySelectorAll('input[name="question-count"]')
+
     // Quiz elements
     this.progressBar = document.getElementById('progress')
     this.questionCounter = document.getElementById('question-counter')
@@ -120,6 +123,7 @@ class QuizGame {
 
     // Result elements
     this.finalScore = document.getElementById('final-score')
+    this.scoreTotal = document.getElementById('score-total')
     this.accuracy = document.getElementById('accuracy')
     this.correctCount = document.getElementById('correct-count')
     this.incorrectCount = document.getElementById('incorrect-count')
@@ -154,6 +158,11 @@ class QuizGame {
       this.selectAllCategories()
     )
     this.clearAllBtn.addEventListener('click', () => this.clearAllCategories())
+
+    // Question count selection events
+    this.questionCountRadios.forEach(radio => {
+      radio.addEventListener('change', () => this.updateQuestionCount())
+    })
   }
 
   showScreen (screenId) {
@@ -250,6 +259,14 @@ class QuizGame {
     this.updateSelectedCategories()
   }
 
+  updateQuestionCount () {
+    const selectedRadio = document.querySelector('input[name="question-count"]:checked')
+    if (selectedRadio) {
+      this.totalQuestions = parseInt(selectedRadio.value)
+      console.log(`Question count updated to: ${this.totalQuestions}`)
+    }
+  }
+
   toggleCategorySelection () {
     const isCollapsed = this.categoryContent.classList.contains('collapsed')
 
@@ -263,6 +280,9 @@ class QuizGame {
   }
 
   startQuiz () {
+    // 選択された問題数を更新
+    this.updateQuestionCount()
+
     // データの存在確認
     if (typeof allQuestions === 'undefined') {
       console.error('❌ allQuestions is not defined. Check questions.js file.')
@@ -932,6 +952,7 @@ class QuizGame {
 
     // Update result display
     this.finalScore.textContent = this.score
+    this.scoreTotal.textContent = `/ ${this.totalQuestions}`
     this.accuracy.textContent = `${accuracyPercent}%`
     this.correctCount.textContent = this.score
     this.incorrectCount.textContent = incorrectCount
@@ -1066,7 +1087,7 @@ class QuizGame {
   }
 
   restartQuiz () {
-    this.totalQuestions = 10 // デフォルト値にリセット
+    // 問題数は現在の選択を維持
     this.showScreen('start-screen')
   }
 }

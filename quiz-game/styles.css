@@ -909,7 +909,6 @@ footer {
     }
     
     .stats {
-        flex-direction: column;
         gap: 1rem;
     }
     
@@ -925,6 +924,30 @@ footer {
     .category-actions .btn {
         width: 100%;
         max-width: 200px;
+    }
+    
+    /* 問題数選択のレスポンシブ対応 */
+    .question-count-selection {
+        padding: 1rem;
+        margin: 1.5rem 0;
+    }
+    
+    .question-count-options {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .question-count-option {
+        min-width: auto;
+        padding: 0.75rem;
+    }
+    
+    .option-label {
+        font-size: 1.1rem;
+    }
+    
+    .option-description {
+        font-size: 0.8rem;
     }
     
     .result-summary {
@@ -1097,6 +1120,92 @@ footer {
 .category-actions .btn {
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
+}
+
+/* Question Count Selection Styles */
+.question-count-selection {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.question-count-selection h3 {
+    margin: 0 0 1rem 0;
+    color: #495057;
+    font-size: 1.1rem;
+}
+
+.question-count-options {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.question-count-option {
+    flex: 1;
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    background: white;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.question-count-option:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.2);
+}
+
+.question-count-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.question-count-option input[type="radio"]:checked + .option-label {
+    color: #667eea;
+    font-weight: 600;
+}
+
+.question-count-option input[type="radio"]:checked ~ .option-description {
+    color: #667eea;
+}
+
+.question-count-option:has(input[type="radio"]:checked) {
+    border-color: #667eea;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.question-count-option:has(input[type="radio"]:checked) .option-label {
+    color: white;
+}
+
+.question-count-option:has(input[type="radio"]:checked) .option-description {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.option-label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    transition: all 0.3s ease;
+}
+
+.option-description {
+    font-size: 0.85rem;
+    color: #6c757d;
+    text-align: center;
+    transition: all 0.3s ease;
 }
 
 /* Animation */
