@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Solution Architect Professional 試験対策クイズ</title>
+    <meta name="description" content="AWS Solution Architect Professional試験対策のためのインタラクティブクイズゲーム">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="AWS SAP Quiz">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AWS SAP 試験対策クイズ</h1>
+            <p>AWS Solution Architect Professional 試験に向けたサービス特徴クイズ</p>
+        </header>
+
+        <div id="start-screen" class="screen active">
+            <div class="card">
+                <h2>クイズを開始しましょう</h2>
+                <p>10問のランダムクイズに挑戦して、AWSサービスの知識を確認しましょう。</p>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">200+</span>
+                        <span class="stat-label">問題数</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">10</span>
+                        <span class="stat-label">出題数/回</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">3</span>
+                        <span class="stat-label">カテゴリ</span>
+                    </div>
+                </div>
+                <button id="start-btn" class="btn btn-primary">クイズ開始</button>
+            </div>
+        </div>
+
+        <div id="quiz-screen" class="screen">
+            <div class="quiz-header">
+                <div class="progress-bar">
+                    <div id="progress" class="progress-fill"></div>
+                </div>
+                <div class="quiz-info">
+                    <span id="question-counter">1 / 10</span>
+                    <span id="category-badge" class="category-badge">カテゴリ</span>
+                </div>
+            </div>
+
+            <div class="quiz-content">
+                <div class="question-card">
+                    <h2 id="question-text">質問がここに表示されます</h2>
+                    <div id="options-container" class="options">
+                        <!-- 選択肢がJavaScriptで動的に生成されます -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="quiz-controls">
+                <button id="next-btn" class="btn btn-primary" style="display: none;">次の問題</button>
+            </div>
+        </div>
+
+        <div id="result-screen" class="screen">
+            <div class="card">
+                <h2>クイズ結果</h2>
+                <div class="result-summary">
+                    <div class="score-circle">
+                        <span id="final-score">0</span>
+                        <span class="score-total">/ 10</span>
+                    </div>
+                    <div class="result-details">
+                        <div class="result-item">
+                            <span class="result-label">正答率</span>
+                            <span id="accuracy" class="result-value">0%</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">正解数</span>
+                            <span id="correct-count" class="result-value">0</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">不正解数</span>
+                            <span id="incorrect-count" class="result-value">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="performance-message" class="performance-message">
+                    <!-- パフォーマンスメッセージがここに表示されます -->
+                </div>
+
+                <div class="result-actions">
+                    <button id="retry-btn" class="btn btn-primary">もう一度挑戦</button>
+                    <button id="review-btn" class="btn btn-secondary">解答を確認</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="review-screen" class="screen">
+            <div class="review-header">
+                <h2>解答確認</h2>
+                <button id="back-to-result-btn" class="btn btn-secondary">結果に戻る</button>
+            </div>
+            <div id="review-content" class="review-content">
+                <!-- 解答確認内容がJavaScriptで動的に生成されます -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 AWS SAP Study Guide - MIT License</p>
+    </footer>
+
+    <script src="questions.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

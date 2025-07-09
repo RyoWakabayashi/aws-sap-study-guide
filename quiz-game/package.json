@@ -1,0 +1,25 @@
+{
+  "name": "aws-sap-quiz-game",
+  "version": "1.0.0",
+  "description": "AWS Solution Architect Professional 試験対策クイズゲーム",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "dev": "python3 -m http.server 8000",
+    "serve": "http-server -p 8000 -c-1",
+    "test": "echo \"テスト用のスクリプトを追加してください\" && exit 1"
+  },
+  "keywords": [
+    "aws",
+    "solution-architect",
+    "professional",
+    "quiz",
+    "exam",
+    "study"
+  ],
+  "author": "AWS SAP Study Guide",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
