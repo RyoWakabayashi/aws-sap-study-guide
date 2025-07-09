@@ -373,13 +373,21 @@ class QuizGame {
     // Clear and populate options
     this.optionsContainer.innerHTML = ''
 
+    // 選択肢をシャッフル
+    const shuffledOptions = this.shuffleOptions(question)
+
     // 複数選択問題の場合は選択状態を初期化
     if (question.multipleChoice) {
       this.selectedAnswers = []
     }
 
-    question.options.forEach((option, index) => {
-      const optionElement = this.createOptionElement(option, index, question.multipleChoice)
+    shuffledOptions.forEach((optionData, displayIndex) => {
+      const optionElement = this.createOptionElement(
+        optionData.text,
+        displayIndex,
+        question.multipleChoice,
+        optionData.originalIndex
+      )
       this.optionsContainer.appendChild(optionElement)
     })
 
@@ -407,9 +415,32 @@ class QuizGame {
     this.startTimer()
   }
 
-  createOptionElement (text, index, isMultipleChoice = false) {
+  shuffleOptions (question) {
+    // 選択肢とその元のインデックスをペアにする
+    const optionsWithIndex = question.options.map((option, index) => ({
+      text: option,
+      originalIndex: index
+    }))
+
+    // Fisher-Yates シャッフルアルゴリズム
+    const shuffled = [...optionsWithIndex]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
+
+    // シャッフル後のマッピングを保存（回答処理で使用）
+    this.currentShuffleMapping = shuffled.map(item => item.originalIndex)
+
+    return shuffled
+  }
+
+  createOptionElement (text, displayIndex, isMultipleChoice = false, originalIndex = null) {
     const option = document.createElement('div')
     option.className = 'option'
+
+    // 元のインデックスを保存（シャッフル対応）
+    const actualIndex = originalIndex !== null ? originalIndex : displayIndex
 
     if (isMultipleChoice) {
       // 複数選択問題の場合はチェックボックス形式
@@ -417,11 +448,11 @@ class QuizGame {
 
       const checkbox = document.createElement('input')
       checkbox.type = 'checkbox'
-      checkbox.id = `option-${index}`
-      checkbox.value = index
+      checkbox.id = `option-${displayIndex}`
+      checkbox.value = actualIndex
 
       const label = document.createElement('label')
-      label.htmlFor = `option-${index}`
+      label.htmlFor = `option-${displayIndex}`
       label.textContent = text
 
       option.appendChild(checkbox)
@@ -443,8 +474,8 @@ class QuizGame {
         e.preventDefault()
         checkbox.checked = !checkbox.checked
 
-        // 選択状態を更新
-        this.updateMultipleChoiceSelection(index, checkbox.checked)
+        // 選択状態を更新（元のインデックスを使用）
+        this.updateMultipleChoiceSelection(actualIndex, checkbox.checked, displayIndex)
       })
 
       // チェックボックス自体のchangeイベント
@@ -455,7 +486,7 @@ class QuizGame {
           return
         }
 
-        this.updateMultipleChoiceSelection(index, e.target.checked)
+        this.updateMultipleChoiceSelection(actualIndex, e.target.checked, displayIndex)
       })
 
       // ラベルのクリックイベント（デフォルトの動作を防ぐ）
@@ -469,7 +500,7 @@ class QuizGame {
     } else {
       // 単一選択問題の場合は従来通り
       option.textContent = text
-      option.addEventListener('click', () => this.selectOption(index, option))
+      option.addEventListener('click', () => this.selectOption(actualIndex, option, displayIndex))
     }
 
     return option
@@ -557,9 +588,9 @@ class QuizGame {
         isMultipleChoice: true
       })
 
-      // Show correct answers for multiple choice
+      // Show correct answers for multiple choice (シャッフル対応)
       const options = this.optionsContainer.querySelectorAll('.option')
-      options.forEach((option, index) => {
+      options.forEach((option, displayIdx) => {
         option.classList.add('disabled')
         option.style.pointerEvents = 'none'
 
@@ -569,7 +600,9 @@ class QuizGame {
           checkbox.disabled = true
         }
 
-        if (correctAnswers.includes(index)) {
+        // シャッフルされた表示位置から元のインデックスを取得
+        const originalIndex = this.currentShuffleMapping[displayIdx]
+        if (correctAnswers.includes(originalIndex)) {
           option.classList.add('correct')
         }
       })
@@ -588,13 +621,15 @@ class QuizGame {
         timeUp: true
       })
 
-      // Show correct answer
+      // Show correct answer (シャッフル対応)
       const options = this.optionsContainer.querySelectorAll('.option')
-      options.forEach((option, index) => {
+      options.forEach((option, displayIdx) => {
         option.classList.add('disabled')
         option.style.pointerEvents = 'none'
 
-        if (index === question.correct) {
+        // シャッフルされた表示位置から元のインデックスを取得
+        const originalIndex = this.currentShuffleMapping[displayIdx]
+        if (originalIndex === question.correct) {
           option.classList.add('correct')
         }
       })
@@ -647,7 +682,7 @@ class QuizGame {
     }, 100)
   }
 
-  selectOption (selectedIndex, selectedElement) {
+  selectOption (selectedIndex, selectedElement, displayIndex = null) {
     // Check if question already answered or time is up
     if (this.questionAnswered) {
       return
@@ -667,11 +702,14 @@ class QuizGame {
       option.style.pointerEvents = 'none'
     })
 
-    // Mark correct and incorrect answers
-    options.forEach((option, index) => {
-      if (index === question.correct) {
+    // Mark correct and incorrect answers (シャッフル対応)
+    options.forEach((option, displayIdx) => {
+      // シャッフルされた表示位置から元のインデックスを取得
+      const originalIndex = this.currentShuffleMapping[displayIdx]
+
+      if (originalIndex === question.correct) {
         option.classList.add('correct')
-      } else if (index === selectedIndex && !isCorrect) {
+      } else if (originalIndex === selectedIndex && !isCorrect) {
         option.classList.add('incorrect')
       }
     })
@@ -698,7 +736,7 @@ class QuizGame {
     this.nextBtn.style.display = 'block'
   }
 
-  updateMultipleChoiceSelection (index, isSelected) {
+  updateMultipleChoiceSelection (originalIndex, isSelected, displayIndex = null) {
     if (this.questionAnswered) {
       return
     }
@@ -708,15 +746,16 @@ class QuizGame {
     }
 
     if (isSelected) {
-      if (!this.selectedAnswers.includes(index)) {
-        this.selectedAnswers.push(index)
+      if (!this.selectedAnswers.includes(originalIndex)) {
+        this.selectedAnswers.push(originalIndex)
       }
     } else {
-      this.selectedAnswers = this.selectedAnswers.filter(i => i !== index)
+      this.selectedAnswers = this.selectedAnswers.filter(i => i !== originalIndex)
     }
 
-    // 視覚的フィードバックを更新
-    const optionElement = this.optionsContainer.children[index]
+    // 視覚的フィードバックを更新（表示インデックスを使用）
+    const targetIndex = displayIndex !== null ? displayIndex : originalIndex
+    const optionElement = this.optionsContainer.children[targetIndex]
     if (optionElement && optionElement.classList.contains('multiple-choice')) {
       if (isSelected) {
         optionElement.classList.add('checked')
@@ -767,11 +806,14 @@ class QuizGame {
       }
     })
 
-    // Mark correct and incorrect answers
-    options.forEach((option, index) => {
-      if (correctAnswers.includes(index)) {
+    // Mark correct and incorrect answers (シャッフル対応)
+    options.forEach((option, displayIdx) => {
+      // シャッフルされた表示位置から元のインデックスを取得
+      const originalIndex = this.currentShuffleMapping[displayIdx]
+
+      if (correctAnswers.includes(originalIndex)) {
         option.classList.add('correct')
-      } else if (selectedAnswers.includes(index)) {
+      } else if (selectedAnswers.includes(originalIndex)) {
         option.classList.add('incorrect')
       }
     })
