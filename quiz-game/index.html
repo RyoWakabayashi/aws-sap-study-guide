@@ -39,6 +39,24 @@
             </div>
           </div>
 
+          <div class="difficulty-selection">
+            <h3>難易度を選択</h3>
+            <div class="difficulty-options">
+              <label class="difficulty-option">
+                <input type="radio" name="difficulty" value="basic" checked>
+                <span class="option-label">初級編</span>
+                <span class="option-description">基本的な知識を確認</span>
+                <span class="option-details">制限時間: 30秒</span>
+              </label>
+              <label class="difficulty-option">
+                <input type="radio" name="difficulty" value="advanced">
+                <span class="option-label">上級編</span>
+                <span class="option-description">本番試験レベルの長文問題</span>
+                <span class="option-details">制限時間: 90秒</span>
+              </label>
+            </div>
+          </div>
+
           <div class="category-selection">
             <div class="category-toggle" id="category-toggle">
               <h3>カテゴリを選択 <span class="toggle-icon">▼</span></h3>
@@ -215,6 +233,7 @@
     </footer>
 
     <script src="questions.js"></script>
+    <script src="questions-advanced.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

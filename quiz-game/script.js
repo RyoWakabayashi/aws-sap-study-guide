@@ -1,4 +1,4 @@
-/* globals getAllCategories, getQuestionStats */
+/* globals allQuestions:readonly */
 
 // AWS SAP クイズゲーム メインスクリプト
 class QuizGame {
@@ -27,7 +27,20 @@ class QuizGame {
     this.originalUserAnswers = []
     this.originalQuestions = [] // 元の問題データを保存
 
-    this.initializeElements()
+    // 難易度関連
+    this.currentDifficulty = 'basic' // 'basic' or 'advanced'
+    this.currentQuestionSet = window.allQuestions || [] // 現在の問題セット
+
+    // グローバル変数の参照を保持（lintエラー回避）
+    this.allQuestions = window.allQuestions || []
+    this.allAdvancedQuestions = window.allAdvancedQuestions || []
+
+    // 要素の初期化
+    if (!this.initializeElements()) {
+      console.error('Failed to initialize required elements')
+      return
+    }
+
     this.bindEvents()
     this.initializeCategorySelection()
     this.updateStats()
@@ -96,6 +109,15 @@ class QuizGame {
       review: document.getElementById('review-screen')
     }
 
+    // 重要な要素の存在確認
+    const requiredElements = ['start-screen', 'quiz-screen', 'result-screen']
+    const missingElements = requiredElements.filter(id => !document.getElementById(id))
+
+    if (missingElements.length > 0) {
+      console.error('Missing required elements:', missingElements)
+      return false
+    }
+
     // Stats elements
     this.totalQuestionsElement = document.getElementById('total-questions')
     this.totalCategoriesElement = document.getElementById('total-categories')
@@ -146,6 +168,8 @@ class QuizGame {
     this.reviewBtn = document.getElementById('review-btn')
     this.reviewIncorrectBtn = document.getElementById('review-incorrect-btn')
     this.backToResultBtn = document.getElementById('back-to-result-btn')
+
+    return true
   }
 
   bindEvents () {
@@ -167,6 +191,11 @@ class QuizGame {
     )
     this.clearAllBtn.addEventListener('click', () => this.clearAllCategories())
 
+    // Difficulty selection events
+    document.querySelectorAll('input[name="difficulty"]').forEach(radio => {
+      radio.addEventListener('change', (e) => this.updateDifficulty(e.target.value))
+    })
+
     // Question count selection events
     this.questionCountRadios.forEach(radio => {
       radio.addEventListener('change', () => this.updateQuestionCount())
@@ -184,26 +213,83 @@ class QuizGame {
   }
 
   updateStats () {
-    if (
-      typeof allQuestions !== 'undefined' &&
-      typeof getAllCategories !== 'undefined'
-    ) {
-      this.totalQuestionsElement.textContent = allQuestions.length
-      this.totalCategoriesElement.textContent = getAllCategories().length
+    const stats = this.getQuestionStatsFromCurrentSet()
+    const totalQuestions = this.currentQuestionSet.length
+    const categories = Object.keys(stats).length
+
+    // UI要素が存在する場合は更新
+    if (this.totalQuestionsElement) {
+      this.totalQuestionsElement.textContent = totalQuestions
     }
+    if (this.totalCategoriesElement) {
+      this.totalCategoriesElement.textContent = categories
+    }
+
+    console.log(`📊 Current question set stats (${this.currentDifficulty}):`)
+    console.log(`   Total questions: ${totalQuestions}`)
+    console.log(`   Categories: ${categories}`)
+  }
+
+  getAllCategoriesFromCurrentSet () {
+    const categories = new Set()
+    this.currentQuestionSet.forEach(question => {
+      if (question.category) {
+        categories.add(question.category)
+      }
+    })
+    return Array.from(categories).sort()
+  }
+
+  getQuestionStatsFromCurrentSet () {
+    const stats = {}
+    this.currentQuestionSet.forEach(question => {
+      if (question.category) {
+        if (!stats[question.category]) {
+          stats[question.category] = 0
+        }
+        stats[question.category]++
+      }
+    })
+    return stats
+  }
+
+  formatQuestionText (questionText) {
+    // 改行文字を<br>タグに変換
+    let formattedText = questionText.replace(/\n/g, '<br>')
+
+    // 箇条書きの処理（- で始まる行）
+    formattedText = formattedText.replace(/^- (.+)$/gm, '<li>$1</li>')
+
+    // 連続する<li>タグを<ul>で囲む
+    formattedText = formattedText.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
+
+    // 数字付き箇条書きの処理（1. 2. 3. など）
+    formattedText = formattedText.replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>')
+
+    // 太字の処理（**text** を <strong>text</strong> に）
+    formattedText = formattedText.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+
+    // コードブロックの処理（`code` を <code>code</code> に）
+    formattedText = formattedText.replace(/`([^`]+)`/g, '<code>$1</code>')
+
+    // 空行を段落区切りとして処理
+    formattedText = formattedText.replace(/(<br>\s*){2,}/g, '</p><p>')
+
+    // 最初と最後にpタグを追加
+    if (formattedText.trim()) {
+      formattedText = '<p>' + formattedText + '</p>'
+    }
+
+    // 空のpタグを削除
+    formattedText = formattedText.replace(/<p>\s*<\/p>/g, '')
+
+    return formattedText
   }
 
   initializeCategorySelection () {
-    if (
-      typeof getAllCategories === 'undefined' ||
-      typeof getQuestionStats === 'undefined'
-    ) {
-      console.warn('Category functions not available')
-      return
-    }
-
-    const categories = getAllCategories()
-    const stats = getQuestionStats()
+    // 現在の問題セットからカテゴリを取得
+    const categories = this.getAllCategoriesFromCurrentSet()
+    const stats = this.getQuestionStatsFromCurrentSet()
 
     this.categoryCheckboxes.innerHTML = ''
 
@@ -273,6 +359,29 @@ class QuizGame {
       this.totalQuestions = parseInt(selectedRadio.value)
       console.log(`Question count updated to: ${this.totalQuestions}`)
     }
+  }
+
+  updateDifficulty (difficulty) {
+    this.currentDifficulty = difficulty
+
+    // 問題セットを切り替え
+    if (difficulty === 'advanced') {
+      this.currentQuestionSet = this.allAdvancedQuestions
+      this.timeLimit = 90 // 上級編は90秒
+      console.log(`🎓 Switched to Advanced mode: ${this.currentQuestionSet.length} questions available`)
+    } else {
+      this.currentQuestionSet = this.allQuestions
+      this.timeLimit = 30 // 初級編は30秒
+      console.log(`📚 Switched to Basic mode: ${this.currentQuestionSet.length} questions available`)
+    }
+
+    // カテゴリ選択を更新
+    this.initializeCategorySelection()
+
+    // 統計を更新
+    this.updateStats()
+
+    console.log(`Difficulty updated to: ${difficulty}`)
   }
 
   startIncorrectReview () {
@@ -503,14 +612,9 @@ class QuizGame {
     }
   }
 
-  getRandomQuestions (count) {
-    const shuffled = [...allQuestions].sort(() => 0.5 - Math.random())
-    return shuffled.slice(0, count)
-  }
-
   getRandomQuestionsByCategories (categories, count) {
-    // 選択されたカテゴリの問題を収集
-    const categoryQuestions = allQuestions.filter((q) =>
+    // 選択されたカテゴリの問題を現在の問題セットから収集
+    const categoryQuestions = this.currentQuestionSet.filter((q) =>
       categories.includes(q.category)
     )
 
@@ -521,6 +625,12 @@ class QuizGame {
 
     // シャッフルして指定数を取得
     const shuffled = [...categoryQuestions].sort(() => 0.5 - Math.random())
+    return shuffled.slice(0, count)
+  }
+
+  getRandomQuestions (count) {
+    // 現在の問題セットからランダムに取得
+    const shuffled = [...this.currentQuestionSet].sort(() => 0.5 - Math.random())
     return shuffled.slice(0, count)
   }
 
@@ -558,8 +668,29 @@ class QuizGame {
         this.questionText.parentNode.insertBefore(header, this.questionText)
       }
     }
-    this.categoryBadge.textContent = question.category
-    this.questionText.textContent = question.question
+
+    // 難易度に応じてクラスを追加
+    const quizScreen = document.getElementById('quiz-screen')
+    if (quizScreen) {
+      if (this.currentDifficulty === 'advanced') {
+        quizScreen.classList.add('difficulty-advanced')
+      } else {
+        quizScreen.classList.remove('difficulty-advanced')
+      }
+    } else {
+      console.warn('Quiz screen element not found')
+    }
+
+    if (this.categoryBadge) {
+      this.categoryBadge.textContent = question.category
+    }
+
+    // 問題文の改行を適切に処理
+    if (this.questionText) {
+      this.questionText.innerHTML = this.formatQuestionText(question.question)
+    } else {
+      console.warn('Question text element not found')
+    }
 
     // Clear and populate options
     this.optionsContainer.innerHTML = ''
@@ -870,8 +1001,8 @@ class QuizGame {
   }
 
   showExplanation (explanationText) {
-    // Set explanation text
-    this.explanationText.textContent = explanationText
+    // Set explanation text with proper formatting
+    this.explanationText.innerHTML = this.formatQuestionText(explanationText)
 
     // Show explanation container with animation
     this.explanationContainer.style.display = 'block'
@@ -1323,7 +1454,7 @@ class QuizGame {
             </div>
             ${timeInfo}
             <div class="review-explanation">
-                <strong>解説:</strong> ${question.explanation}
+                <strong>解説:</strong> ${this.formatQuestionText(question.explanation)}
             </div>
         `
 
@@ -1444,7 +1575,7 @@ QuizGame.prototype.showMultipleChoiceResults = function (question, correctAnswer
     ${resultSummary}
     <div class="explanation-divider"></div>
     <strong>解説:</strong><br>
-    ${question.explanation}
+    ${this.formatQuestionText(question.explanation)}
   `
 }
 
