@@ -14,7 +14,10 @@
     "validate-questions": "node scripts/validate-questions.js",
     "build": "node scripts/build.js",
     "build-check": "node scripts/build-check.js",
-    "precommit": "npm run lint && npm test",
+    "load-questions": "node scripts/load-questions.js",
+    "prebuild": "npm run load-questions && npm run lint:fix",
+    "pretest": "npm run load-questions && npm run lint:fix",
+    "precommit": "npm run load-questions && npm run lint && npm test",
     "prepare": "husky install"
   },
   "keywords": [

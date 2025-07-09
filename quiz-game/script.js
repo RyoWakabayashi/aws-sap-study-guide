@@ -1,3 +1,5 @@
+/* globals getAllCategories, getQuestionStats */
+
 // AWS SAP クイズゲーム メインスクリプト
 class QuizGame {
   constructor () {
@@ -6,10 +8,13 @@ class QuizGame {
     this.score = 0
     this.userAnswers = []
     this.totalQuestions = 10
+    this.selectedCategories = []
     this.debugMode = this.isDebugMode()
 
     this.initializeElements()
     this.bindEvents()
+    this.initializeCategorySelection()
+    this.updateStats()
     this.showScreen('start-screen')
 
     if (this.debugMode) {
@@ -75,6 +80,17 @@ class QuizGame {
       review: document.getElementById('review-screen')
     }
 
+    // Stats elements
+    this.totalQuestionsElement = document.getElementById('total-questions')
+    this.totalCategoriesElement = document.getElementById('total-categories')
+
+    // Category selection elements
+    this.categoryToggle = document.getElementById('category-toggle')
+    this.categoryContent = document.getElementById('category-content')
+    this.categoryCheckboxes = document.getElementById('category-checkboxes')
+    this.selectAllBtn = document.getElementById('select-all-btn')
+    this.clearAllBtn = document.getElementById('clear-all-btn')
+
     // Quiz elements
     this.progressBar = document.getElementById('progress')
     this.questionCounter = document.getElementById('question-counter')
@@ -108,6 +124,15 @@ class QuizGame {
     this.backToResultBtn.addEventListener('click', () =>
       this.showScreen('result-screen')
     )
+
+    // Category selection events
+    this.categoryToggle.addEventListener('click', () =>
+      this.toggleCategorySelection()
+    )
+    this.selectAllBtn.addEventListener('click', () =>
+      this.selectAllCategories()
+    )
+    this.clearAllBtn.addEventListener('click', () => this.clearAllCategories())
   }
 
   showScreen (screenId) {
@@ -118,6 +143,102 @@ class QuizGame {
 
     // Show target screen
     document.getElementById(screenId).classList.add('active')
+  }
+
+  updateStats () {
+    if (
+      typeof allQuestions !== 'undefined' &&
+      typeof getAllCategories !== 'undefined'
+    ) {
+      this.totalQuestionsElement.textContent = allQuestions.length
+      this.totalCategoriesElement.textContent = getAllCategories().length
+    }
+  }
+
+  initializeCategorySelection () {
+    if (
+      typeof getAllCategories === 'undefined' ||
+      typeof getQuestionStats === 'undefined'
+    ) {
+      console.warn('Category functions not available')
+      return
+    }
+
+    const categories = getAllCategories()
+    const stats = getQuestionStats()
+
+    this.categoryCheckboxes.innerHTML = ''
+
+    categories.forEach((category) => {
+      const categoryItem = document.createElement('div')
+      categoryItem.className = 'category-item'
+
+      const checkbox = document.createElement('input')
+      checkbox.type = 'checkbox'
+      checkbox.id = `category-${category}`
+      checkbox.value = category
+      checkbox.addEventListener('change', () =>
+        this.updateSelectedCategories()
+      )
+
+      const label = document.createElement('label')
+      label.htmlFor = `category-${category}`
+      label.className = 'category-label'
+      label.textContent = category
+
+      const count = document.createElement('span')
+      count.className = 'category-count'
+      count.textContent = `${stats[category] || 0}問`
+
+      categoryItem.appendChild(checkbox)
+      categoryItem.appendChild(label)
+      categoryItem.appendChild(count)
+
+      this.categoryCheckboxes.appendChild(categoryItem)
+    })
+  }
+
+  updateSelectedCategories () {
+    const checkboxes = this.categoryCheckboxes.querySelectorAll(
+      'input[type="checkbox"]'
+    )
+    this.selectedCategories = Array.from(checkboxes)
+      .filter((cb) => cb.checked)
+      .map((cb) => cb.value)
+
+    console.log('Selected categories:', this.selectedCategories)
+  }
+
+  selectAllCategories () {
+    const checkboxes = this.categoryCheckboxes.querySelectorAll(
+      'input[type="checkbox"]'
+    )
+    checkboxes.forEach((cb) => {
+      cb.checked = true
+    })
+    this.updateSelectedCategories()
+  }
+
+  clearAllCategories () {
+    const checkboxes = this.categoryCheckboxes.querySelectorAll(
+      'input[type="checkbox"]'
+    )
+    checkboxes.forEach((cb) => {
+      cb.checked = false
+    })
+    this.updateSelectedCategories()
+  }
+
+  toggleCategorySelection () {
+    const isCollapsed = this.categoryContent.classList.contains('collapsed')
+
+    if (isCollapsed) {
+      this.categoryContent.classList.remove('collapsed')
+      this.categoryToggle.classList.add('expanded')
+    } else {
+      this.categoryContent.classList.add('collapsed')
+      this.categoryToggle.classList.remove('expanded')
+    }
   }
 
   startQuiz () {
@@ -140,8 +261,36 @@ class QuizGame {
       `✅ Questions loaded: ${allQuestions.length} questions available`
     )
 
+    // 選択されたカテゴリを更新
+    this.updateSelectedCategories()
+
     this.resetQuiz()
-    this.currentQuestions = this.getRandomQuestions(this.totalQuestions)
+
+    // カテゴリが選択されている場合は、そのカテゴリから問題を取得
+    if (this.selectedCategories.length > 0) {
+      this.currentQuestions = this.getRandomQuestionsByCategories(
+        this.selectedCategories,
+        this.totalQuestions
+      )
+      console.log(
+        `🎯 Selected categories: ${this.selectedCategories.join(', ')}`
+      )
+    } else {
+      // カテゴリが選択されていない場合は全問題から取得
+      this.currentQuestions = this.getRandomQuestions(this.totalQuestions)
+      console.log('🎯 Using all categories')
+    }
+
+    // 問題数が不足している場合の警告
+    if (this.currentQuestions.length < this.totalQuestions) {
+      console.warn(
+        `⚠️ Only ${this.currentQuestions.length} questions available for selected categories`
+      )
+      alert(
+        `選択されたカテゴリには${this.currentQuestions.length}問しかありません。\n${this.currentQuestions.length}問でクイズを開始します。`
+      )
+      this.totalQuestions = this.currentQuestions.length
+    }
 
     if (this.debugMode) {
       console.log(
@@ -167,6 +316,22 @@ class QuizGame {
 
   getRandomQuestions (count) {
     const shuffled = [...allQuestions].sort(() => 0.5 - Math.random())
+    return shuffled.slice(0, count)
+  }
+
+  getRandomQuestionsByCategories (categories, count) {
+    // 選択されたカテゴリの問題を収集
+    const categoryQuestions = allQuestions.filter((q) =>
+      categories.includes(q.category)
+    )
+
+    if (categoryQuestions.length === 0) {
+      console.warn('No questions found for selected categories')
+      return []
+    }
+
+    // シャッフルして指定数を取得
+    const shuffled = [...categoryQuestions].sort(() => 0.5 - Math.random())
     return shuffled.slice(0, count)
   }
 
@@ -339,6 +504,7 @@ class QuizGame {
   }
 
   restartQuiz () {
+    this.totalQuestions = 10 // デフォルト値にリセット
     this.showScreen('start-screen')
   }
 }

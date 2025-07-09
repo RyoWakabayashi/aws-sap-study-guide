@@ -84,10 +84,10 @@ allQuestions.forEach((question, index) => {
   if (hasError) return
 
   // IDの型と重複チェック
-  if (typeof question.id !== 'number') {
+  if (typeof question.id !== 'string') {
     console.error(
       chalk.red(
-        `❌ Question ${questionNum}: ID must be a number, got ${typeof question.id}`
+        `❌ Question ${questionNum}: ID must be a string, got ${typeof question.id}`
       )
     )
     errors++
@@ -98,6 +98,13 @@ allQuestions.forEach((question, index) => {
     errors++
   } else {
     usedIds.add(question.id)
+
+    // ID形式チェック（category-number形式）
+    const idPattern = /^[a-z-]+-\d+$/
+    if (!idPattern.test(question.id)) {
+      console.warn(chalk.yellow(`⚠️  Question ${questionNum}: ID should follow 'category-number' format, got '${question.id}'`))
+      warnings++
+    }
   }
 
   // カテゴリのチェック

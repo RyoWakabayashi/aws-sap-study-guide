@@ -97,8 +97,8 @@ test('Questions data is valid', () => {
   // 各問題の構造チェック
   allQuestions.forEach((question, index) => {
     assert(
-      typeof question.id === 'number',
-      `Question ${index + 1}: id must be a number`
+      typeof question.id === 'string',
+      `Question ${index + 1}: id must be a string`
     )
     assert(
       typeof question.category === 'string',

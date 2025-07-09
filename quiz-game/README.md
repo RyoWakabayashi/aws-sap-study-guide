@@ -93,17 +93,58 @@ npm run validate-questions
 
 ## 🔧 カスタマイズ
 
-問題を追加・修正する場合は `questions.js` ファイルを編集してください：
+### 問題の追加・修正
+
+問題データはカテゴリ別に分割されています：
+
+```
+questions/
+├── computing.js          # コンピューティング関連
+├── storage.js           # ストレージ関連
+├── database.js          # データベース関連
+├── networking.js        # ネットワーキング関連
+├── security.js          # セキュリティ関連
+├── monitoring.js        # 監視・ログ関連
+├── migration.js         # 移行・統合関連
+├── analytics.js         # 分析・機械学習関連
+├── integration.js       # アプリケーション統合関連
+├── management.js        # 管理・ガバナンス関連
+├── disaster-recovery.js # 災害復旧関連
+├── cost-optimization.js # コスト最適化関連
+├── architecture.js      # アーキテクチャ関連
+├── use-cases.js         # ユースケース関連
+└── operations.js        # 運用・デプロイ関連
+```
+
+#### 新しい問題の追加
+
+1. 適切なカテゴリファイルを編集
+2. 問題を追加（ID形式: `category-number`）
+3. 問題データを統合
 
 ```javascript
+// 例: computing.js に問題を追加
 {
-    id: 101,
-    category: "カテゴリ名",
-    question: "問題文",
+    id: "computing-7",  // カテゴリ-連番形式
+    category: "コンピューティング",
+    question: "新しい問題文",
     options: ["選択肢1", "選択肢2", "選択肢3", "選択肢4"],
     correct: 0, // 正解のインデックス（0-3）
-    explanation: "解説文"
+    explanation: "詳細な解説文"
 }
+```
+
+#### 問題データの統合
+
+```bash
+# 問題データを統合してquestions.jsを生成
+npm run load-questions
+
+# 検証実行
+npm run validate-questions
+
+# テスト実行
+npm test
 ```
 
 ## 📄 ライセンス

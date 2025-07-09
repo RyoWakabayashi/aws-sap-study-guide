@@ -25,7 +25,7 @@
                 <p>10問のランダムクイズに挑戦して、AWSサービスの知識を確認しましょう。</p>
                 <div class="stats">
                     <div class="stat-item">
-                        <span class="stat-number">200+</span>
+                        <span id="total-questions" class="stat-number">-</span>
                         <span class="stat-label">問題数</span>
                     </div>
                     <div class="stat-item">
@@ -33,10 +33,27 @@
                         <span class="stat-label">出題数/回</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-number">3</span>
+                        <span id="total-categories" class="stat-number">-</span>
                         <span class="stat-label">カテゴリ</span>
                     </div>
                 </div>
+                
+                <div class="category-selection">
+                    <div class="category-toggle" id="category-toggle">
+                        <h3>カテゴリを選択 <span class="toggle-icon">▼</span></h3>
+                        <p class="category-instruction">複数選択可能です。選択しない場合は全カテゴリから出題されます。</p>
+                    </div>
+                    <div id="category-content" class="category-content collapsed">
+                        <div id="category-checkboxes" class="category-checkboxes">
+                            <!-- カテゴリチェックボックスがJavaScriptで動的に生成されます -->
+                        </div>
+                        <div class="category-actions">
+                            <button id="select-all-btn" class="btn btn-secondary">全て選択</button>
+                            <button id="clear-all-btn" class="btn btn-secondary">全て解除</button>
+                        </div>
+                    </div>
+                </div>
+                
                 <button id="start-btn" class="btn btn-primary">クイズ開始</button>
             </div>
         </div>
