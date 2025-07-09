@@ -66,6 +66,19 @@
                 <div class="quiz-info">
                     <span id="question-counter">1 / 10</span>
                     <span id="category-badge" class="category-badge">カテゴリ</span>
+                    <div id="timer" class="timer">
+                        <span id="timer-text">30</span>
+                        <div id="timer-circle" class="timer-circle">
+                            <svg class="timer-svg" viewBox="0 0 36 36">
+                                <path class="timer-bg" d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                <path id="timer-progress" class="timer-progress" d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -103,6 +116,10 @@
                         <div class="result-item">
                             <span class="result-label">不正解数</span>
                             <span id="incorrect-count" class="result-value">0</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">時間切れ</span>
+                            <span id="timeout-count" class="result-value">0</span>
                         </div>
                     </div>
                 </div>

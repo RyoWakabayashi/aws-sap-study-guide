@@ -11,6 +11,12 @@ class QuizGame {
     this.selectedCategories = []
     this.debugMode = this.isDebugMode()
 
+    // Timer variables
+    this.timeLimit = 30 // 30 seconds per question
+    this.timeRemaining = this.timeLimit
+    this.timerInterval = null
+    this.questionAnswered = false
+
     this.initializeElements()
     this.bindEvents()
     this.initializeCategorySelection()
@@ -99,11 +105,16 @@ class QuizGame {
     this.optionsContainer = document.getElementById('options-container')
     this.nextBtn = document.getElementById('next-btn')
 
+    // Timer elements
+    this.timerText = document.getElementById('timer-text')
+    this.timerProgress = document.getElementById('timer-progress')
+
     // Result elements
     this.finalScore = document.getElementById('final-score')
     this.accuracy = document.getElementById('accuracy')
     this.correctCount = document.getElementById('correct-count')
     this.incorrectCount = document.getElementById('incorrect-count')
+    this.timeoutCount = document.getElementById('timeout-count')
     this.performanceMessage = document.getElementById('performance-message')
 
     // Review elements
@@ -312,6 +323,11 @@ class QuizGame {
     this.score = 0
     this.userAnswers = []
     this.nextBtn.style.display = 'none'
+
+    // Reset timer
+    this.stopTimer()
+    this.timeRemaining = this.timeLimit
+    this.questionAnswered = false
   }
 
   getRandomQuestions (count) {
@@ -359,6 +375,9 @@ class QuizGame {
 
     // Hide next button
     this.nextBtn.style.display = 'none'
+
+    // Start timer
+    this.startTimer()
   }
 
   createOptionElement (text, index) {
@@ -369,7 +388,129 @@ class QuizGame {
     return option
   }
 
+  startTimer () {
+    // Reset timer state
+    this.timeRemaining = this.timeLimit
+    this.questionAnswered = false
+
+    // Clear any existing timer
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval)
+    }
+
+    // Update timer display
+    this.updateTimerDisplay()
+
+    // Start countdown
+    this.timerInterval = setInterval(() => {
+      this.timeRemaining--
+      this.updateTimerDisplay()
+
+      if (this.timeRemaining <= 0) {
+        this.handleTimeUp()
+      }
+    }, 1000)
+  }
+
+  updateTimerDisplay () {
+    // Update text
+    this.timerText.textContent = this.timeRemaining
+
+    // Update progress circle
+    const progress = (this.timeRemaining / this.timeLimit) * 100
+    const offset = 100 - progress
+    this.timerProgress.style.strokeDashoffset = offset
+
+    // Update colors based on remaining time
+    // Reset classes for timer text (regular HTML element)
+    this.timerText.className = ''
+
+    // Reset classes for timer progress (SVG element) - use setAttribute for safety
+    this.timerProgress.setAttribute('class', 'timer-progress')
+
+    if (this.timeRemaining <= 5) {
+      this.timerText.classList.add('danger')
+      this.timerProgress.setAttribute('class', 'timer-progress danger')
+    } else if (this.timeRemaining <= 10) {
+      this.timerText.classList.add('warning')
+      this.timerProgress.setAttribute('class', 'timer-progress warning')
+    }
+  }
+
+  stopTimer () {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval)
+      this.timerInterval = null
+    }
+  }
+
+  handleTimeUp () {
+    if (this.questionAnswered) {
+      return // Question already answered
+    }
+
+    this.stopTimer()
+    this.questionAnswered = true
+
+    // Mark as incorrect (no answer selected)
+    const question = this.currentQuestions[this.currentQuestionIndex]
+    this.userAnswers.push({
+      questionIndex: this.currentQuestionIndex,
+      selectedAnswer: -1, // -1 indicates no answer (time up)
+      correctAnswer: question.correct,
+      isCorrect: false,
+      timeUp: true
+    })
+
+    // Show correct answer
+    const options = this.optionsContainer.querySelectorAll('.option')
+    options.forEach((option, index) => {
+      option.classList.add('disabled')
+      option.style.pointerEvents = 'none'
+
+      if (index === question.correct) {
+        option.classList.add('correct')
+      }
+    })
+
+    // Show next button
+    this.nextBtn.style.display = 'block'
+
+    // Show time up message
+    this.showTimeUpMessage()
+  }
+
+  showTimeUpMessage () {
+    // Create and show time up notification
+    const notification = document.createElement('div')
+    notification.className = 'time-up-notification'
+    notification.innerHTML = `
+      <div class="notification-content">
+        <span class="notification-icon">⏰</span>
+        <span class="notification-text">時間切れです！</span>
+      </div>
+    `
+
+    document.body.appendChild(notification)
+
+    // Remove notification after 2 seconds
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification)
+      }
+    }, 2000)
+  }
+
   selectOption (selectedIndex, selectedElement) {
+    // Check if question already answered or time is up
+    if (this.questionAnswered) {
+      return
+    }
+
+    // Stop timer
+    this.stopTimer()
+    this.questionAnswered = true
+
     const question = this.currentQuestions[this.currentQuestionIndex]
     const isCorrect = selectedIndex === question.correct
 
@@ -391,10 +532,12 @@ class QuizGame {
 
     // Record user answer
     this.userAnswers.push({
-      questionId: question.id,
-      selectedIndex,
+      questionIndex: this.currentQuestionIndex,
+      selectedAnswer: selectedIndex,
+      correctAnswer: question.correct,
       isCorrect,
-      question
+      timeRemaining: this.timeRemaining,
+      timeUp: false
     })
 
     // Update score
@@ -421,40 +564,51 @@ class QuizGame {
       (this.score / this.totalQuestions) * 100
     )
     const incorrectCount = this.totalQuestions - this.score
+    const timeoutCount = this.userAnswers.filter(answer => answer.timeUp).length
 
     // Update result display
     this.finalScore.textContent = this.score
     this.accuracy.textContent = `${accuracyPercent}%`
     this.correctCount.textContent = this.score
     this.incorrectCount.textContent = incorrectCount
+    this.timeoutCount.textContent = timeoutCount
 
     // Show performance message
     this.performanceMessage.innerHTML =
-      this.getPerformanceMessage(accuracyPercent)
+      this.getPerformanceMessage(accuracyPercent, timeoutCount)
 
     this.showScreen('result-screen')
   }
 
-  getPerformanceMessage (accuracy) {
+  getPerformanceMessage (accuracy, timeoutCount) {
+    let timeoutMessage = ''
+    if (timeoutCount > 0) {
+      timeoutMessage = `<p style="color: #ff9800; margin-top: 0.5rem;"><strong>⏰ ${timeoutCount}問で時間切れになりました。</strong><br>実際の試験では時間管理も重要です。</p>`
+    }
+
     if (accuracy >= 90) {
       return `
                 <h3 style="color: #28a745;">🎉 素晴らしい！</h3>
                 <p>AWS Solution Architect Professional試験に向けて、非常に良い準備ができています。この調子で頑張ってください！</p>
+                ${timeoutMessage}
             `
     } else if (accuracy >= 70) {
       return `
                 <h3 style="color: #17a2b8;">👍 良い結果です！</h3>
                 <p>基本的な知識は身についています。間違えた問題を復習して、さらに理解を深めましょう。</p>
+                ${timeoutMessage}
             `
     } else if (accuracy >= 50) {
       return `
                 <h3 style="color: #ffc107;">📚 もう少し頑張りましょう</h3>
                 <p>基礎知識はありますが、まだ改善の余地があります。解答を確認して、弱点を克服しましょう。</p>
+                ${timeoutMessage}
             `
     } else {
       return `
                 <h3 style="color: #dc3545;">💪 継続的な学習が必要です</h3>
                 <p>AWSサービスの基本的な特徴をもう一度学習し直すことをお勧めします。解答確認で詳細を確認してください。</p>
+                ${timeoutMessage}
             `
     }
   }
@@ -474,27 +628,36 @@ class QuizGame {
     const item = document.createElement('div')
     item.className = 'review-item'
 
-    const question = answer.question
-    const userAnswerText = question.options[answer.selectedIndex]
-    const correctAnswerText = question.options[question.correct]
+    const question = this.currentQuestions[answer.questionIndex]
+    let userAnswerText = '回答なし（時間切れ）'
+    let resultText = '❌ 時間切れ'
+    let resultClass = 'timeout'
+
+    if (!answer.timeUp) {
+      userAnswerText = question.options[answer.selectedAnswer]
+      resultText = answer.isCorrect ? '✅ 正解' : '❌ 不正解'
+      resultClass = answer.isCorrect ? 'correct' : 'incorrect'
+    }
+
+    const correctAnswerText = question.options[answer.correctAnswer]
+    const timeInfo = answer.timeUp
+      ? '<div class="review-time timeout"><strong>⏰ 時間切れ</strong></div>'
+      : `<div class="review-time"><strong>回答時間:</strong> ${this.timeLimit - answer.timeRemaining}秒</div>`
 
     item.innerHTML = `
             <div class="review-question">
-                <strong>問題 ${index + 1}:</strong> ${question.question}
+                <strong>問題 ${answer.questionIndex + 1}:</strong> ${question.question}
             </div>
             <div class="review-answer user">
                 <strong>あなたの回答:</strong> ${userAnswerText}
             </div>
-            <div class="review-answer ${
-              answer.isCorrect ? 'correct' : 'incorrect'
-            }">
+            <div class="review-answer correct">
                 <strong>正解:</strong> ${correctAnswerText}
             </div>
-            <div class="review-answer">
-                <strong>結果:</strong> ${
-                  answer.isCorrect ? '✅ 正解' : '❌ 不正解'
-                }
+            <div class="review-answer ${resultClass}">
+                <strong>結果:</strong> ${resultText}
             </div>
+            ${timeInfo}
             <div class="review-explanation">
                 <strong>解説:</strong> ${question.explanation}
             </div>
