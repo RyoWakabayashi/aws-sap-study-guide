@@ -1362,6 +1362,53 @@ footer {
     font-size: 0.9rem;
 }
 
+/* 復習モード用スタイル */
+.review-mode-indicator {
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+    box-shadow: 0 2px 4px rgba(255, 152, 0, 0.3);
+}
+
+.review-mode-header {
+    background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+    border: 2px solid #ff9800;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.review-mode-title {
+    color: #e65100;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+}
+
+.review-mode-description {
+    color: #bf360c;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #f57c00 0%, #ef6c00 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 152, 0, 0.3);
+}
+
 /* Question Count Selection Styles */
 .question-count-selection {
     margin: 2rem 0;
@@ -1497,5 +1544,35 @@ footer {
     
     .celebration-overlay {
         padding: 1rem;
+    }
+    
+    /* 復習モードのレスポンシブ対応 */
+    .review-mode-indicator {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+        margin-left: 0.3rem;
+    }
+    
+    .review-mode-header {
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .review-mode-title {
+        font-size: 1rem;
+    }
+    
+    .review-mode-description {
+        font-size: 0.8rem;
+    }
+    
+    .result-actions {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .result-actions .btn {
+        width: 100%;
+        max-width: 300px;
     }
 }

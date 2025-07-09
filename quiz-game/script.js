@@ -21,6 +21,12 @@ class QuizGame {
     this.timerInterval = null
     this.questionAnswered = false
 
+    // 復習モード関連
+    this.isReviewMode = false
+    this.incorrectQuestions = []
+    this.originalUserAnswers = []
+    this.originalQuestions = [] // 元の問題データを保存
+
     this.initializeElements()
     this.bindEvents()
     this.initializeCategorySelection()
@@ -138,6 +144,7 @@ class QuizGame {
     this.startBtn = document.getElementById('start-btn')
     this.retryBtn = document.getElementById('retry-btn')
     this.reviewBtn = document.getElementById('review-btn')
+    this.reviewIncorrectBtn = document.getElementById('review-incorrect-btn')
     this.backToResultBtn = document.getElementById('back-to-result-btn')
   }
 
@@ -146,6 +153,7 @@ class QuizGame {
     this.nextBtn.addEventListener('click', () => this.nextQuestion())
     this.retryBtn.addEventListener('click', () => this.restartQuiz())
     this.reviewBtn.addEventListener('click', () => this.showReview())
+    this.reviewIncorrectBtn.addEventListener('click', () => this.startIncorrectReview())
     this.backToResultBtn.addEventListener('click', () =>
       this.showScreen('result-screen')
     )
@@ -267,6 +275,52 @@ class QuizGame {
     }
   }
 
+  startIncorrectReview () {
+    // 間違った問題を抽出
+    this.incorrectQuestions = this.userAnswers.filter(answer => !answer.isCorrect)
+
+    if (this.incorrectQuestions.length === 0) {
+      alert('間違った問題がありません。全問正解おめでとうございます！')
+      return
+    }
+
+    // 元の問題データが存在するかチェック
+    if (!this.originalQuestions || this.originalQuestions.length === 0) {
+      console.error('❌ Original questions data not found')
+      alert('復習データが見つかりません。もう一度クイズを開始してください。')
+      return
+    }
+
+    // 復習モードの設定
+    this.isReviewMode = true
+    this.originalUserAnswers = [...this.userAnswers] // 元の回答を保存
+
+    // 間違った問題のみでクイズを再構成
+    this.currentQuestions = this.incorrectQuestions.map(answer => {
+      const originalQuestion = this.originalQuestions[answer.questionIndex]
+      if (!originalQuestion) {
+        console.error(`❌ Question not found at index ${answer.questionIndex}`)
+        return null
+      }
+      return originalQuestion
+    }).filter(q => q !== null) // nullを除外
+
+    // 復習用の設定
+    this.totalQuestions = this.currentQuestions.length
+    this.currentQuestionIndex = 0
+    this.score = 0
+    this.userAnswers = []
+    this.currentStreak = 0
+    this.maxStreak = 0
+
+    console.log(`🔄 Starting incorrect review mode with ${this.totalQuestions} questions`)
+
+    // 復習モードでクイズ開始
+    this.showScreen('quiz-screen')
+    this.displayQuestion()
+    this.startTimer()
+  }
+
   toggleCategorySelection () {
     const isCollapsed = this.categoryContent.classList.contains('collapsed')
 
@@ -331,6 +385,11 @@ class QuizGame {
         `選択されたカテゴリには${this.currentQuestions.length}問しかありません。\n${this.currentQuestions.length}問でクイズを開始します。`
       )
       this.totalQuestions = this.currentQuestions.length
+    }
+
+    // 復習機能のために元の問題データを保存（復習モードでない場合のみ）
+    if (!this.isReviewMode) {
+      this.originalQuestions = [...this.currentQuestions]
     }
 
     if (this.debugMode) {
@@ -477,6 +536,28 @@ class QuizGame {
     this.questionCounter.textContent = `${this.currentQuestionIndex + 1} / ${
       this.totalQuestions
     }`
+
+    // 復習モードの表示
+    if (this.isReviewMode) {
+      // 復習モードインジケーターを追加
+      if (!document.querySelector('.review-mode-indicator')) {
+        const indicator = document.createElement('span')
+        indicator.className = 'review-mode-indicator'
+        indicator.textContent = '復習モード'
+        this.questionCounter.parentNode.appendChild(indicator)
+      }
+
+      // 復習モードヘッダーを追加
+      if (!document.querySelector('.review-mode-header')) {
+        const header = document.createElement('div')
+        header.className = 'review-mode-header'
+        header.innerHTML = `
+          <div class="review-mode-title">📚 間違った問題の復習</div>
+          <div class="review-mode-description">前回間違えた問題を再度挑戦しています</div>
+        `
+        this.questionText.parentNode.insertBefore(header, this.questionText)
+      }
+    }
     this.categoryBadge.textContent = question.category
     this.questionText.textContent = question.question
 
@@ -1035,7 +1116,43 @@ class QuizGame {
     this.performanceMessage.innerHTML =
       this.getPerformanceMessage(accuracyPercent, timeoutCount)
 
+    // 復習ボタンの表示制御
+    this.updateReviewButton(incorrectCount)
+
     this.showScreen('result-screen')
+  }
+
+  updateReviewButton (incorrectCount) {
+    if (this.isReviewMode) {
+      // 復習モードの場合は復習ボタンを非表示
+      this.reviewIncorrectBtn.style.display = 'none'
+
+      // 復習完了メッセージを表示
+      const reviewCompleteMessage = document.createElement('div')
+      reviewCompleteMessage.className = 'review-complete-message'
+      reviewCompleteMessage.innerHTML = `
+        <div style="background: #e8f5e8; border: 2px solid #4caf50; border-radius: 8px; padding: 1rem; margin: 1rem 0; text-align: center;">
+          <h4 style="color: #2e7d32; margin: 0 0 0.5rem 0;">🎯 復習完了！</h4>
+          <p style="color: #388e3c; margin: 0;">間違った問題の復習が完了しました。理解度が向上しました！</p>
+        </div>
+      `
+
+      // 既存のメッセージがあれば削除
+      const existing = document.querySelector('.review-complete-message')
+      if (existing) {
+        existing.remove()
+      }
+
+      this.performanceMessage.appendChild(reviewCompleteMessage)
+    } else {
+      // 通常モードで間違いがある場合は復習ボタンを表示
+      if (incorrectCount > 0) {
+        this.reviewIncorrectBtn.style.display = 'inline-block'
+        this.reviewIncorrectBtn.textContent = `間違った問題を復習 (${incorrectCount}問)`
+      } else {
+        this.reviewIncorrectBtn.style.display = 'none'
+      }
+    }
   }
 
   showQuizCompletionCelebration (accuracy) {
@@ -1120,19 +1237,28 @@ class QuizGame {
   showReview () {
     this.reviewContent.innerHTML = ''
 
-    this.userAnswers.forEach((answer, index) => {
-      const reviewItem = this.createReviewItem(answer, index)
+    // 復習モードの場合は元の回答データを使用
+    const answersToReview = this.isReviewMode ? this.originalUserAnswers : this.userAnswers
+    const questionsToReview = this.isReviewMode ? this.originalQuestions : this.currentQuestions
+
+    answersToReview.forEach((answer, index) => {
+      const reviewItem = this.createReviewItem(answer, index, questionsToReview)
       this.reviewContent.appendChild(reviewItem)
     })
 
     this.showScreen('review-screen')
   }
 
-  createReviewItem (answer, index) {
+  createReviewItem (answer, index, questionsArray) {
     const item = document.createElement('div')
     item.className = 'review-item'
 
-    const question = this.currentQuestions[answer.questionIndex]
+    const question = questionsArray[answer.questionIndex]
+    if (!question) {
+      console.error(`❌ Question not found at index ${answer.questionIndex}`)
+      return item
+    }
+
     let userAnswerText = '回答なし（時間切れ）'
     let resultText = '❌ 時間切れ'
     let resultClass = 'timeout'
@@ -1205,6 +1331,28 @@ class QuizGame {
   }
 
   restartQuiz () {
+    // 復習モードをリセット
+    this.isReviewMode = false
+    this.incorrectQuestions = []
+    this.originalUserAnswers = []
+    this.originalQuestions = []
+
+    // 復習モード表示要素を削除
+    const reviewIndicator = document.querySelector('.review-mode-indicator')
+    if (reviewIndicator) {
+      reviewIndicator.remove()
+    }
+
+    const reviewHeader = document.querySelector('.review-mode-header')
+    if (reviewHeader) {
+      reviewHeader.remove()
+    }
+
+    const reviewCompleteMessage = document.querySelector('.review-complete-message')
+    if (reviewCompleteMessage) {
+      reviewCompleteMessage.remove()
+    }
+
     // 問題数は現在の選択を維持
     this.showScreen('start-screen')
   }
