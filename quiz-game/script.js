@@ -654,6 +654,11 @@ class QuizGame {
         if (correctAnswers.includes(originalIndex)) {
           option.classList.add('correct')
         }
+
+        // 時間切れの場合、選択された項目があれば表示
+        if (this.selectedAnswers && this.selectedAnswers.includes(originalIndex)) {
+          option.classList.add('user-selected')
+        }
       })
 
       // Hide submit button if exists
@@ -864,10 +869,18 @@ class QuizGame {
       // シャッフルされた表示位置から元のインデックスを取得
       const originalIndex = this.currentShuffleMapping[displayIdx]
 
-      if (correctAnswers.includes(originalIndex)) {
+      const isCorrectAnswer = correctAnswers.includes(originalIndex)
+      const isUserSelected = selectedAnswers.includes(originalIndex)
+
+      if (isCorrectAnswer) {
         option.classList.add('correct')
-      } else if (selectedAnswers.includes(originalIndex)) {
-        option.classList.add('incorrect')
+      }
+
+      if (isUserSelected) {
+        option.classList.add('user-selected')
+        if (!isCorrectAnswer) {
+          option.classList.add('incorrect')
+        }
       }
     })
 
@@ -876,8 +889,8 @@ class QuizGame {
       this.submitBtn.style.display = 'none'
     }
 
-    // Show explanation
-    this.showExplanation(question.explanation)
+    // Show explanation with detailed results for multiple choice
+    this.showMultipleChoiceResults(question, correctAnswers, selectedAnswers, isCorrect)
 
     // Record user answer
     this.userAnswers.push({
@@ -1129,4 +1142,91 @@ if ('serviceWorker' in navigator) {
         console.log('❌ SW registration failed: ', registrationError)
       })
   })
+}
+
+// 複数選択問題の結果表示関数をQuizGameクラスに追加
+QuizGame.prototype.showMultipleChoiceResults = function (question, correctAnswers, selectedAnswers, isCorrect) {
+  // 結果の詳細を作成
+  const resultSummary = this.createMultipleChoiceResultSummary(
+    question, correctAnswers, selectedAnswers, isCorrect
+  )
+
+  // 解説と結果を表示
+  this.explanationContainer.style.display = 'block'
+  this.explanationText.innerHTML = `
+    ${resultSummary}
+    <div class="explanation-divider"></div>
+    <strong>解説:</strong><br>
+    ${question.explanation}
+  `
+}
+
+QuizGame.prototype.createMultipleChoiceResultSummary = function (question, correctAnswers, selectedAnswers, isCorrect) {
+  const resultClass = isCorrect ? 'result-correct' : 'result-incorrect'
+  const resultIcon = isCorrect ? '✅' : '❌'
+  const resultText = isCorrect ? '正解' : '不正解'
+
+  let summary = `
+    <div class="multiple-choice-result ${resultClass}">
+      <h4>${resultIcon} ${resultText}</h4>
+  `
+
+  // 正解の選択肢を表示
+  const correctOptions = correctAnswers.map(index => `• ${question.options[index]}`).join('<br>')
+  summary += `
+    <div class="result-section">
+      <strong>正解:</strong><br>
+      <div class="correct-answers">${correctOptions}</div>
+    </div>
+  `
+
+  // ユーザーの選択を表示
+  if (selectedAnswers.length > 0) {
+    const selectedOptions = selectedAnswers.map(index => {
+      const isCorrectChoice = correctAnswers.includes(index)
+      const icon = isCorrectChoice ? '✅' : '❌'
+      return `${icon} ${question.options[index]}`
+    }).join('<br>')
+
+    summary += `
+      <div class="result-section">
+        <strong>あなたの選択:</strong><br>
+        <div class="user-answers">${selectedOptions}</div>
+      </div>
+    `
+  } else {
+    summary += `
+      <div class="result-section">
+        <strong>あなたの選択:</strong><br>
+        <div class="user-answers no-selection">選択なし</div>
+      </div>
+    `
+  }
+
+  // 見逃した正解があるかチェック
+  const missedCorrect = correctAnswers.filter(index => !selectedAnswers.includes(index))
+  if (missedCorrect.length > 0) {
+    const missedOptions = missedCorrect.map(index => `• ${question.options[index]}`).join('<br>')
+    summary += `
+      <div class="result-section missed-correct">
+        <strong>見逃した正解:</strong><br>
+        <div class="missed-answers">${missedOptions}</div>
+      </div>
+    `
+  }
+
+  // 間違って選択した選択肢があるかチェック
+  const wrongSelections = selectedAnswers.filter(index => !correctAnswers.includes(index))
+  if (wrongSelections.length > 0) {
+    const wrongOptions = wrongSelections.map(index => `• ${question.options[index]}`).join('<br>')
+    summary += `
+      <div class="result-section wrong-selections">
+        <strong>間違って選択:</strong><br>
+        <div class="wrong-answers">${wrongOptions}</div>
+      </div>
+    `
+  }
+
+  summary += '</div>'
+  return summary
 }

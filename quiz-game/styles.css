@@ -417,17 +417,158 @@ header p {
     border-color: #28a745;
     background: #d4edda;
     color: #155724;
+    position: relative;
 }
 
 .option.incorrect {
     border-color: #dc3545;
     background: #f8d7da;
     color: #721c24;
+    position: relative;
 }
 
-.option.disabled {
-    cursor: not-allowed;
-    opacity: 0.7;
+/* 複数選択問題の正解・不正解表示の改善 */
+.option.multiple-choice.correct::after {
+    content: '✓ 正解';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #28a745;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+}
+
+.option.multiple-choice.incorrect::after {
+    content: '✗ 不正解';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #dc3545;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+}
+
+.option.multiple-choice.user-selected {
+    border-color: #007bff;
+    background: #e3f2fd;
+    color: #0d47a1;
+}
+
+.option.multiple-choice.user-selected::before {
+    content: '選択済み';
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #007bff;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    z-index: 1;
+}
+
+.option.multiple-choice.user-selected.correct::before {
+    background: #28a745;
+    content: '選択済み';
+}
+
+.option.multiple-choice.user-selected.incorrect::before {
+    background: #dc3545;
+    content: '選択済み';
+}
+
+/* 複数選択問題の結果表示スタイル */
+.multiple-choice-result {
+    background: #f8f9fa;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.multiple-choice-result.result-correct {
+    border-color: #28a745;
+    background: #d4edda;
+}
+
+.multiple-choice-result.result-incorrect {
+    border-color: #dc3545;
+    background: #f8d7da;
+}
+
+.multiple-choice-result h4 {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+}
+
+.result-section {
+    margin-bottom: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.result-section:last-child {
+    margin-bottom: 0;
+}
+
+.result-section strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: #495057;
+}
+
+.correct-answers {
+    color: #28a745;
+    font-weight: 500;
+}
+
+.user-answers {
+    color: #007bff;
+    font-weight: 500;
+}
+
+.user-answers.no-selection {
+    color: #6c757d;
+    font-style: italic;
+}
+
+.missed-correct {
+    border-left: 4px solid #ffc107;
+    background: #fff3cd;
+}
+
+.missed-answers {
+    color: #856404;
+    font-weight: 500;
+}
+
+.wrong-selections {
+    border-left: 4px solid #dc3545;
+    background: #f8d7da;
+}
+
+.wrong-answers {
+    color: #721c24;
+    font-weight: 500;
+}
+
+.explanation-divider {
+    height: 1px;
+    background: #dee2e6;
+    margin: 1rem 0;
 }
 
 /* Multiple Choice Options */
@@ -724,6 +865,34 @@ footer {
     .streak-counter {
         font-size: 0.7rem;
         padding: 3px 8px;
+    }
+    
+    /* 複数選択問題の結果表示のレスポンシブ対応 */
+    .multiple-choice-result {
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .multiple-choice-result h4 {
+        font-size: 1rem;
+    }
+    
+    .result-section {
+        padding: 0.4rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .option.multiple-choice.correct::after,
+    .option.multiple-choice.incorrect::after {
+        font-size: 0.65rem;
+        padding: 1px 6px;
+        right: 8px;
+    }
+    
+    .option.multiple-choice.user-selected::before {
+        font-size: 0.6rem;
+        padding: 1px 4px;
+        left: 8px;
     }
     
     .timer {
