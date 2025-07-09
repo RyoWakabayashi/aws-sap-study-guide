@@ -67,6 +67,7 @@
                     <div class="quiz-info-left">
                         <span id="question-counter">1 / 10</span>
                         <span id="category-badge" class="category-badge">カテゴリ</span>
+                        <span id="streak-counter" class="streak-counter">🔥 0</span>
                     </div>
                     <div class="quiz-info-right">
                         <button id="next-btn" class="btn btn-primary btn-compact" style="display: none;">次の問題</button>
@@ -127,6 +128,10 @@
                         <div class="result-item">
                             <span class="result-label">時間切れ</span>
                             <span id="timeout-count" class="result-value">0</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">最大連続正解</span>
+                            <span id="max-streak" class="result-value">🔥 0</span>
                         </div>
                     </div>
                 </div>

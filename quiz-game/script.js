@@ -11,6 +11,10 @@ class QuizGame {
     this.selectedCategories = []
     this.debugMode = this.isDebugMode()
 
+    // Streak tracking
+    this.currentStreak = 0
+    this.maxStreak = 0
+
     // Timer variables
     this.timeLimit = 30 // 30 seconds per question
     this.timeRemaining = this.timeLimit
@@ -101,6 +105,7 @@ class QuizGame {
     this.progressBar = document.getElementById('progress')
     this.questionCounter = document.getElementById('question-counter')
     this.categoryBadge = document.getElementById('category-badge')
+    this.streakCounter = document.getElementById('streak-counter')
     this.questionText = document.getElementById('question-text')
     this.optionsContainer = document.getElementById('options-container')
     this.nextBtn = document.getElementById('next-btn')
@@ -119,6 +124,7 @@ class QuizGame {
     this.correctCount = document.getElementById('correct-count')
     this.incorrectCount = document.getElementById('incorrect-count')
     this.timeoutCount = document.getElementById('timeout-count')
+    this.maxStreakElement = document.getElementById('max-streak')
     this.performanceMessage = document.getElementById('performance-message')
 
     // Review elements
@@ -328,10 +334,53 @@ class QuizGame {
     this.userAnswers = []
     this.nextBtn.style.display = 'none'
 
+    // Reset streak
+    this.currentStreak = 0
+    this.maxStreak = 0
+    this.updateStreakDisplay()
+
     // Reset timer
     this.stopTimer()
     this.timeRemaining = this.timeLimit
     this.questionAnswered = false
+  }
+
+  updateStreak (isCorrect) {
+    if (isCorrect) {
+      this.currentStreak++
+      if (this.currentStreak > this.maxStreak) {
+        this.maxStreak = this.currentStreak
+      }
+      // アニメーション効果を追加
+      this.animateStreakIncrease()
+    } else {
+      this.currentStreak = 0
+    }
+    this.updateStreakDisplay()
+  }
+
+  updateStreakDisplay () {
+    if (this.streakCounter) {
+      this.streakCounter.textContent = `🔥 ${this.currentStreak}`
+
+      // 連続正解数に応じてスタイルを変更
+      if (this.currentStreak >= 5) {
+        this.streakCounter.style.background = 'linear-gradient(135deg, #ff6b6b, #ff8e53)'
+      } else if (this.currentStreak >= 3) {
+        this.streakCounter.style.background = 'linear-gradient(135deg, #ffa500, #ffcd3c)'
+      } else {
+        this.streakCounter.style.background = 'linear-gradient(135deg, #ff6b6b, #ffa500)'
+      }
+    }
+  }
+
+  animateStreakIncrease () {
+    if (this.streakCounter) {
+      this.streakCounter.classList.add('streak-active')
+      setTimeout(() => {
+        this.streakCounter.classList.remove('streak-active')
+      }, 1000)
+    }
   }
 
   getRandomQuestions (count) {
@@ -635,6 +684,9 @@ class QuizGame {
       })
     }
 
+    // Update streak (time up = incorrect)
+    this.updateStreak(false)
+
     // Show explanation
     this.showExplanation(question.explanation)
 
@@ -727,10 +779,11 @@ class QuizGame {
       timeUp: false
     })
 
-    // Update score
+    // Update score and streak
     if (isCorrect) {
       this.score++
     }
+    this.updateStreak(isCorrect)
 
     // Show next button
     this.nextBtn.style.display = 'block'
@@ -837,10 +890,11 @@ class QuizGame {
       isMultipleChoice: true
     })
 
-    // Update score
+    // Update score and streak
     if (isCorrect) {
       this.score++
     }
+    this.updateStreak(isCorrect)
 
     // Show next button
     this.nextBtn.style.display = 'block'
@@ -869,6 +923,7 @@ class QuizGame {
     this.correctCount.textContent = this.score
     this.incorrectCount.textContent = incorrectCount
     this.timeoutCount.textContent = timeoutCount
+    this.maxStreakElement.textContent = `🔥 ${this.maxStreak}`
 
     // Show performance message
     this.performanceMessage.innerHTML =
