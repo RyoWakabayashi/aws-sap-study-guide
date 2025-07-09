@@ -2,7 +2,7 @@ name: Markdown Lint
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
     paths:
       - "**.md"
   pull_request:

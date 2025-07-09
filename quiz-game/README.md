@@ -1,5 +1,9 @@
 # AWS Solution Architect Professional 試験対策クイズ
 
+[![CI](https://github.com/[username]/[repository]/actions/workflows/ci.yml/badge.svg)](https://github.com/[username]/[repository]/actions/workflows/ci.yml)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 AWS Solution Architect Professional (SAP-C02) 試験に向けたインタラクティブなクイズゲームです。
 
 ## 🎯 特徴
@@ -41,13 +45,43 @@ AWS Solution Architect Professional (SAP-C02) 試験に向けたインタラク�
 - **弱点の把握**: 間違えやすいカテゴリを特定
 - **実践的理解**: サービスの特徴だけでなく使い分けを理解
 
-## 🛠 技術仕様
+## 🛠 開発・CI/CD
 
-- **フロントエンド**: HTML5、CSS3、JavaScript (ES6+)
-- **フレームワーク**: Vanilla JavaScript（ライブラリ不使用）
-- **PWA**: Service Worker対応
-- **レスポンシブ**: CSS Grid、Flexbox使用
-- **ホスティング**: GitHub Pages対応
+### ローカル開発
+
+```bash
+# 依存関係のインストール
+npm install
+
+# 開発サーバー起動
+npm run dev
+
+# コードリント
+npm run lint
+
+# テスト実行
+npm test
+
+# 問題データ検証
+npm run validate-questions
+```
+
+### コード品質
+
+- **JavaScript Standard Style**: 一貫したコードスタイル
+- **自動テスト**: 機能テスト、データ検証
+- **継続的インテグレーション**: GitHub Actions
+- **自動デプロイ**: GitHub Pages
+
+### CI/CD パイプライン
+
+- ✅ **コードリント**: Standard JavaScript Style
+- ✅ **テスト実行**: 機能・データ検証テスト
+- ✅ **問題データ検証**: 構造・内容チェック
+- ✅ **ビルドチェック**: ファイルサイズ・構造検証
+- ✅ **自動デプロイ**: GitHub Pages (本番・プレビュー)
+
+詳細は [CI_README.md](./CI_README.md) を参照してください。
 
 ## 📱 PWA機能
 

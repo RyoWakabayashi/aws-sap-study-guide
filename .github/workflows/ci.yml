@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "quiz-game/**"
+      - ".github/workflows/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "quiz-game/**"
+      - ".github/workflows/**"
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: quiz-game/package-lock.json
+
+      - name: Install dependencies
+        working-directory: quiz-game
+        run: npm ci
+
+      - name: Run Standard linter
+        working-directory: quiz-game
+        run: npm run lint
+
+      - name: Run tests
+        working-directory: quiz-game
+        run: npm test
+
+      - name: Validate questions data
+        working-directory: quiz-game
+        run: npm run validate-questions
+
+      - name: Build check
+        working-directory: quiz-game
+        run: npm run build-check

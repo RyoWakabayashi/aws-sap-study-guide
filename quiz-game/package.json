@@ -7,7 +7,15 @@
     "start": "python3 -m http.server 8000",
     "dev": "python3 -m http.server 8000",
     "serve": "http-server -p 8000 -c-1",
-    "test": "echo \"テスト用のスクリプトを追加してください\" && exit 1"
+    "lint": "standard",
+    "lint:fix": "standard --fix",
+    "test": "node test/test-runner.js",
+    "test:watch": "nodemon --exec \"npm test\"",
+    "validate-questions": "node scripts/validate-questions.js",
+    "build": "node scripts/build.js",
+    "build-check": "node scripts/build-check.js",
+    "precommit": "npm run lint && npm test",
+    "prepare": "husky install"
   },
   "keywords": [
     "aws",
@@ -20,6 +28,30 @@
   "author": "AWS SAP Study Guide",
   "license": "MIT",
   "devDependencies": {
-    "http-server": "^14.1.1"
+    "http-server": "^14.1.1",
+    "standard": "^17.1.2",
+    "husky": "^9.1.7",
+    "nodemon": "^3.1.10",
+    "chalk": "^4.1.2",
+    "jsdom": "^26.1.0"
+  },
+  "standard": {
+    "ignore": [
+      "node_modules/**",
+      "dist/**",
+      "build/**"
+    ],
+    "globals": [
+      "allQuestions",
+      "QuizGame",
+      "navigator",
+      "document",
+      "window",
+      "console",
+      "alert"
+    ]
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }
