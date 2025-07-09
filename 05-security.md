@@ -192,7 +192,7 @@ credentials = response['Credentials']
 ### 公式リソース
 
 - [IAM サービス紹介](https://aws.amazon.com/jp/iam/)
-- [IAM Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_IAM.pdf)
+- [IAM Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2024_AWS-IAM-Access-Analyzer_1231_v1.pdf)
 
 ---
 
@@ -335,7 +335,7 @@ Web アプリケーションファイアウォール。SQL インジェクショ
 ### 公式リソース
 
 - [WAF サービス紹介](https://aws.amazon.com/jp/waf/)
-- [WAF Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_WAF.pdf)
+- [WAF Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/202206_AWS_Black_Belt_AWS_FirewallManager_For_AWS_WAF.pdf)
 
 ---
 
@@ -412,7 +412,7 @@ DDoS 攻撃からの保護サービス。Standard（無料）と Advanced（有�
 ### 公式リソース
 
 - [Shield サービス紹介](https://aws.amazon.com/jp/shield/)
-- [Shield Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_Shield.pdf)
+- [Shield Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/20200818_AWS_BlackBelt_AWS_Shield_Advanced.pdf)
 
 ---
 
@@ -574,7 +574,7 @@ def block_suspicious_ip(detail):
 ### 公式リソース
 
 - [GuardDuty サービス紹介](https://aws.amazon.com/jp/guardduty/)
-- [GuardDuty Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_GuardDuty.pdf)
+- [GuardDuty Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2025_Amazon-GuardDuty-Basic_0131_v1.pdf)
 
 ---
 
@@ -692,7 +692,7 @@ def lambda_handler(event, context):
 ### 公式リソース
 
 - [Security Hub サービス紹介](https://aws.amazon.com/jp/security-hub/)
-- [Security Hub Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_SecurityHub.pdf)
+- [Security Hub Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20201013_AWS-BlackBelt-AWSSecurityHub.pdf)
 
 ---
 
@@ -820,7 +820,7 @@ decrypted = kms.decrypt(
 ### 公式リソース
 
 - [KMS サービス紹介](https://aws.amazon.com/jp/kms/)
-- [KMS Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_KMS.pdf)
+- [KMS Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20160928_AWS-BlackBelt-KMS.pdf)
 
 ---
 
@@ -940,7 +940,7 @@ connection = mysql.connector.connect(
 ### 公式リソース
 
 - [Secrets Manager サービス紹介](https://aws.amazon.com/jp/secrets-manager/)
-- [Secrets Manager Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_SecretsManager.pdf)
+- [Secrets Manager Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AWS-Secrets-Manager_0901_v1.pdf)
 
 ---
 
@@ -1041,7 +1041,7 @@ Resources:
 ### 公式リソース
 
 - [Certificate Manager サービス紹介](https://aws.amazon.com/jp/certificate-manager/)
-- [Certificate Manager Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_CertificateManager.pdf)
+- [Certificate Manager Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AWS-Certificate-Manager_v1.pdf)
 
 ---
 

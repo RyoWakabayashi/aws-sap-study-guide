@@ -203,7 +203,7 @@ https://my-bucket.s3-accelerate.amazonaws.com
 ### 公式リソース
 
 - [S3 サービス紹介](https://aws.amazon.com/jp/s3/)
-- [S3 Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_S3.pdf)
+- [Amazon S3 Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_S3.pdf)
 - [S3 パフォーマンスガイド](https://docs.aws.amazon.com/AmazonS3/latest/userguide/optimizing-performance.html)
 
 ---
@@ -363,7 +363,7 @@ aws ec2 attach-volume \
 ### 公式リソース
 
 - [EBS サービス紹介](https://aws.amazon.com/jp/ebs/)
-- [EBS Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_EBS.pdf)
+- [Amazon EBS Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_EBS.pdf)
 
 ---
 
@@ -508,7 +508,7 @@ fs-12345678.efs.region.amazonaws.com:/ /mnt/efs efs defaults,_netdev 0 0
 ### 公式リソース
 
 - [EFS サービス紹介](https://aws.amazon.com/jp/efs/)
-- [EFS Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_EFS.pdf)
+- [Amazon EFS Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_EFS.pdf)
 
 ---
 
@@ -618,7 +618,7 @@ S3統合: 透明なデータアクセス
 ### 公式リソース
 
 - [FSx サービス紹介](https://aws.amazon.com/jp/fsx/)
-- [FSx Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_FSx.pdf)
+- [Amazon FSx Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_FSx.pdf)
 
 ---
 
@@ -718,7 +718,7 @@ S3統合: 透明なデータアクセス
 ### 公式リソース
 
 - [Storage Gateway サービス紹介](https://aws.amazon.com/jp/storagegateway/)
-- [Storage Gateway Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_StorageGateway.pdf)
+- [AWS Storage Gateway Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_StorageGateway.pdf)
 
 ---
 
@@ -815,7 +815,7 @@ NTP: 時刻同期必須
 ### 公式リソース
 
 - [DataSync サービス紹介](https://aws.amazon.com/jp/datasync/)
-- [DataSync Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_DataSync.pdf)
+- [AWS DataSync Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_DataSync.pdf)
 
 ---
 

@@ -145,7 +145,7 @@
 ### 公式リソース
 
 - [EC2 サービス紹介](https://aws.amazon.com/jp/ec2/)
-- [EC2 Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_EC2.pdf)
+- [EC2 Black Belt](https://aws.amazon.com/jp/blogs/news/aws-black-belt-seminar-amazon-ec2-introduction/)
 - [EC2 インスタンスタイプ](https://aws.amazon.com/jp/ec2/instance-types/)
 
 ---
@@ -283,7 +283,7 @@ Docker コンテナのオーケストレーションサービス。AWS 独自の
 ### 公式リソース
 
 - [ECS サービス紹介](https://aws.amazon.com/jp/ecs/)
-- [ECS Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200804_BlackBelt_ECS.pdf)
+- [ECS Black Belt](https://aws.amazon.com/jp/blogs/news/aws-black-belt-online-seminar-con201-ecs-overview/)
 - [ECS ベストプラクティス](https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/)
 
 ---
@@ -391,7 +391,7 @@ Cluster Autoscaler:
 ### 公式リソース
 
 - [EKS サービス紹介](https://aws.amazon.com/jp/eks/)
-- [EKS Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200825_BlackBelt_EKS.pdf)
+- [EKS Black Belt](https://aws.amazon.com/jp/blogs/news/aws-black-belt-online-seminar-con221-introduction-eks/)
 - [EKS ベストプラクティス](https://aws.github.io/aws-eks-best-practices/)
 
 ---
@@ -525,7 +525,7 @@ Resources:
 ### 公式リソース
 
 - [Lambda サービス紹介](https://aws.amazon.com/jp/lambda/)
-- [Lambda Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_Lambda.pdf)
+- [Lambda Black Belt](https://aws.amazon.com/jp/modern-apps/recommendation-guide/serverless/aws-lambda/)
 - [Lambda ベストプラクティス](https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html)
 
 ---
@@ -618,7 +618,7 @@ fargateProfiles:
 ### 公式リソース
 
 - [Fargate サービス紹介](https://aws.amazon.com/jp/fargate/)
-- [Fargate Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200804_BlackBelt_Fargate.pdf)
+- [Fargate Black Belt](https://aws.amazon.com/jp/blogs/news/webinar-bb-aws-fargate-2019/)
 
 ---
 
@@ -703,7 +703,7 @@ fargateProfiles:
 ### 公式リソース
 
 - [Batch サービス紹介](https://aws.amazon.com/jp/batch/)
-- [Batch Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200825_BlackBelt_Batch.pdf)
+- [Batch Black Belt](https://aws.amazon.com/jp/blogs/news/webinar-bb-aws-batch-2019/)
 
 ---
 
@@ -814,7 +814,7 @@ fargateProfiles:
 ### 公式リソース
 
 - [Auto Scaling サービス紹介](https://aws.amazon.com/jp/autoscaling/)
-- [Auto Scaling Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_AutoScaling.pdf)
+- [Auto Scaling Black Belt](https://aws.amazon.com/jp/blogs/news/webinar-bb-amazon-ec2-auto-scaling-and-aws-auto-scaling-2019/())
 
 ---
 

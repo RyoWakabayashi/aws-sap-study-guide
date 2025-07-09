@@ -220,7 +220,7 @@ fields @timestamp, @message
 ### 公式リソース
 
 - [CloudWatch サービス紹介](https://aws.amazon.com/jp/cloudwatch/)
-- [CloudWatch Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_CloudWatch.pdf)
+- [CloudWatch Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AmazonCloudWatch_0330_v1.pdf)
 
 ---
 
@@ -371,7 +371,7 @@ xray_recorder.put_metadata('request_details', {
 ### 公式リソース
 
 - [X-Ray サービス紹介](https://aws.amazon.com/jp/xray/)
-- [X-Ray Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_XRay.pdf)
+- [X-Ray Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AWS-X-Ray_0228_v1.pdf)
 
 ---
 
@@ -502,7 +502,7 @@ def detect_api_burst():
 ### 公式リソース
 
 - [CloudTrail サービス紹介](https://aws.amazon.com/jp/cloudtrail/)
-- [CloudTrail Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_CloudTrail.pdf)
+- [CloudTrail Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AWS-CloudTrail_0228_v1.pdf)
 
 ---
 
@@ -642,7 +642,7 @@ def evaluate_ec2_instance(config_item):
 ### 公式リソース
 
 - [Config サービス紹介](https://aws.amazon.com/jp/config/)
-- [Config Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_Config.pdf)
+- [Config Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AWS-Config_0228_v1.pdf)
 
 ---
 
@@ -819,7 +819,7 @@ mainSteps:
 ### 公式リソース
 
 - [Systems Manager サービス紹介](https://aws.amazon.com/jp/systems-manager/)
-- [Systems Manager Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_SystemsManager.pdf)
+- [Systems Manager Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AWS-SystemsManager-Hybrid-Activations_0602_v1.pdf)
 
 ---
 

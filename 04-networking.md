@@ -184,7 +184,7 @@ VPC: 10.0.0.0/16 (65,536 IP)
 ### 公式リソース
 
 - [VPC サービス紹介](https://aws.amazon.com/jp/vpc/)
-- [VPC Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_VPC.pdf)
+- [VPC Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20201021_AWS-BlackBelt-VPC.pdf)
 
 ---
 
@@ -314,7 +314,7 @@ Gateway Load Balancer
 ### 公式リソース
 
 - [ELB サービス紹介](https://aws.amazon.com/jp/elasticloadbalancing/)
-- [ELB Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_ELB.pdf)
+- [ELB Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20191029_AWS-Blackbelt_ELB.pdf)
 
 ---
 
@@ -437,7 +437,7 @@ exports.handler = (event, context, callback) => {
 ### 公式リソース
 
 - [CloudFront サービス紹介](https://aws.amazon.com/jp/cloudfront/)
-- [CloudFront Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_CloudFront.pdf)
+- [CloudFront Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20190730_AWS-BlackBelt_Amazon_CloudFront.pdf)
 
 ---
 
@@ -561,7 +561,7 @@ exports.handler = (event, context, callback) => {
 ### 公式リソース
 
 - [Route 53 サービス紹介](https://aws.amazon.com/jp/route53/)
-- [Route 53 Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_Route53.pdf)
+- [Route 53 Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AmazonRoute53-hostedZone_0531_V1.pdf)
 
 ---
 
@@ -667,7 +667,7 @@ Backup: VPN over Internet
 ### 公式リソース
 
 - [Direct Connect サービス紹介](https://aws.amazon.com/jp/directconnect/)
-- [Direct Connect Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_DirectConnect.pdf)
+- [Direct Connect Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20210209-AWS-Blackbelt-DirectConnect.pdf)
 
 ---
 
@@ -733,7 +733,7 @@ VPN Gateway:
 ### 公式リソース
 
 - [VPN サービス紹介](https://aws.amazon.com/jp/vpn/)
-- [VPN Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_VPN.pdf)
+- [VPN Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/202110_AWS_Black_Belt_Site-to-Site_VPN.pdf)
 
 ---
 
@@ -814,7 +814,7 @@ aws ec2 create-route \
 ### 公式リソース
 
 - [Transit Gateway サービス紹介](https://aws.amazon.com/jp/transit-gateway/)
-- [Transit Gateway Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_TransitGateway.pdf)
+- [Transit Gateway Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20191113_AWS-BlackBelt_Transit_Gateway.pdf)
 
 ---
 
@@ -928,7 +928,7 @@ def generate_policy(principal_id, effect, resource):
 ### 公式リソース
 
 - [API Gateway サービス紹介](https://aws.amazon.com/jp/api-gateway/)
-- [API Gateway Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_APIGateway.pdf)
+- [API Gateway Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20190514_AWS-Blackbelt_APIGateway.pdf)
 
 ---
 

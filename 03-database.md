@@ -128,7 +128,7 @@ Magnetic:
 ### 公式リソース
 
 - [RDS サービス紹介](https://aws.amazon.com/jp/rds/)
-- [RDS Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_RDS.pdf)
+- [RDS Black Belt](https://aws.amazon.com/jp/blogs/news/webinar-bb-rds-2018/)
 
 ---
 
@@ -263,7 +263,7 @@ SELECT comprehend_detect_sentiment('This is great!') as sentiment;
 ### 公式リソース
 
 - [Aurora サービス紹介](https://aws.amazon.com/jp/rds/aurora/)
-- [Aurora Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_Aurora.pdf)
+- [Aurora Black Belt](https://aws.amazon.com/jp/blogs/news/webinar-bb-amazon-aurora-mysql-2019/)
 
 ---
 
@@ -459,7 +459,7 @@ def lambda_handler(event, context):
 ### 公式リソース
 
 - [DynamoDB サービス紹介](https://aws.amazon.com/jp/dynamodb/)
-- [DynamoDB Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_DynamoDB.pdf)
+- [DynamoDB Black Belt](https://docs.aws.amazon.com/ja_jp/dynamodb/)
 
 ---
 
@@ -509,7 +509,7 @@ mongorestore --host docdb-cluster.cluster-xxx.docdb.amazonaws.com:27017 \
 ### 公式リソース
 
 - [DocumentDB サービス紹介](https://aws.amazon.com/jp/documentdb/)
-- [DocumentDB Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_DocumentDB.pdf)
+- [DocumentDB Black Belt](https://docs.aws.amazon.com/ja_jp/documentdb/latest/developerguide/connect_programmatically.html)
 
 ---
 
@@ -555,7 +555,7 @@ RDF (SPARQL):
 ### 公式リソース
 
 - [Neptune サービス紹介](https://aws.amazon.com/jp/neptune/)
-- [Neptune Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_Neptune.pdf)
+- [Neptune Black Belt](https://aws.amazon.com/jp/blogs/news/webinar-bb-amazon-neptune-2020/)
 
 ---
 
@@ -607,7 +607,7 @@ RDF (SPARQL):
 ### 公式リソース
 
 - [Redshift サービス紹介](https://aws.amazon.com/jp/redshift/)
-- [Redshift Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_Redshift.pdf)
+- [Redshift Black Belt](https://aws.amazon.com/jp/blogs/news/bb-amazon-redshift-2023/)
 
 ---
 
@@ -647,7 +647,7 @@ RDF (SPARQL):
 ### 公式リソース
 
 - [ElastiCache サービス紹介](https://aws.amazon.com/jp/elasticache/)
-- [ElastiCache Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_ElastiCache.pdf)
+- [ElastiCache Black Belt](https://docs.aws.amazon.com/ja_jp/AmazonElastiCache/latest/dg/WhatIs.corecomponents.html)
 
 ---
 
