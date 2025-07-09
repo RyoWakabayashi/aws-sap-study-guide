@@ -150,6 +150,27 @@ header p {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-weight: 500;
+}
+
+.quiz-info-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.quiz-info-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btn-compact {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    min-width: auto;
+    white-space: nowrap;
 }
 
 .category-badge {
@@ -289,6 +310,56 @@ header p {
     margin-bottom: 1.5rem;
     line-height: 1.5;
     color: #333;
+}
+
+/* Explanation Container */
+.explanation-container {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid #e0e0e0;
+    animation: slideDown 0.3s ease-out;
+}
+
+.explanation-content {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.explanation-title {
+    color: #667eea;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.explanation-title::before {
+    content: "💡";
+    font-size: 1.2rem;
+}
+
+#explanation-text {
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 200px;
+    }
 }
 
 /* Options */
@@ -510,6 +581,34 @@ footer {
         padding: 1.5rem;
     }
     
+    .quiz-info-left,
+    .quiz-info-right {
+        gap: 0.5rem;
+    }
+    
+    .btn-compact {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    .category-badge {
+        font-size: 0.7rem;
+        padding: 3px 8px;
+    }
+    
+    .timer {
+        gap: 0.3rem;
+    }
+    
+    .timer-circle {
+        width: 35px;
+        height: 35px;
+    }
+    
+    #timer-text {
+        font-size: 1rem;
+    }
+    
     .stats {
         flex-direction: column;
         gap: 1rem;
@@ -548,6 +647,27 @@ footer {
 @media (max-width: 480px) {
     header h1 {
         font-size: 1.5rem;
+    }
+    
+    .quiz-info {
+        flex-direction: column;
+        gap: 0.8rem;
+        align-items: stretch;
+    }
+    
+    .quiz-info-left,
+    .quiz-info-right {
+        justify-content: center;
+        gap: 0.8rem;
+    }
+    
+    .quiz-info-right {
+        order: -1;
+    }
+    
+    .btn-compact {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
     }
     
     .question-card h2 {

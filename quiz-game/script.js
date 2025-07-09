@@ -105,6 +105,10 @@ class QuizGame {
     this.optionsContainer = document.getElementById('options-container')
     this.nextBtn = document.getElementById('next-btn')
 
+    // Explanation elements
+    this.explanationContainer = document.getElementById('explanation-container')
+    this.explanationText = document.getElementById('explanation-text')
+
     // Timer elements
     this.timerText = document.getElementById('timer-text')
     this.timerProgress = document.getElementById('timer-progress')
@@ -373,7 +377,8 @@ class QuizGame {
       this.optionsContainer.appendChild(optionElement)
     })
 
-    // Hide next button
+    // Hide explanation and next button
+    this.explanationContainer.style.display = 'none'
     this.nextBtn.style.display = 'none'
 
     // Start timer
@@ -473,6 +478,9 @@ class QuizGame {
       }
     })
 
+    // Show explanation
+    this.showExplanation(question.explanation)
+
     // Show next button
     this.nextBtn.style.display = 'block'
 
@@ -499,6 +507,22 @@ class QuizGame {
         notification.parentNode.removeChild(notification)
       }
     }, 2000)
+  }
+
+  showExplanation (explanationText) {
+    // Set explanation text
+    this.explanationText.textContent = explanationText
+
+    // Show explanation container with animation
+    this.explanationContainer.style.display = 'block'
+
+    // Scroll to explanation if needed
+    setTimeout(() => {
+      this.explanationContainer.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      })
+    }, 100)
   }
 
   selectOption (selectedIndex, selectedElement) {
@@ -529,6 +553,9 @@ class QuizGame {
         option.classList.add('incorrect')
       }
     })
+
+    // Show explanation
+    this.showExplanation(question.explanation)
 
     // Record user answer
     this.userAnswers.push({

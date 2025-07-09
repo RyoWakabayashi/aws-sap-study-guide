@@ -64,19 +64,24 @@
                     <div id="progress" class="progress-fill"></div>
                 </div>
                 <div class="quiz-info">
-                    <span id="question-counter">1 / 10</span>
-                    <span id="category-badge" class="category-badge">カテゴリ</span>
-                    <div id="timer" class="timer">
-                        <span id="timer-text">30</span>
-                        <div id="timer-circle" class="timer-circle">
-                            <svg class="timer-svg" viewBox="0 0 36 36">
-                                <path class="timer-bg" d="M18 2.0845
-                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                    a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                                <path id="timer-progress" class="timer-progress" d="M18 2.0845
-                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                    a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                            </svg>
+                    <div class="quiz-info-left">
+                        <span id="question-counter">1 / 10</span>
+                        <span id="category-badge" class="category-badge">カテゴリ</span>
+                    </div>
+                    <div class="quiz-info-right">
+                        <button id="next-btn" class="btn btn-primary btn-compact" style="display: none;">次の問題</button>
+                        <div id="timer" class="timer">
+                            <span id="timer-text">30</span>
+                            <div id="timer-circle" class="timer-circle">
+                                <svg class="timer-svg" viewBox="0 0 36 36">
+                                    <path class="timer-bg" d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                    <path id="timer-progress" class="timer-progress" d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                </svg>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -88,11 +93,13 @@
                     <div id="options-container" class="options">
                         <!-- 選択肢がJavaScriptで動的に生成されます -->
                     </div>
+                    <div id="explanation-container" class="explanation-container" style="display: none;">
+                        <div class="explanation-content">
+                            <h3 class="explanation-title">解説</h3>
+                            <p id="explanation-text"></p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="quiz-controls">
-                <button id="next-btn" class="btn btn-primary" style="display: none;">次の問題</button>
             </div>
         </div>
 
