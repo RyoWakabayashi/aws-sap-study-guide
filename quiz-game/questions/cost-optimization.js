@@ -199,6 +199,167 @@ const costOptimizationQuestions = [
     options: ['タグの一貫性', 'タグの階層化', 'タグの自動化', 'すべて正しい'],
     correct: 3,
     explanation: '効果的なタグベースコスト配分には、一貫したタグ付け、階層化された構造、自動化されたタグ付けが重要です。'
+  },
+  // 複数選択問題
+  {
+    id: 'cost-optimization-multi-1',
+    category: 'コスト最適化',
+    question: 'EC2のコスト最適化手法として正しいものを3つ選択してください。',
+    options: [
+      'リザーブドインスタンスの活用',
+      'スポットインスタンスの活用',
+      '適切なインスタンスサイズの選択',
+      '常時最大スペックでの運用',
+      'すべてのインスタンスをオンデマンドで運用',
+      'セキュリティグループの最適化'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'EC2コスト最適化：リザーブドインスタンス（長期利用での割引）、スポットインスタンス（最大90%割引）、適切なサイズ選択（過剰スペック回避）。常時最大スペックやオンデマンドのみの運用はコスト効率が悪いです。'
+  },
+  {
+    id: 'cost-optimization-multi-2',
+    category: 'コスト最適化',
+    question: 'S3のコスト最適化手法として正しいものを2つ選択してください。',
+    options: [
+      'ライフサイクルポリシーの設定',
+      '適切なストレージクラスの選択',
+      'すべてのデータをStandardクラスで保存',
+      'バケット数の最大化',
+      'アクセス頻度に関係なく同一クラス使用',
+      'データの重複保存'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'S3コスト最適化：ライフサイクルポリシー（自動的なストレージクラス移行）、適切なストレージクラス選択（アクセス頻度に応じた選択）。すべてStandardクラスや重複保存はコスト効率が悪いです。'
+  },
+  {
+    id: 'cost-optimization-multi-3',
+    category: 'コスト最適化',
+    question: 'AWS Cost Explorerで分析できる項目を3つ選択してください。',
+    options: [
+      'サービス別コスト',
+      'リージョン別コスト',
+      'タグ別コスト',
+      'ユーザー別アクセス頻度',
+      'ネットワークトラフィック詳細',
+      'セキュリティ脆弱性'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS Cost Explorerは、サービス別、リージョン別、タグ別などの様々な軸でコスト分析が可能です。アクセス頻度、ネットワーク詳細、セキュリティ脆弱性は他のサービスで分析します。'
+  },
+  {
+    id: 'cost-optimization-multi-4',
+    category: 'コスト最適化',
+    question: 'AWS Savings Plansの種類として正しいものを2つ選択してください。',
+    options: [
+      'Compute Savings Plans',
+      'EC2 Instance Savings Plans',
+      'S3 Savings Plans',
+      'RDS Savings Plans',
+      'Lambda Savings Plans',
+      'VPC Savings Plans'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS Savings Plansの種類：Compute Savings Plans（EC2、Fargate、Lambda対象）、EC2 Instance Savings Plans（特定のEC2インスタンスファミリー対象）。S3、RDS、VPC専用のSavings Plansは存在しません。'
+  },
+  {
+    id: 'cost-optimization-multi-5',
+    category: 'コスト最適化',
+    question: 'データ転送コストを削減する方法として正しいものを3つ選択してください。',
+    options: [
+      'CloudFrontの活用',
+      'VPC Endpointの使用',
+      'Direct Connectの活用',
+      'すべてのデータをパブリックサブネットに配置',
+      'リージョン間転送の最大化',
+      'NAT Gatewayの多用'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'データ転送コスト削減：CloudFront（エッジキャッシュでオリジンアクセス削減）、VPC Endpoint（AWS内部ネットワーク使用）、Direct Connect（専用線で安価な転送）。パブリック配置やリージョン間転送の増加はコスト増加要因です。'
+  },
+  {
+    id: 'cost-optimization-multi-6',
+    category: 'コスト最適化',
+    question: 'AWS Budgetsの機能として正しいものを2つ選択してください。',
+    options: [
+      'コスト予算の設定と監視',
+      '使用量予算の設定と監視',
+      'リソースの自動削除',
+      'インスタンスの自動停止',
+      'データの自動アーカイブ',
+      'アカウントの自動作成'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS Budgetsの機能：コスト予算の設定と監視（支出上限設定）、使用量予算の設定と監視（リソース使用量上限）、予算超過時のアラート送信。リソース削除、インスタンス停止、データアーカイブ、アカウント作成は行いません。'
+  },
+  {
+    id: 'cost-optimization-multi-7',
+    category: 'コスト最適化',
+    question: 'RDS のコスト最適化手法として正しいものを3つ選択してください。',
+    options: [
+      'Reserved Instancesの活用',
+      '適切なインスタンスサイズの選択',
+      'Multi-AZ配置の見直し',
+      'すべてのデータベースをMulti-AZ化',
+      'バックアップ保持期間の最大化',
+      'リードレプリカの無制限作成'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'RDSコスト最適化：Reserved Instances（長期利用割引）、適切なインスタンスサイズ選択（過剰スペック回避）、Multi-AZ配置の見直し（必要性に応じた選択）。すべてMulti-AZ化、バックアップ期間最大化、リードレプリカ無制限作成はコスト増加要因です。'
+  },
+  {
+    id: 'cost-optimization-multi-8',
+    category: 'コスト最適化',
+    question: 'AWS Cost and Usage Reportの機能として正しいものを2つ選択してください。',
+    options: [
+      '詳細な使用量データの提供',
+      'カスタムコスト分析の実現',
+      'リソースの自動最適化',
+      'コストの自動削減',
+      'インスタンスの自動リサイズ',
+      'データの自動削除'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS Cost and Usage Reportの機能：詳細な使用量データの提供（時間単位、リソース単位）、カスタムコスト分析の実現（BIツールとの連携）。自動最適化、自動削減、自動リサイズ、自動削除は行わず、データ提供のみです。'
+  },
+  {
+    id: 'cost-optimization-multi-9',
+    category: 'コスト最適化',
+    question: 'AWS Trusted Advisorのコスト最適化チェック項目として正しいものを3つ選択してください。',
+    options: [
+      '未使用のEBSボリューム',
+      'アイドル状態のRDSインスタンス',
+      '低使用率のEC2インスタンス',
+      'セキュリティグループの設定',
+      'IAMポリシーの複雑さ',
+      'ネットワーク設定の最適化'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'Trusted Advisorのコスト最適化チェック：未使用EBSボリューム、アイドル状態のRDSインスタンス、低使用率のEC2インスタンス、未使用のElastic IP等。セキュリティグループ、IAMポリシー、ネットワーク設定は他のカテゴリーです。'
+  },
+  {
+    id: 'cost-optimization-multi-10',
+    category: 'コスト最適化',
+    question: 'Lambda のコスト最適化手法として正しいものを2つ選択してください。',
+    options: [
+      'メモリ割り当ての最適化',
+      '実行時間の短縮',
+      'プロビジョンド同時実行の最大化',
+      'タイムアウト値の最大化',
+      'VPC設定の必須化',
+      'デプロイパッケージサイズの最大化'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'Lambdaコスト最適化：メモリ割り当ての最適化（必要最小限に設定）、実行時間の短縮（効率的なコード）。プロビジョンド同時実行の最大化、タイムアウト最大化、VPC必須化、パッケージサイズ最大化はコスト増加要因です。'
   }
 ]
 

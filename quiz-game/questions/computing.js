@@ -239,6 +239,167 @@ const computingQuestions = [
     options: ['Cluster Autoscaler', 'Horizontal Pod Autoscaler', 'Vertical Pod Autoscaler', 'Karpenter'],
     correct: 1,
     explanation: 'Horizontal Pod Autoscaler（HPA）は、メトリクスに基づいてPodの数を自動的にスケールします。'
+  },
+  // 複数選択問題
+  {
+    id: 'computing-multi-1',
+    category: 'コンピューティング',
+    question: 'EC2インスタンスの高可用性を実現するために使用できるAWSサービスを2つ選択してください。',
+    options: [
+      'Auto Scaling Groups',
+      'Elastic Load Balancer',
+      'CloudFront',
+      'Route 53',
+      'S3',
+      'RDS'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'Auto Scaling Groupsは複数のAZにインスタンスを分散配置し、Elastic Load Balancerは複数のインスタンス間でトラフィックを分散することで高可用性を実現します。'
+  },
+  {
+    id: 'computing-multi-2',
+    category: 'コンピューティング',
+    question: 'AWS Lambdaの制限事項として正しいものを3つ選択してください。',
+    options: [
+      '実行時間は最大15分',
+      'メモリは最大10GB',
+      'デプロイパッケージサイズは最大50MB（zip圧縮時）',
+      '同時実行数は無制限',
+      'ファイルシステムアクセスは不可',
+      'VPC内のリソースにアクセス可能'
+    ],
+    correct: [0, 2, 4],
+    multipleChoice: true,
+    explanation: 'Lambdaの制限：実行時間最大15分、デプロイパッケージ50MB（zip）、デフォルトではファイルシステムアクセス不可（EFSマウント除く）。メモリは最大10GB、同時実行数にはデフォルト制限があります。'
+  },
+  {
+    id: 'computing-multi-3',
+    category: 'コンピューティング',
+    question: 'ECS Fargateの特徴として正しいものを2つ選択してください。',
+    options: [
+      'EC2インスタンスの管理が必要',
+      'サーバーレスでコンテナを実行',
+      'Kubernetesベース',
+      'タスク単位での課金',
+      'Docker Swarmをサポート',
+      'Windows コンテナのみサポート'
+    ],
+    correct: [1, 3],
+    multipleChoice: true,
+    explanation: 'ECS Fargateはサーバーレスでコンテナを実行でき、実行したタスクの分だけ課金されます。EC2インスタンスの管理は不要で、DockerコンテナをサポートしますがKubernetesベースではありません。'
+  },
+  {
+    id: 'computing-multi-4',
+    category: 'コンピューティング',
+    question: 'EC2スポットインスタンスを使用する際の考慮事項として正しいものを3つ選択してください。',
+    options: [
+      'インスタンスが突然終了する可能性がある',
+      '価格が固定されている',
+      'ステートレスなワークロードに適している',
+      'データベースサーバーに最適',
+      'バッチ処理に適している',
+      'SLAが保証されている'
+    ],
+    correct: [0, 2, 4],
+    multipleChoice: true,
+    explanation: 'スポットインスタンスは需要に応じて突然終了する可能性があるため、ステートレスなワークロードやバッチ処理に適しています。価格は変動し、SLAは保証されません。'
+  },
+  {
+    id: 'computing-multi-5',
+    category: 'コンピューティング',
+    question: 'AWS Batchの構成要素として正しいものを3つ選択してください。',
+    options: [
+      'Job Definition',
+      'Job Queue',
+      'Compute Environment',
+      'Task Definition',
+      'Service',
+      'Pod'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS Batchの主要構成要素は、Job Definition（ジョブの定義）、Job Queue（ジョブキュー）、Compute Environment（コンピューティング環境）です。Task DefinitionはECS、ServiceはECS/EKS、PodはKubernetesの概念です。'
+  },
+  {
+    id: 'computing-multi-6',
+    category: 'コンピューティング',
+    question: 'Amazon EKSでワーカーノードを管理する方法として正しいものを2つ選択してください。',
+    options: [
+      'EKS Managed Node Groups',
+      'Self-managed nodes',
+      'AWS Fargate',
+      'EC2 Auto Scaling Groups',
+      'Lambda Functions',
+      'ECS Tasks'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'EKSでワーカーノードを管理する方法：EKS Managed Node Groups（AWSが管理）、Self-managed nodes（ユーザーが管理）。FargateはサーバーレスでPodを実行しますが、ノード管理ではありません。'
+  },
+  {
+    id: 'computing-multi-7',
+    category: 'コンピューティング',
+    question: 'AWS Lambdaのパフォーマンス最適化手法として正しいものを3つ選択してください。',
+    options: [
+      'プロビジョンド同時実行の設定',
+      'メモリ割り当ての最適化',
+      'コールドスタートの最小化',
+      'デプロイパッケージサイズの最大化',
+      'VPC設定の必須化',
+      'タイムアウト値の最小化'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'Lambdaパフォーマンス最適化：プロビジョンド同時実行（コールドスタート回避）、適切なメモリ割り当て（CPU性能も向上）、コールドスタート最小化（軽量なランタイム使用）。パッケージサイズは小さく、VPCは必要時のみ使用します。'
+  },
+  {
+    id: 'computing-multi-8',
+    category: 'コンピューティング',
+    question: 'Amazon EC2のネットワーク最適化機能として正しいものを2つ選択してください。',
+    options: [
+      'Enhanced Networking (SR-IOV)',
+      'Placement Groups',
+      'Elastic Network Adapter (ENA)',
+      'Security Groups',
+      'Network ACLs',
+      'Route Tables'
+    ],
+    correct: [0, 2],
+    multipleChoice: true,
+    explanation: 'EC2のネットワーク最適化：Enhanced Networking（SR-IOV）とElastic Network Adapter（ENA）により、高いネットワークパフォーマンスと低レイテンシを実現します。Placement Groupsは配置最適化、Security Groups等はセキュリティ機能です。'
+  },
+  {
+    id: 'computing-multi-9',
+    category: 'コンピューティング',
+    question: 'AWS App Runnerの特徴として正しいものを3つ選択してください。',
+    options: [
+      'ソースコードから自動デプロイ',
+      'コンテナイメージからの自動デプロイ',
+      '自動スケーリング',
+      'Kubernetesクラスター管理が必要',
+      'VPC設定が必須',
+      'ロードバランサー設定が必要'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS App Runnerの特徴：ソースコードまたはコンテナイメージからの自動デプロイ、自動スケーリング機能。Kubernetesクラスター管理、VPC設定、ロードバランサー設定は不要で、フルマネージドサービスです。'
+  },
+  {
+    id: 'computing-multi-10',
+    category: 'コンピューティング',
+    question: 'EC2インスタンスのストレージ最適化手法として正しいものを2つ選択してください。',
+    options: [
+      'Instance Store（エフェメラルストレージ）の活用',
+      'EBS最適化インスタンスの使用',
+      'すべてのデータをS3に保存',
+      'RAIDの無効化',
+      'スワップファイルの最大化',
+      'ネットワークストレージのみ使用'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'EC2ストレージ最適化：Instance Store（高速な一時ストレージ）の活用、EBS最適化インスタンス（専用帯域幅でEBS性能向上）。S3は別用途、RAIDやスワップの設定は用途次第、ネットワークストレージのみでは性能制限があります。'
   }
 ]
 

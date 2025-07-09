@@ -199,6 +199,167 @@ const disasterRecoveryQuestions = [
     options: ['定期実行', '文書化', '自動化', 'すべて正しい'],
     correct: 3,
     explanation: '効果的な災害復旧テストには、定期的な実行、詳細な文書化、可能な限りの自動化がすべて重要です。'
+  },
+  // 複数選択問題
+  {
+    id: 'disaster-recovery-multi-1',
+    category: '災害復旧',
+    question: 'AWS災害復旧戦略の4つのパターンを3つ選択してください。',
+    options: [
+      'Backup and Restore',
+      'Pilot Light',
+      'Warm Standby',
+      'Multi-Site Active/Active',
+      'Cold Storage',
+      'Hot Backup'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS災害復旧の4つのパターン：Backup and Restore、Pilot Light、Warm Standby、Multi-Site Active/Active。Cold StorageやHot Backupは一般的な用語ですが、AWS DRの標準パターンではありません。'
+  },
+  {
+    id: 'disaster-recovery-multi-2',
+    category: '災害復旧',
+    question: 'RTO（Recovery Time Objective）を短縮する方法として正しいものを2つ選択してください。',
+    options: [
+      'Multi-AZ配置の活用',
+      'Auto Scalingの設定',
+      'データのアーカイブ化',
+      'バックアップ頻度の削減',
+      'マニュアル復旧手順の採用',
+      '単一リージョンでの運用'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'RTO短縮方法：Multi-AZ配置（自動フェイルオーバー）、Auto Scaling（迅速な容量調整）。アーカイブ化、バックアップ頻度削減、マニュアル手順、単一リージョン運用はRTOを延長させる要因です。'
+  },
+  {
+    id: 'disaster-recovery-multi-3',
+    category: '災害復旧',
+    question: 'Amazon RDSの災害復旧機能として正しいものを3つ選択してください。',
+    options: [
+      'Multi-AZ配置',
+      'リードレプリカ',
+      '自動バックアップ',
+      'マニュアルスナップショット',
+      'Auto Scaling',
+      'Load Balancing'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'RDSの災害復旧機能：Multi-AZ配置（同期レプリケーション）、リードレプリカ（非同期レプリケーション）、自動バックアップ（ポイントインタイムリカバリ）。マニュアルスナップショットも可能ですが、Auto ScalingやLoad BalancingはRDSの直接機能ではありません。'
+  },
+  {
+    id: 'disaster-recovery-multi-4',
+    category: '災害復旧',
+    question: 'AWS Backupの機能として正しいものを2つ選択してください。',
+    options: [
+      '一元的なバックアップ管理',
+      'クロスリージョンバックアップ',
+      'リアルタイムレプリケーション',
+      'データベースクエリ最適化',
+      'ネットワーク監視',
+      'ユーザー認証'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS Backupの機能：一元的なバックアップ管理（複数サービスのバックアップを統合管理）、クロスリージョンバックアップ（地理的分散）。リアルタイムレプリケーション、DB最適化、ネットワーク監視、認証は他のサービスの機能です。'
+  },
+  {
+    id: 'disaster-recovery-multi-5',
+    category: '災害復旧',
+    question: 'RPO（Recovery Point Objective）を短縮する方法として正しいものを3つ選択してください。',
+    options: [
+      'バックアップ頻度の増加',
+      '同期レプリケーションの使用',
+      'Change Data Capture (CDC)の活用',
+      'データ圧縮の強化',
+      'バックアップの暗号化',
+      'アクセス権限の制限'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'RPO短縮方法：バックアップ頻度増加（データ損失期間短縮）、同期レプリケーション（リアルタイム複製）、CDC（変更データのリアルタイム捕捉）。データ圧縮、暗号化、アクセス制限はセキュリティや効率性の向上ですが、RPOには直接影響しません。'
+  },
+  {
+    id: 'disaster-recovery-multi-6',
+    category: '災害復旧',
+    question: 'AWS Elastic Disaster Recovery の機能として正しいものを2つ選択してください。',
+    options: [
+      'ブロックレベルレプリケーション',
+      'ポイントインタイムリカバリ',
+      'データベーススキーマ変換',
+      'アプリケーションコード変換',
+      'ネットワーク設定の自動化',
+      'ユーザーアカウントの移行'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS Elastic Disaster Recoveryの機能：ブロックレベルレプリケーション（継続的なデータ同期）、ポイントインタイムリカバリ（任意の時点への復旧）。スキーマ変換、コード変換、ネットワーク自動化、アカウント移行は対象外です。'
+  },
+  {
+    id: 'disaster-recovery-multi-7',
+    category: '災害復旧',
+    question: 'Cross-Region Replication の利点として正しいものを3つ選択してください。',
+    options: [
+      '地理的な分散',
+      'コンプライアンス要件への対応',
+      'レイテンシの改善',
+      'コストの削減',
+      'セキュリティの向上',
+      'パフォーマンスの統一'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'Cross-Region Replicationの利点：地理的分散（災害復旧）、コンプライアンス要件対応（データ保存場所規制）、レイテンシ改善（ユーザーに近い場所からアクセス）。コスト削減、セキュリティ向上、性能統一は直接的な利点ではありません。'
+  },
+  {
+    id: 'disaster-recovery-multi-8',
+    category: '災害復旧',
+    question: 'Amazon S3 の災害復旧機能として正しいものを2つ選択してください。',
+    options: [
+      'Cross-Region Replication',
+      'Versioning',
+      'MFA Delete',
+      'Transfer Acceleration',
+      'Intelligent Tiering',
+      'Inventory'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'S3の災害復旧機能：Cross-Region Replication（他リージョンへの自動複製）、Versioning（オブジェクトの複数バージョン保持）。MFA Delete、Transfer Acceleration、Intelligent Tiering、Inventoryは他の目的の機能です。'
+  },
+  {
+    id: 'disaster-recovery-multi-9',
+    category: '災害復旧',
+    question: 'AWS CloudFormation を使用した災害復旧の利点として正しいものを3つ選択してください。',
+    options: [
+      'インフラストラクチャのコード化',
+      '迅速な環境復旧',
+      '設定の一貫性保証',
+      'データの自動バックアップ',
+      'ネットワーク帯域幅の向上',
+      'アプリケーションの自動修復'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'CloudFormationを使用した災害復旧の利点：インフラストラクチャのコード化（再現可能）、迅速な環境復旧（テンプレート実行）、設定の一貫性保証（同一構成で復旧）。データバックアップ、帯域幅向上、アプリ修復は別の機能です。'
+  },
+  {
+    id: 'disaster-recovery-multi-10',
+    category: '災害復旧',
+    question: 'Database の災害復旧戦略として正しいものを2つ選択してください。',
+    options: [
+      'Read Replica の活用',
+      'Database Snapshot の定期取得',
+      'Connection Pooling の設定',
+      'Query Optimization の実施',
+      'Index の最適化',
+      'Cache の活用'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'データベース災害復旧戦略：Read Replica（読み取り専用レプリカ、フェイルオーバー可能）、Database Snapshot（定期的なバックアップ取得）。Connection Pooling、Query Optimization、Index最適化、Cacheはパフォーマンス向上の手法です。'
   }
 ]
 

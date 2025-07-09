@@ -372,10 +372,32 @@ class QuizGame {
 
     // Clear and populate options
     this.optionsContainer.innerHTML = ''
+
+    // 複数選択問題の場合は選択状態を初期化
+    if (question.multipleChoice) {
+      this.selectedAnswers = []
+    }
+
     question.options.forEach((option, index) => {
-      const optionElement = this.createOptionElement(option, index)
+      const optionElement = this.createOptionElement(option, index, question.multipleChoice)
       this.optionsContainer.appendChild(optionElement)
     })
+
+    // 複数選択問題の場合は回答ボタンを追加
+    if (question.multipleChoice) {
+      const submitContainer = document.createElement('div')
+      submitContainer.className = 'submit-container'
+
+      const submitBtn = document.createElement('button')
+      submitBtn.className = 'submit-answer-btn'
+      submitBtn.textContent = '回答を確定'
+      submitBtn.disabled = true
+      submitBtn.addEventListener('click', () => this.submitMultipleChoice())
+
+      submitContainer.appendChild(submitBtn)
+      this.optionsContainer.appendChild(submitContainer)
+      this.submitBtn = submitBtn
+    }
 
     // Hide explanation and next button
     this.explanationContainer.style.display = 'none'
@@ -385,11 +407,71 @@ class QuizGame {
     this.startTimer()
   }
 
-  createOptionElement (text, index) {
+  createOptionElement (text, index, isMultipleChoice = false) {
     const option = document.createElement('div')
     option.className = 'option'
-    option.textContent = text
-    option.addEventListener('click', () => this.selectOption(index, option))
+
+    if (isMultipleChoice) {
+      // 複数選択問題の場合はチェックボックス形式
+      option.classList.add('multiple-choice')
+
+      const checkbox = document.createElement('input')
+      checkbox.type = 'checkbox'
+      checkbox.id = `option-${index}`
+      checkbox.value = index
+
+      const label = document.createElement('label')
+      label.htmlFor = `option-${index}`
+      label.textContent = text
+
+      option.appendChild(checkbox)
+      option.appendChild(label)
+
+      // 選択肢全体のクリックイベント
+      option.addEventListener('click', (e) => {
+        // 回答済みの場合は何もしない
+        if (this.questionAnswered) {
+          return
+        }
+
+        // チェックボックス自体がクリックされた場合は、そのイベントに任せる
+        if (e.target === checkbox) {
+          return
+        }
+
+        // 選択肢全体がクリックされた場合、チェックボックスの状態を切り替え
+        e.preventDefault()
+        checkbox.checked = !checkbox.checked
+
+        // 選択状態を更新
+        this.updateMultipleChoiceSelection(index, checkbox.checked)
+      })
+
+      // チェックボックス自体のchangeイベント
+      checkbox.addEventListener('change', (e) => {
+        // 回答済みの場合は何もしない
+        if (this.questionAnswered) {
+          e.preventDefault()
+          return
+        }
+
+        this.updateMultipleChoiceSelection(index, e.target.checked)
+      })
+
+      // ラベルのクリックイベント（デフォルトの動作を防ぐ）
+      label.addEventListener('click', (e) => {
+        if (this.questionAnswered) {
+          e.preventDefault()
+        }
+        // ラベルのクリックは選択肢全体のクリックとして処理されるので、
+        // ここでは何もしない（重複処理を防ぐ）
+      })
+    } else {
+      // 単一選択問題の場合は従来通り
+      option.textContent = text
+      option.addEventListener('click', () => this.selectOption(index, option))
+    }
+
     return option
   }
 
@@ -459,24 +541,64 @@ class QuizGame {
 
     // Mark as incorrect (no answer selected)
     const question = this.currentQuestions[this.currentQuestionIndex]
-    this.userAnswers.push({
-      questionIndex: this.currentQuestionIndex,
-      selectedAnswer: -1, // -1 indicates no answer (time up)
-      correctAnswer: question.correct,
-      isCorrect: false,
-      timeUp: true
-    })
 
-    // Show correct answer
-    const options = this.optionsContainer.querySelectorAll('.option')
-    options.forEach((option, index) => {
-      option.classList.add('disabled')
-      option.style.pointerEvents = 'none'
+    // 複数選択問題の場合の処理
+    if (question.multipleChoice) {
+      const correctAnswers = Array.isArray(question.correct)
+        ? question.correct
+        : [question.correct]
 
-      if (index === question.correct) {
-        option.classList.add('correct')
+      this.userAnswers.push({
+        questionIndex: this.currentQuestionIndex,
+        selectedAnswer: [], // 空配列で時間切れを示す
+        correctAnswer: correctAnswers,
+        isCorrect: false,
+        timeUp: true,
+        isMultipleChoice: true
+      })
+
+      // Show correct answers for multiple choice
+      const options = this.optionsContainer.querySelectorAll('.option')
+      options.forEach((option, index) => {
+        option.classList.add('disabled')
+        option.style.pointerEvents = 'none'
+
+        // チェックボックスも無効化
+        const checkbox = option.querySelector('input[type="checkbox"]')
+        if (checkbox) {
+          checkbox.disabled = true
+        }
+
+        if (correctAnswers.includes(index)) {
+          option.classList.add('correct')
+        }
+      })
+
+      // Hide submit button if exists
+      if (this.submitBtn) {
+        this.submitBtn.style.display = 'none'
       }
-    })
+    } else {
+      // 単一選択問題の場合の従来処理
+      this.userAnswers.push({
+        questionIndex: this.currentQuestionIndex,
+        selectedAnswer: -1, // -1 indicates no answer (time up)
+        correctAnswer: question.correct,
+        isCorrect: false,
+        timeUp: true
+      })
+
+      // Show correct answer
+      const options = this.optionsContainer.querySelectorAll('.option')
+      options.forEach((option, index) => {
+        option.classList.add('disabled')
+        option.style.pointerEvents = 'none'
+
+        if (index === question.correct) {
+          option.classList.add('correct')
+        }
+      })
+    }
 
     // Show explanation
     this.showExplanation(question.explanation)
@@ -576,6 +698,112 @@ class QuizGame {
     this.nextBtn.style.display = 'block'
   }
 
+  updateMultipleChoiceSelection (index, isSelected) {
+    if (this.questionAnswered) {
+      return
+    }
+
+    if (!this.selectedAnswers) {
+      this.selectedAnswers = []
+    }
+
+    if (isSelected) {
+      if (!this.selectedAnswers.includes(index)) {
+        this.selectedAnswers.push(index)
+      }
+    } else {
+      this.selectedAnswers = this.selectedAnswers.filter(i => i !== index)
+    }
+
+    // 視覚的フィードバックを更新
+    const optionElement = this.optionsContainer.children[index]
+    if (optionElement && optionElement.classList.contains('multiple-choice')) {
+      if (isSelected) {
+        optionElement.classList.add('checked')
+      } else {
+        optionElement.classList.remove('checked')
+      }
+    }
+
+    // 回答ボタンの有効/無効を切り替え
+    if (this.submitBtn) {
+      this.submitBtn.disabled = this.selectedAnswers.length === 0
+    }
+  }
+
+  submitMultipleChoice () {
+    if (this.questionAnswered || !this.selectedAnswers || this.selectedAnswers.length === 0) {
+      return
+    }
+
+    // Stop timer
+    this.stopTimer()
+    this.questionAnswered = true
+
+    const question = this.currentQuestions[this.currentQuestionIndex]
+
+    // 正解の配列をソート
+    const correctAnswers = Array.isArray(question.correct)
+      ? [...question.correct].sort((a, b) => a - b)
+      : [question.correct]
+
+    // 選択した回答をソート
+    const selectedAnswers = [...this.selectedAnswers].sort((a, b) => a - b)
+
+    // 配列が同じかどうかを比較
+    const isCorrect = correctAnswers.length === selectedAnswers.length &&
+      correctAnswers.every((answer, index) => answer === selectedAnswers[index])
+
+    // Disable all options
+    const options = this.optionsContainer.querySelectorAll('.option')
+    options.forEach((option) => {
+      option.classList.add('disabled')
+      option.style.pointerEvents = 'none'
+
+      // チェックボックスも無効化
+      const checkbox = option.querySelector('input[type="checkbox"]')
+      if (checkbox) {
+        checkbox.disabled = true
+      }
+    })
+
+    // Mark correct and incorrect answers
+    options.forEach((option, index) => {
+      if (correctAnswers.includes(index)) {
+        option.classList.add('correct')
+      } else if (selectedAnswers.includes(index)) {
+        option.classList.add('incorrect')
+      }
+    })
+
+    // Hide submit button
+    if (this.submitBtn) {
+      this.submitBtn.style.display = 'none'
+    }
+
+    // Show explanation
+    this.showExplanation(question.explanation)
+
+    // Record user answer
+    this.userAnswers.push({
+      questionIndex: this.currentQuestionIndex,
+      selectedAnswer: selectedAnswers,
+      correctAnswer: correctAnswers,
+      isCorrect,
+      timeRemaining: this.timeRemaining,
+      timeUp: false,
+      isMultipleChoice: true
+    })
+
+    // Update score
+    if (isCorrect) {
+      this.score++
+    }
+
+    // Show next button
+    this.nextBtn.style.display = 'block'
+  }
+
   nextQuestion () {
     this.currentQuestionIndex++
 
@@ -661,19 +889,53 @@ class QuizGame {
     let resultClass = 'timeout'
 
     if (!answer.timeUp) {
-      userAnswerText = question.options[answer.selectedAnswer]
+      if (answer.isMultipleChoice) {
+        // 複数選択問題の場合
+        if (Array.isArray(answer.selectedAnswer) && answer.selectedAnswer.length > 0) {
+          userAnswerText = answer.selectedAnswer
+            .map(index => question.options[index])
+            .join(', ')
+        } else {
+          userAnswerText = '回答なし'
+        }
+      } else {
+        // 単一選択問題の場合
+        if (answer.selectedAnswer >= 0) {
+          userAnswerText = question.options[answer.selectedAnswer]
+        } else {
+          userAnswerText = '回答なし'
+        }
+      }
       resultText = answer.isCorrect ? '✅ 正解' : '❌ 不正解'
       resultClass = answer.isCorrect ? 'correct' : 'incorrect'
     }
 
-    const correctAnswerText = question.options[answer.correctAnswer]
+    // 正解の表示
+    let correctAnswerText
+    if (question.multipleChoice) {
+      const correctAnswers = Array.isArray(question.correct)
+        ? question.correct
+        : [question.correct]
+      correctAnswerText = correctAnswers
+        .map(index => question.options[index])
+        .join(', ')
+    } else {
+      correctAnswerText = question.options[question.correct]
+    }
+
     const timeInfo = answer.timeUp
       ? '<div class="review-time timeout"><strong>⏰ 時間切れ</strong></div>'
       : `<div class="review-time"><strong>回答時間:</strong> ${this.timeLimit - answer.timeRemaining}秒</div>`
 
+    // 問題タイプの表示
+    const questionType = question.multipleChoice
+      ? '<span class="question-type multiple">複数選択</span>'
+      : '<span class="question-type single">単一選択</span>'
+
     item.innerHTML = `
             <div class="review-question">
                 <strong>問題 ${answer.questionIndex + 1}:</strong> ${question.question}
+                ${questionType}
             </div>
             <div class="review-answer user">
                 <strong>あなたの回答:</strong> ${userAnswerText}
@@ -708,19 +970,28 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log(`✅ Questions loaded: ${allQuestions.length} questions`)
 
     // 問題データの基本検証
-    const invalidQuestions = allQuestions.filter(
-      (q) =>
-        !q.id ||
-        !q.category ||
-        !q.question ||
-        !q.options ||
-        !Array.isArray(q.options) ||
-        q.options.length !== 4 ||
-        typeof q.correct !== 'number' ||
-        q.correct < 0 ||
-        q.correct > 3 ||
-        !q.explanation
-    )
+    const invalidQuestions = allQuestions.filter((q) => {
+      // 基本的な必須フィールドのチェック
+      if (!q.id || !q.category || !q.question || !q.options || !Array.isArray(q.options) || !q.explanation) {
+        return true
+      }
+
+      // 複数選択問題の場合
+      if (q.multipleChoice) {
+        // 選択肢は6個、正解は配列
+        if (q.options.length !== 6 || !Array.isArray(q.correct)) {
+          return true
+        }
+        // 正解の配列の各要素が有効な範囲内かチェック
+        return q.correct.some(answer => typeof answer !== 'number' || answer < 0 || answer >= 6)
+      } else {
+        // 単一選択問題の場合（従来通り）
+        if (q.options.length !== 4) {
+          return true
+        }
+        return typeof q.correct !== 'number' || q.correct < 0 || q.correct >= 4
+      }
+    })
 
     if (invalidQuestions.length > 0) {
       console.warn('⚠️ Invalid questions found:', invalidQuestions)
@@ -728,12 +999,17 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('✅ All questions are valid')
     }
 
-    // カテゴリ別の問題数を表示
+    // カテゴリ別の問題数を表示（単一選択・複数選択別）
     const categories = {}
+    const multipleChoiceCount = {}
     allQuestions.forEach((q) => {
       categories[q.category] = (categories[q.category] || 0) + 1
+      if (q.multipleChoice) {
+        multipleChoiceCount[q.category] = (multipleChoiceCount[q.category] || 0) + 1
+      }
     })
     console.log('📊 Questions by category:', categories)
+    console.log('📊 Multiple choice questions by category:', multipleChoiceCount)
   } else {
     console.error(
       '❌ allQuestions is not defined. Check if questions.js is loaded properly.'

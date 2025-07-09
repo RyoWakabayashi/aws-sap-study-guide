@@ -199,6 +199,167 @@ const managementQuestions = [
     options: ['新規サービス起動', '複雑なワークロード展開', 'アプリケーション移行', 'インフラ最適化'],
     correct: 1,
     explanation: 'Launch Wizardは、SAP、Microsoft SQL Server等の複雑なワークロードの展開を簡素化します。'
+  },
+  // 複数選択問題
+  {
+    id: 'management-multi-1',
+    category: '管理・ガバナンス',
+    question: 'AWS Organizationsの機能として正しいものを3つ選択してください。',
+    options: [
+      '一括請求管理',
+      'Service Control Policies (SCP)',
+      'アカウントの一元管理',
+      'データベース管理',
+      'ネットワーク監視',
+      'アプリケーション開発'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS Organizationsの機能：一括請求管理（統合請求）、SCP（アカウント権限制御）、アカウント一元管理（組織単位での管理）。データベース管理、ネットワーク監視、アプリ開発は他のサービスの機能です。'
+  },
+  {
+    id: 'management-multi-2',
+    category: '管理・ガバナンス',
+    question: 'AWS Control Towerの機能として正しいものを2つ選択してください。',
+    options: [
+      'ランディングゾーンの自動セットアップ',
+      'ガードレールによるガバナンス',
+      'データベースの自動バックアップ',
+      'ネットワークトラフィック分析',
+      'アプリケーションパフォーマンス監視',
+      'ユーザーインターフェース設計'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS Control Towerの機能：ランディングゾーンの自動セットアップ（マルチアカウント環境の構築）、ガードレール（予防・検出型の統制）。バックアップ、トラフィック分析、性能監視、UI設計は他のサービスの機能です。'
+  },
+  {
+    id: 'management-multi-3',
+    category: '管理・ガバナンス',
+    question: 'AWS Resource Access Manager (RAM)で共有できるリソースを3つ選択してください。',
+    options: [
+      'VPCサブネット',
+      'Route 53 Resolver Rules',
+      'Transit Gateway',
+      'EC2インスタンス',
+      'S3バケット',
+      'Lambda関数'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS RAMで共有可能なリソース：VPCサブネット、Route 53 Resolver Rules、Transit Gateway、License Manager設定等。EC2インスタンス、S3バケット、Lambda関数は直接共有できません。'
+  },
+  {
+    id: 'management-multi-4',
+    category: '管理・ガバナンス',
+    question: 'AWS Trusted Advisorのチェックカテゴリーとして正しいものを2つ選択してください。',
+    options: [
+      'コスト最適化',
+      'セキュリティ',
+      'パフォーマンス',
+      'データベース設計',
+      'アプリケーション開発',
+      'ユーザーエクスペリエンス'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS Trusted Advisorのチェックカテゴリー：コスト最適化、セキュリティ、パフォーマンス、耐障害性、サービス制限。データベース設計、アプリ開発、UXは直接的なチェック項目ではありません。'
+  },
+  {
+    id: 'management-multi-5',
+    category: '管理・ガバナンス',
+    question: 'AWS License Managerの機能として正しいものを3つ選択してください。',
+    options: [
+      'ライセンス使用量の追跡',
+      'ライセンス違反の防止',
+      'ライセンスコストの最適化',
+      'データベースパフォーマンス監視',
+      'ネットワークセキュリティ',
+      'アプリケーション開発支援'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS License Managerの機能：ライセンス使用量追跡（利用状況監視）、ライセンス違反防止（ルール適用）、コスト最適化（適切な配分）。DB性能監視、ネットワークセキュリティ、アプリ開発は他のサービスの機能です。'
+  },
+  {
+    id: 'management-multi-6',
+    category: '管理・ガバナンス',
+    question: 'AWS CloudTrail の機能として正しいものを2つ選択してください。',
+    options: [
+      'API呼び出しの記録',
+      'ユーザーアクティビティの追跡',
+      'パフォーマンス監視',
+      'コスト分析',
+      'セキュリティ脆弱性スキャン',
+      'データバックアップ'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS CloudTrailの機能：API呼び出しの記録（管理イベント・データイベント）、ユーザーアクティビティの追跡（誰が何をいつ実行したか）。パフォーマンス監視、コスト分析、脆弱性スキャン、バックアップは他のサービスです。'
+  },
+  {
+    id: 'management-multi-7',
+    category: '管理・ガバナンス',
+    question: 'AWS Compute Optimizer の機能として正しいものを3つ選択してください。',
+    options: [
+      'EC2インスタンスの最適化推奨',
+      'EBSボリュームの最適化推奨',
+      'Lambda関数の最適化推奨',
+      'RDSインスタンスの最適化推奨',
+      'S3ストレージクラスの最適化推奨',
+      'CloudFront設定の最適化推奨'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS Compute Optimizerの機能：EC2インスタンスの最適化推奨（サイズ・タイプ）、EBSボリュームの最適化推奨（サイズ・タイプ）、Lambda関数の最適化推奨（メモリ設定）。RDS、S3、CloudFrontは対象外です。'
+  },
+  {
+    id: 'management-multi-8',
+    category: '管理・ガバナンス',
+    question: 'AWS Systems Manager Compliance の機能として正しいものを2つ選択してください。',
+    options: [
+      'パッチコンプライアンスの監視',
+      '設定コンプライアンスの監視',
+      'コストコンプライアンスの監視',
+      'パフォーマンスコンプライアンスの監視',
+      'ユーザーアクセスコンプライアンスの監視',
+      'データバックアップコンプライアンスの監視'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'Systems Manager Complianceの機能：パッチコンプライアンスの監視（パッチ適用状況）、設定コンプライアンスの監視（設定基準への準拠）。コスト、パフォーマンス、ユーザーアクセス、バックアップのコンプライアンスは他のサービスです。'
+  },
+  {
+    id: 'management-multi-9',
+    category: '管理・ガバナンス',
+    question: 'AWS Health API の機能として正しいものを3つ選択してください。',
+    options: [
+      'サービス障害情報の取得',
+      'メンテナンス予定の取得',
+      'アカウント固有の健全性情報',
+      'コスト異常の検出',
+      'セキュリティ脆弱性の検出',
+      'パフォーマンス問題の検出'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS Health APIの機能：サービス障害情報の取得、メンテナンス予定の取得、アカウント固有の健全性情報（使用中サービスへの影響）。コスト異常、セキュリティ脆弱性、パフォーマンス問題の検出は他のサービスです。'
+  },
+  {
+    id: 'management-multi-10',
+    category: '管理・ガバナンス',
+    question: 'AWS Application Auto Scaling の対象サービスとして正しいものを2つ選択してください。',
+    options: [
+      'Amazon ECS',
+      'Amazon DynamoDB',
+      'Amazon Aurora',
+      'Amazon EC2',
+      'Amazon S3',
+      'Amazon CloudFront'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS Application Auto Scalingの対象：Amazon ECS（タスク数のスケーリング）、Amazon DynamoDB（読み書き容量のスケーリング）、Lambda同時実行数、Aurora Serverless等。EC2は別のAuto Scaling、S3・CloudFrontは自動スケーリング対象外です。'
   }
 ]
 

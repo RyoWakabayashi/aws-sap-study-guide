@@ -405,6 +405,106 @@ header p {
     opacity: 0.7;
 }
 
+/* Multiple Choice Options */
+.option.multiple-choice {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+}
+
+.option.multiple-choice input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #667eea;
+    transition: transform 0.2s ease;
+}
+
+.option.multiple-choice label {
+    flex: 1;
+    cursor: pointer;
+    margin: 0;
+    user-select: none;
+    transition: all 0.2s ease;
+}
+
+.option.multiple-choice:hover:not(.disabled) {
+    background: #e9ecef;
+    transform: translateY(-1px);
+}
+
+.option.multiple-choice:hover:not(.disabled) input[type="checkbox"] {
+    transform: scale(1.1);
+}
+
+.option.multiple-choice:active:not(.disabled) {
+    transform: translateY(0);
+}
+
+/* チェックされた状態の視覚的フィードバック */
+.option.multiple-choice.checked {
+    border-color: #667eea;
+    background: #f0f4ff;
+}
+
+.option.multiple-choice.checked label {
+    font-weight: 600;
+    color: #667eea;
+}
+
+/* Submit Answer Button */
+.submit-container {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.submit-answer-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 150px;
+}
+
+.submit-answer-btn:hover:not(:disabled) {
+    background: #5a67d8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.submit-answer-btn:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Question Type Badge */
+.question-type {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 8px;
+    text-transform: uppercase;
+}
+
+.question-type.single {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.question-type.multiple {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
 /* Quiz Controls */
 .quiz-controls {
     text-align: center;
@@ -824,3 +924,5 @@ footer {
 .option:nth-child(2) { animation-delay: 0.2s; }
 .option:nth-child(3) { animation-delay: 0.3s; }
 .option:nth-child(4) { animation-delay: 0.4s; }
+.option:nth-child(5) { animation-delay: 0.5s; }
+.option:nth-child(6) { animation-delay: 0.6s; }

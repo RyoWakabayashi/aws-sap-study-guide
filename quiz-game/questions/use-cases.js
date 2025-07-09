@@ -399,6 +399,167 @@ const useCasesQuestions = [
     options: ['Rekognition + Lambda + SNS', 'Textract + SQS + SES', 'Comprehend + EventBridge + SMS', '最初の選択肢'],
     correct: 3,
     explanation: 'Rekognitionで画像・動画分析、Lambdaで処理、SNSで通知を行う組み合わせが最適です。'
+  },
+  // 複数選択問題
+  {
+    id: 'use-cases-multi-1',
+    category: 'ユースケース',
+    question: 'グローバルなWebアプリケーションの高可用性を実現するために必要なAWSサービスを3つ選択してください。',
+    options: [
+      'Amazon CloudFront',
+      'Application Load Balancer',
+      'Auto Scaling Groups',
+      'Amazon S3',
+      'Amazon RDS',
+      'AWS Lambda'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'グローバル高可用性の実現：CloudFront（グローバル配信・キャッシュ）、ALB（複数インスタンス間の負荷分散）、Auto Scaling（需要に応じた自動スケール）。S3、RDS、Lambdaも重要ですが、高可用性の中核ではありません。'
+  },
+  {
+    id: 'use-cases-multi-2',
+    category: 'ユースケース',
+    question: 'リアルタイムデータ分析パイプラインを構築するために必要なAWSサービスを2つ選択してください。',
+    options: [
+      'Amazon Kinesis Data Streams',
+      'Amazon Kinesis Analytics',
+      'Amazon S3',
+      'Amazon RDS',
+      'Amazon EC2',
+      'Amazon VPC'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'リアルタイムデータ分析パイプライン：Kinesis Data Streams（ストリーミングデータ収集）、Kinesis Analytics（リアルタイム分析）。S3、RDS、EC2、VPCは基盤サービスですが、リアルタイム分析の中核ではありません。'
+  },
+  {
+    id: 'use-cases-multi-3',
+    category: 'ユースケース',
+    question: 'サーバーレスWebアプリケーションを構築するために必要なAWSサービスを3つ選択してください。',
+    options: [
+      'AWS Lambda',
+      'Amazon API Gateway',
+      'Amazon DynamoDB',
+      'Amazon EC2',
+      'Amazon RDS',
+      'Elastic Load Balancer'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'サーバーレスWebアプリ構築：Lambda（サーバーレス処理）、API Gateway（APIエンドポイント）、DynamoDB（サーバーレスDB）。EC2、RDS、ELBはサーバー管理が必要なサービスです。'
+  },
+  {
+    id: 'use-cases-multi-4',
+    category: 'ユースケース',
+    question: 'ハイブリッドクラウド環境でオンプレミスとAWSを接続するために使用できるサービスを2つ選択してください。',
+    options: [
+      'AWS Direct Connect',
+      'AWS VPN',
+      'AWS Transit Gateway',
+      'Amazon CloudFront',
+      'Amazon Route 53',
+      'AWS Lambda'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'ハイブリッドクラウド接続：Direct Connect（専用線接続）、VPN（暗号化されたインターネット接続）。Transit Gatewayは接続の集約に使用、CloudFront、Route 53、Lambdaは直接的な接続サービスではありません。'
+  },
+  {
+    id: 'use-cases-multi-5',
+    category: 'ユースケース',
+    question: '機械学習モデルの開発・デプロイメントパイプラインに必要なAWSサービスを3つ選択してください。',
+    options: [
+      'Amazon SageMaker',
+      'AWS CodePipeline',
+      'Amazon ECR',
+      'Amazon S3',
+      'Amazon RDS',
+      'Amazon VPC'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'ML開発・デプロイパイプライン：SageMaker（ML開発・訓練・推論）、CodePipeline（CI/CDパイプライン）、ECR（コンテナイメージ管理）。S3はデータ保存、RDS・VPCは基盤サービスですが、MLパイプラインの中核ではありません。'
+  },
+  {
+    id: 'use-cases-multi-6',
+    category: 'ユースケース',
+    question: 'IoTデータ処理パイプラインを構築するために必要なAWSサービスを3つ選択してください。',
+    options: [
+      'AWS IoT Core',
+      'Amazon Kinesis Data Streams',
+      'AWS Lambda',
+      'Amazon RDS',
+      'Amazon EC2',
+      'Amazon CloudFront'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'IoTデータ処理パイプライン：AWS IoT Core（デバイス接続・管理）、Kinesis Data Streams（ストリーミングデータ収集）、Lambda（リアルタイム処理）。RDS、EC2、CloudFrontは基盤サービスですが、IoTパイプラインの中核ではありません。'
+  },
+  {
+    id: 'use-cases-multi-7',
+    category: 'ユースケース',
+    question: 'コンテンツ配信ネットワーク（CDN）を構築するために必要なAWSサービスを2つ選択してください。',
+    options: [
+      'Amazon CloudFront',
+      'Amazon S3',
+      'Amazon Route 53',
+      'Amazon EC2',
+      'Amazon RDS',
+      'Amazon VPC'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'CDN構築：CloudFront（グローバル配信・キャッシュ）、S3（オリジンコンテンツ保存）。Route 53はDNS、EC2・RDS・VPCは基盤サービスですが、CDNの中核ではありません。'
+  },
+  {
+    id: 'use-cases-multi-8',
+    category: 'ユースケース',
+    question: 'ビッグデータ分析基盤を構築するために必要なAWSサービスを3つ選択してください。',
+    options: [
+      'Amazon S3',
+      'Amazon EMR',
+      'Amazon Redshift',
+      'Amazon EC2',
+      'Amazon RDS',
+      'Amazon ElastiCache'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'ビッグデータ分析基盤：S3（データレイク）、EMR（ビッグデータ処理）、Redshift（データウェアハウス）。EC2、RDS、ElastiCacheは基盤サービスですが、ビッグデータ分析の中核ではありません。'
+  },
+  {
+    id: 'use-cases-multi-9',
+    category: 'ユースケース',
+    question: 'マイクロサービスアーキテクチャを構築するために必要なAWSサービスを2つ選択してください。',
+    options: [
+      'Amazon ECS/EKS',
+      'Amazon API Gateway',
+      'AWS Lambda',
+      'Amazon S3',
+      'Amazon RDS',
+      'Amazon CloudWatch'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'マイクロサービスアーキテクチャ：ECS/EKS（コンテナオーケストレーション）、API Gateway（サービス間通信・ルーティング）。Lambda、S3、RDS、CloudWatchも重要ですが、マイクロサービスの中核はコンテナ管理とAPI管理です。'
+  },
+  {
+    id: 'use-cases-multi-10',
+    category: 'ユースケース',
+    question: 'エンタープライズ向けファイル共有システムを構築するために必要なAWSサービスを3つ選択してください。',
+    options: [
+      'Amazon WorkDocs',
+      'Amazon FSx',
+      'AWS Directory Service',
+      'Amazon S3',
+      'Amazon EC2',
+      'Amazon RDS'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'エンタープライズファイル共有システム：WorkDocs（ドキュメント管理・共有）、FSx（高性能ファイルシステム）、Directory Service（Active Directory統合・認証）。S3、EC2、RDSは基盤サービスですが、ファイル共有の中核ではありません。'
   }
 ]
 

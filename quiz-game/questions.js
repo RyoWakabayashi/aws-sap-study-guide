@@ -1,6 +1,6 @@
 // AWS Solution Architect Professional 試験対策クイズ問題データ
 // 自動生成ファイル - 手動編集しないでください
-// 生成日時: 2025-07-09T09:00:13.028Z
+// 生成日時: 2025-07-09T11:31:20.069Z
 
 // 全問題データ
 const allQuestions = [
@@ -395,6 +395,201 @@ const allQuestions = [
     explanation: 'Horizontal Pod Autoscaler（HPA）は、メトリクスに基づいてPodの数を自動的にスケールします。'
   },
   {
+    id: 'computing-multi-1',
+    category: 'コンピューティング',
+    question: 'EC2インスタンスの高可用性を実現するために使用できるAWSサービスを2つ選択してください。',
+    options: [
+      'Auto Scaling Groups',
+      'Elastic Load Balancer',
+      'CloudFront',
+      'Route 53',
+      'S3',
+      'RDS'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'Auto Scaling Groupsは複数のAZにインスタンスを分散配置し、Elastic Load Balancerは複数のインスタンス間でトラフィックを分散することで高可用性を実現します。'
+  },
+  {
+    id: 'computing-multi-2',
+    category: 'コンピューティング',
+    question: 'AWS Lambdaの制限事項として正しいものを3つ選択してください。',
+    options: [
+      '実行時間は最大15分',
+      'メモリは最大10GB',
+      'デプロイパッケージサイズは最大50MB（zip圧縮時）',
+      '同時実行数は無制限',
+      'ファイルシステムアクセスは不可',
+      'VPC内のリソースにアクセス可能'
+    ],
+    correct: [
+      0,
+      2,
+      4
+    ],
+    multipleChoice: true,
+    explanation: 'Lambdaの制限：実行時間最大15分、デプロイパッケージ50MB（zip）、デフォルトではファイルシステムアクセス不可（EFSマウント除く）。メモリは最大10GB、同時実行数にはデフォルト制限があります。'
+  },
+  {
+    id: 'computing-multi-3',
+    category: 'コンピューティング',
+    question: 'ECS Fargateの特徴として正しいものを2つ選択してください。',
+    options: [
+      'EC2インスタンスの管理が必要',
+      'サーバーレスでコンテナを実行',
+      'Kubernetesベース',
+      'タスク単位での課金',
+      'Docker Swarmをサポート',
+      'Windows コンテナのみサポート'
+    ],
+    correct: [
+      1,
+      3
+    ],
+    multipleChoice: true,
+    explanation: 'ECS Fargateはサーバーレスでコンテナを実行でき、実行したタスクの分だけ課金されます。EC2インスタンスの管理は不要で、DockerコンテナをサポートしますがKubernetesベースではありません。'
+  },
+  {
+    id: 'computing-multi-4',
+    category: 'コンピューティング',
+    question: 'EC2スポットインスタンスを使用する際の考慮事項として正しいものを3つ選択してください。',
+    options: [
+      'インスタンスが突然終了する可能性がある',
+      '価格が固定されている',
+      'ステートレスなワークロードに適している',
+      'データベースサーバーに最適',
+      'バッチ処理に適している',
+      'SLAが保証されている'
+    ],
+    correct: [
+      0,
+      2,
+      4
+    ],
+    multipleChoice: true,
+    explanation: 'スポットインスタンスは需要に応じて突然終了する可能性があるため、ステートレスなワークロードやバッチ処理に適しています。価格は変動し、SLAは保証されません。'
+  },
+  {
+    id: 'computing-multi-5',
+    category: 'コンピューティング',
+    question: 'AWS Batchの構成要素として正しいものを3つ選択してください。',
+    options: [
+      'Job Definition',
+      'Job Queue',
+      'Compute Environment',
+      'Task Definition',
+      'Service',
+      'Pod'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Batchの主要構成要素は、Job Definition（ジョブの定義）、Job Queue（ジョブキュー）、Compute Environment（コンピューティング環境）です。Task DefinitionはECS、ServiceはECS/EKS、PodはKubernetesの概念です。'
+  },
+  {
+    id: 'computing-multi-6',
+    category: 'コンピューティング',
+    question: 'Amazon EKSでワーカーノードを管理する方法として正しいものを2つ選択してください。',
+    options: [
+      'EKS Managed Node Groups',
+      'Self-managed nodes',
+      'AWS Fargate',
+      'EC2 Auto Scaling Groups',
+      'Lambda Functions',
+      'ECS Tasks'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'EKSでワーカーノードを管理する方法：EKS Managed Node Groups（AWSが管理）、Self-managed nodes（ユーザーが管理）。FargateはサーバーレスでPodを実行しますが、ノード管理ではありません。'
+  },
+  {
+    id: 'computing-multi-7',
+    category: 'コンピューティング',
+    question: 'AWS Lambdaのパフォーマンス最適化手法として正しいものを3つ選択してください。',
+    options: [
+      'プロビジョンド同時実行の設定',
+      'メモリ割り当ての最適化',
+      'コールドスタートの最小化',
+      'デプロイパッケージサイズの最大化',
+      'VPC設定の必須化',
+      'タイムアウト値の最小化'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'Lambdaパフォーマンス最適化：プロビジョンド同時実行（コールドスタート回避）、適切なメモリ割り当て（CPU性能も向上）、コールドスタート最小化（軽量なランタイム使用）。パッケージサイズは小さく、VPCは必要時のみ使用します。'
+  },
+  {
+    id: 'computing-multi-8',
+    category: 'コンピューティング',
+    question: 'Amazon EC2のネットワーク最適化機能として正しいものを2つ選択してください。',
+    options: [
+      'Enhanced Networking (SR-IOV)',
+      'Placement Groups',
+      'Elastic Network Adapter (ENA)',
+      'Security Groups',
+      'Network ACLs',
+      'Route Tables'
+    ],
+    correct: [
+      0,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'EC2のネットワーク最適化：Enhanced Networking（SR-IOV）とElastic Network Adapter（ENA）により、高いネットワークパフォーマンスと低レイテンシを実現します。Placement Groupsは配置最適化、Security Groups等はセキュリティ機能です。'
+  },
+  {
+    id: 'computing-multi-9',
+    category: 'コンピューティング',
+    question: 'AWS App Runnerの特徴として正しいものを3つ選択してください。',
+    options: [
+      'ソースコードから自動デプロイ',
+      'コンテナイメージからの自動デプロイ',
+      '自動スケーリング',
+      'Kubernetesクラスター管理が必要',
+      'VPC設定が必須',
+      'ロードバランサー設定が必要'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS App Runnerの特徴：ソースコードまたはコンテナイメージからの自動デプロイ、自動スケーリング機能。Kubernetesクラスター管理、VPC設定、ロードバランサー設定は不要で、フルマネージドサービスです。'
+  },
+  {
+    id: 'computing-multi-10',
+    category: 'コンピューティング',
+    question: 'EC2インスタンスのストレージ最適化手法として正しいものを2つ選択してください。',
+    options: [
+      'Instance Store（エフェメラルストレージ）の活用',
+      'EBS最適化インスタンスの使用',
+      'すべてのデータをS3に保存',
+      'RAIDの無効化',
+      'スワップファイルの最大化',
+      'ネットワークストレージのみ使用'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'EC2ストレージ最適化：Instance Store（高速な一時ストレージ）の活用、EBS最適化インスタンス（専用帯域幅でEBS性能向上）。S3は別用途、RAIDやスワップの設定は用途次第、ネットワークストレージのみでは性能制限があります。'
+  },
+  {
     id: 'storage-1',
     category: 'ストレージ',
     question: '99.999999999%（11 9s）の耐久性を提供するAWSストレージサービスはどれですか？',
@@ -783,6 +978,201 @@ const allQuestions = [
     ],
     correct: 0,
     explanation: 'S3 SelectはSQL式を使用してオブジェクトの内容から特定のデータを取得できます。'
+  },
+  {
+    id: 'storage-multi-1',
+    category: 'ストレージ',
+    question: 'S3のストレージクラスで、データの取得に料金が発生するものを3つ選択してください。',
+    options: [
+      'S3 Standard',
+      'S3 Standard-IA',
+      'S3 Glacier Instant Retrieval',
+      'S3 Glacier Flexible Retrieval',
+      'S3 Glacier Deep Archive',
+      'S3 One Zone-IA'
+    ],
+    correct: [
+      1,
+      3,
+      4
+    ],
+    multipleChoice: true,
+    explanation: 'S3 Standard-IA、S3 Glacier Flexible Retrieval、S3 Glacier Deep Archiveは、データ取得時に料金が発生します。S3 StandardとS3 Glacier Instant Retrievalは取得料金なし、S3 One Zone-IAは取得料金が発生します。'
+  },
+  {
+    id: 'storage-multi-2',
+    category: 'ストレージ',
+    question: 'EBSボリュームタイプで、プロビジョンドIOPSを提供するものを2つ選択してください。',
+    options: [
+      'gp2 (General Purpose SSD)',
+      'gp3 (General Purpose SSD)',
+      'io1 (Provisioned IOPS SSD)',
+      'io2 (Provisioned IOPS SSD)',
+      'st1 (Throughput Optimized HDD)',
+      'sc1 (Cold HDD)'
+    ],
+    correct: [
+      2,
+      3
+    ],
+    multipleChoice: true,
+    explanation: 'io1とio2は、プロビジョンドIOPSを提供するSSDボリュームタイプです。高いIOPSが必要なデータベースワークロードに適しています。'
+  },
+  {
+    id: 'storage-multi-3',
+    category: 'ストレージ',
+    question: 'AWS Storage Gatewayの展開モードとして正しいものを3つ選択してください。',
+    options: [
+      'File Gateway',
+      'Volume Gateway',
+      'Tape Gateway',
+      'Database Gateway',
+      'Cache Gateway',
+      'Sync Gateway'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Storage Gatewayの3つの展開モード：File Gateway（NFS/SMB）、Volume Gateway（iSCSI）、Tape Gateway（VTL）です。'
+  },
+  {
+    id: 'storage-multi-4',
+    category: 'ストレージ',
+    question: 'S3のセキュリティ機能として正しいものを3つ選択してください。',
+    options: [
+      'バケットポリシー',
+      'Access Control Lists (ACL)',
+      'Server-Side Encryption',
+      'VPC Endpoint',
+      'CloudTrail統合',
+      'Auto Scaling'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'S3の主要セキュリティ機能：バケットポリシー（アクセス制御）、ACL（オブジェクトレベルアクセス制御）、Server-Side Encryption（暗号化）。VPC EndpointとCloudTrailは関連機能ですが、直接的なセキュリティ機能ではありません。'
+  },
+  {
+    id: 'storage-multi-5',
+    category: 'ストレージ',
+    question: 'EFSの特徴として正しいものを2つ選択してください。',
+    options: [
+      'ブロックストレージ',
+      'NFSプロトコルをサポート',
+      '単一AZでのみ利用可能',
+      '複数のEC2インスタンスから同時アクセス可能',
+      'Windows専用',
+      'オブジェクトストレージ'
+    ],
+    correct: [
+      1,
+      3
+    ],
+    multipleChoice: true,
+    explanation: 'EFS（Elastic File System）はNFSプロトコルをサポートし、複数のEC2インスタンスから同時にアクセス可能なファイルストレージサービスです。複数AZにまたがって利用でき、LinuxベースのシステムでPOSIX準拠のファイルシステムを提供します。'
+  },
+  {
+    id: 'storage-multi-6',
+    category: 'ストレージ',
+    question: 'Amazon S3の暗号化オプションとして正しいものを3つ選択してください。',
+    options: [
+      'SSE-S3（S3管理キー）',
+      'SSE-KMS（AWS KMS管理キー）',
+      'SSE-C（カスタマー提供キー）',
+      'SSE-IAM（IAM管理キー）',
+      'SSE-VPC（VPC管理キー）',
+      'SSE-EC2（EC2管理キー）'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'S3の暗号化オプション：SSE-S3（S3がキーを管理）、SSE-KMS（AWS KMSでキー管理）、SSE-C（顧客がキーを提供・管理）。SSE-IAM、SSE-VPC、SSE-EC2は存在しない暗号化方式です。'
+  },
+  {
+    id: 'storage-multi-7',
+    category: 'ストレージ',
+    question: 'Amazon FSxでサポートされているファイルシステムを2つ選択してください。',
+    options: [
+      'Windows File Server',
+      'Lustre',
+      'NetApp ONTAP',
+      'OpenZFS',
+      'GlusterFS',
+      'CephFS'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon FSxでサポートされるファイルシステム：Windows File Server（Windows環境向け）、Lustre（高性能コンピューティング向け）。NetApp ONTAP、OpenZFS、GlusterFS、CephFSは他のソリューションです。'
+  },
+  {
+    id: 'storage-multi-8',
+    category: 'ストレージ',
+    question: 'S3 Transfer Accelerationの利点として正しいものを2つ選択してください。',
+    options: [
+      'CloudFrontエッジロケーションを活用',
+      'アップロード速度の向上',
+      'ストレージコストの削減',
+      'データの自動暗号化',
+      'バージョニングの自動有効化',
+      'アクセス権限の自動設定'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'S3 Transfer Accelerationの利点：CloudFrontのエッジロケーションを活用してAWSバックボーンネットワーク経由でデータ転送、特に遠距離からのアップロード速度向上。コスト削減や暗号化、バージョニング、権限設定は別機能です。'
+  },
+  {
+    id: 'storage-multi-9',
+    category: 'ストレージ',
+    question: 'Amazon EBSのスナップショット機能として正しいものを3つ選択してください。',
+    options: [
+      'S3に自動保存',
+      'インクリメンタルバックアップ',
+      'クロスリージョンコピー',
+      'リアルタイム同期',
+      'データベーストランザクション保証',
+      'ファイルレベル復元'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'EBSスナップショット機能：S3への自動保存（耐久性確保）、インクリメンタルバックアップ（変更分のみ保存）、クロスリージョンコピー（災害復旧）。リアルタイム同期ではなく、ファイルレベル復元は不可、DBトランザクション保証は別途対応が必要です。'
+  },
+  {
+    id: 'storage-multi-10',
+    category: 'ストレージ',
+    question: 'AWS DataSyncの機能として正しいものを2つ選択してください。',
+    options: [
+      'オンプレミスとAWS間のデータ転送',
+      'AWSサービス間のデータ転送',
+      'リアルタイムデータレプリケーション',
+      'データベーススキーマ変換',
+      'アプリケーションコード移行',
+      'ネットワーク設定の自動化'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS DataSyncの機能：オンプレミスとAWS間のデータ転送（NFS、SMB、HDFS等）、AWSサービス間のデータ転送（S3、EFS、FSx間）。リアルタイムレプリケーションではなく一回限りまたはスケジュール実行、スキーマ変換やコード移行は対象外です。'
   },
   {
     id: 'database-1',
@@ -1175,6 +1565,201 @@ const allQuestions = [
     explanation: 'DynamoDBの条件式では、等価、不等価、BETWEEN演算子は使用できますが、REGEX演算子は使用できません。'
   },
   {
+    id: 'database-multi-1',
+    category: 'データベース',
+    question: 'Amazon RDSでサポートされているデータベースエンジンを3つ選択してください。',
+    options: [
+      'MySQL',
+      'PostgreSQL',
+      'MongoDB',
+      'Oracle',
+      'Cassandra',
+      'Redis'
+    ],
+    correct: [
+      0,
+      1,
+      3
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon RDSは、MySQL、PostgreSQL、Oracle、SQL Server、MariaDB、Amazon Auroraをサポートしています。MongoDB、Cassandra、RedisはRDSではサポートされていません。'
+  },
+  {
+    id: 'database-multi-2',
+    category: 'データベース',
+    question: 'DynamoDBのパフォーマンス最適化手法として正しいものを2つ選択してください。',
+    options: [
+      'ホットパーティションの回避',
+      '適切なパーティションキーの選択',
+      'セカンダリインデックスの多用',
+      '大きなアイテムサイズの使用',
+      'スキャン操作の頻繁な実行',
+      'バッチ操作の使用'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'DynamoDBのパフォーマンス最適化には、ホットパーティションの回避と適切なパーティションキーの選択が重要です。セカンダリインデックスの多用、大きなアイテムサイズ、頻繁なスキャン操作は性能低下の原因となります。'
+  },
+  {
+    id: 'database-multi-3',
+    category: 'データベース',
+    question: 'Amazon Auroraの特徴として正しいものを3つ選択してください。',
+    options: [
+      'MySQL・PostgreSQL互換',
+      '最大15個のリードレプリカ',
+      'NoSQLデータベース',
+      '自動バックアップ・ポイントインタイムリカバリ',
+      'シングルAZ展開のみ',
+      'サーバーレス機能'
+    ],
+    correct: [
+      0,
+      1,
+      3
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon Auroraは、MySQL・PostgreSQL互換のリレーショナルデータベース、最大15個のリードレプリカ、自動バックアップ・ポイントインタイムリカバリをサポートします。マルチAZ展開が可能で、サーバーレス機能も提供しています。'
+  },
+  {
+    id: 'database-multi-4',
+    category: 'データベース',
+    question: 'AWS Database Migration Service (DMS)でサポートされているソースデータベースを3つ選択してください。',
+    options: [
+      'Oracle',
+      'SQL Server',
+      'MongoDB',
+      'Cassandra',
+      'S3',
+      'Redshift'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS DMSは、Oracle、SQL Server、MySQL、PostgreSQL、MongoDB、MariaDBなど多くのデータベースをソースとしてサポートしています。S3やRedshiftもサポートされていますが、主要なソースデータベースとしてはOracle、SQL Server、MongoDBが代表的です。'
+  },
+  {
+    id: 'database-multi-5',
+    category: 'データベース',
+    question: 'Amazon ElastiCacheでサポートされているエンジンを2つ選択してください。',
+    options: [
+      'Redis',
+      'Memcached',
+      'MongoDB',
+      'Cassandra',
+      'DynamoDB',
+      'Neptune'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon ElastiCacheは、RedisとMemcachedの2つのインメモリキャッシュエンジンをサポートしています。Redisはより高機能で永続化やレプリケーションをサポートし、Memcachedはシンプルで高速なキャッシュを提供します。'
+  },
+  {
+    id: 'database-multi-6',
+    category: 'データベース',
+    question: 'Amazon DocumentDBの特徴として正しいものを3つ選択してください。',
+    options: [
+      'MongoDB互換',
+      'フルマネージドサービス',
+      '自動バックアップ・復元',
+      'SQL言語サポート',
+      'リレーショナルデータベース',
+      'ACID準拠のトランザクション'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon DocumentDBの特徴：MongoDB互換のドキュメントデータベース、フルマネージドサービス、自動バックアップ・ポイントインタイムリカバリ。SQL言語やリレーショナル機能はサポートせず、NoSQLデータベースです。'
+  },
+  {
+    id: 'database-multi-7',
+    category: 'データベース',
+    question: 'Amazon Neptuneでサポートされているグラフクエリ言語を2つ選択してください。',
+    options: [
+      'Apache TinkerPop Gremlin',
+      'W3C SPARQL',
+      'Cypher',
+      'SQL',
+      'MongoDB Query Language',
+      'GraphQL'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon Neptuneでサポートされるクエリ言語：Apache TinkerPop Gremlin（プロパティグラフ用）、W3C SPARQL（RDFグラフ用）。Cypher、SQL、MongoDB QL、GraphQLは直接サポートされていません。'
+  },
+  {
+    id: 'database-multi-8',
+    category: 'データベース',
+    question: 'DynamoDB Global Tablesの利点として正しいものを2つ選択してください。',
+    options: [
+      'マルチリージョンレプリケーション',
+      '自動フェイルオーバー',
+      'データの強整合性保証',
+      'SQLクエリサポート',
+      'スキーマ定義の必須化',
+      'JOINクエリの最適化'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'DynamoDB Global Tablesの利点：マルチリージョンでの自動レプリケーション、リージョン障害時の自動フェイルオーバー。結果整合性モデルを採用し、SQLクエリやスキーマ定義、JOINクエリはサポートしていません。'
+  },
+  {
+    id: 'database-multi-9',
+    category: 'データベース',
+    question: 'Amazon RDS Proxyの機能として正しいものを3つ選択してください。',
+    options: [
+      'コネクションプーリング',
+      'フェイルオーバー時間の短縮',
+      'IAM認証のサポート',
+      'データの自動暗号化',
+      'スキーマ変更の自動化',
+      'クエリパフォーマンスの監視'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon RDS Proxyの機能：コネクションプーリング（接続効率化）、フェイルオーバー時間短縮（66%削減）、IAM認証サポート（セキュリティ強化）。データ暗号化、スキーマ変更、クエリ監視は他のサービス・機能です。'
+  },
+  {
+    id: 'database-multi-10',
+    category: 'データベース',
+    question: 'Amazon Timestreamの特徴として正しいものを2つ選択してください。',
+    options: [
+      '時系列データ専用データベース',
+      'サーバーレスアーキテクチャ',
+      'リレーショナルデータベース',
+      'グラフデータベース',
+      'キー・バリューストア',
+      'ドキュメントデータベース'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon Timestreamの特徴：時系列データ専用に最適化されたデータベース、サーバーレスでフルマネージド。リレーショナル、グラフ、キー・バリュー、ドキュメントデータベースではなく、IoTやアプリケーション監視データに特化しています。'
+  },
+  {
     id: 'networking-1',
     category: 'ネットワーキング',
     question: 'Layer 7（HTTP/HTTPS）で動作するロードバランサーはどれですか？',
@@ -1563,6 +2148,201 @@ const allQuestions = [
     ],
     correct: 1,
     explanation: 'VPC Latticeは、マイクロサービス間の安全で効率的な通信を実現するアプリケーションネットワーキングサービスです。'
+  },
+  {
+    id: 'networking-multi-1',
+    category: 'ネットワーキング',
+    question: 'VPCピアリング接続の制限事項として正しいものを3つ選択してください。',
+    options: [
+      'CIDRブロックの重複は不可',
+      '推移的ルーティングは不可',
+      '異なるリージョン間では利用不可',
+      'セキュリティグループの参照は不可',
+      '同一アカウント内でのみ利用可能',
+      'DNS解決はサポートされない'
+    ],
+    correct: [
+      0,
+      1,
+      3
+    ],
+    multipleChoice: true,
+    explanation: 'VPCピアリングの制限：CIDRブロックの重複不可、推移的ルーティング不可、異なるVPC間でのセキュリティグループ参照不可。異なるリージョン・アカウント間でも利用可能で、DNS解決もサポートされます。'
+  },
+  {
+    id: 'networking-multi-2',
+    category: 'ネットワーキング',
+    question: 'AWS Transit Gatewayの利点として正しいものを2つ選択してください。',
+    options: [
+      'VPC間の複雑な接続を簡素化',
+      'オンプレミスとの接続を一元化',
+      'データ転送料金が無料',
+      'セキュリティグループ機能を提供',
+      'NATゲートウェイ機能を内蔵',
+      'ロードバランサー機能を提供'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'Transit Gatewayは、複数のVPC間の接続を簡素化し、オンプレミスとの接続を一元化できます。データ転送料金は発生し、セキュリティグループやNATゲートウェイ、ロードバランサー機能は提供しません。'
+  },
+  {
+    id: 'networking-multi-3',
+    category: 'ネットワーキング',
+    question: 'Application Load Balancer (ALB)の機能として正しいものを3つ選択してください。',
+    options: [
+      'パスベースルーティング',
+      'ホストベースルーティング',
+      'WebSocketサポート',
+      'UDP負荷分散',
+      'Layer 4負荷分散のみ',
+      'SSL終端'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'ALBは、パスベースルーティング、ホストベースルーティング、WebSocketサポートを提供します。Layer 7（HTTP/HTTPS）で動作し、SSL終端も可能ですが、UDP負荷分散はNetwork Load Balancerの機能です。'
+  },
+  {
+    id: 'networking-multi-4',
+    category: 'ネットワーキング',
+    question: 'AWS Direct Connectの利点として正しいものを2つ選択してください。',
+    options: [
+      '専用線による安定した帯域幅',
+      'インターネット経由より低レイテンシ',
+      '完全無料のデータ転送',
+      '自動的な冗長化',
+      'VPN設定が不要',
+      'パブリックIPアドレスが不要'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'Direct Connectは、専用線による安定した帯域幅とインターネット経由より低いレイテンシを提供します。データ転送料金は発生し、冗長化は手動設定が必要で、VPN設定やパブリックIPアドレスの要否は用途によります。'
+  },
+  {
+    id: 'networking-multi-5',
+    category: 'ネットワーキング',
+    question: 'Amazon CloudFrontのキャッシュ動作を制御する方法として正しいものを3つ選択してください。',
+    options: [
+      'Cache Behaviors',
+      'TTL設定',
+      'Origin Request Policy',
+      'Security Groups',
+      'Route Tables',
+      'Cache Policy'
+    ],
+    correct: [
+      0,
+      1,
+      5
+    ],
+    multipleChoice: true,
+    explanation: 'CloudFrontのキャッシュ制御：Cache Behaviors（パスパターンベースの動作設定）、TTL設定（キャッシュ保持時間）、Cache Policy（キャッシュキーとTTL設定）。Origin Request Policyはオリジンへのリクエスト制御、Security GroupsやRoute Tablesは関係ありません。'
+  },
+  {
+    id: 'networking-multi-6',
+    category: 'ネットワーキング',
+    question: 'AWS Global Acceleratorの機能として正しいものを2つ選択してください。',
+    options: [
+      'Anycastアドレスの提供',
+      'AWSグローバルネットワークの活用',
+      'コンテンツキャッシュ機能',
+      'SSL証明書の自動管理',
+      'DDoS攻撃の完全防御',
+      'データベース接続の最適化'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Global Acceleratorの機能：Anycastアドレス（単一IPで複数リージョンにルーティング）、AWSグローバルネットワーク活用（最適経路でトラフィック転送）。コンテンツキャッシュはCloudFront、SSL管理やDDoS防御、DB最適化は他のサービスです。'
+  },
+  {
+    id: 'networking-multi-7',
+    category: 'ネットワーキング',
+    question: 'Amazon Route 53のルーティングポリシーとして正しいものを3つ選択してください。',
+    options: [
+      'Weighted Routing',
+      'Latency-based Routing',
+      'Geolocation Routing',
+      'Cost-based Routing',
+      'Performance-based Routing',
+      'Security-based Routing'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'Route 53のルーティングポリシー：Weighted（重み付け）、Latency-based（レイテンシベース）、Geolocation（地理的位置ベース）、Failover、Multivalue Answer、Geoproximity。Cost-based、Performance-based、Security-basedは存在しないポリシーです。'
+  },
+  {
+    id: 'networking-multi-8',
+    category: 'ネットワーキング',
+    question: 'AWS PrivateLinkの利点として正しいものを2つ選択してください。',
+    options: [
+      'VPC間のプライベート接続',
+      'インターネットゲートウェイ不要',
+      'データ転送料金の無料化',
+      'セキュリティグループの自動設定',
+      'DNS解決の自動化',
+      'ロードバランシング機能'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS PrivateLinkの利点：VPC間またはVPCとAWSサービス間のプライベート接続、インターネットを経由せずAWSバックボーンネットワーク使用。データ転送料金は発生し、セキュリティグループ設定、DNS解決、ロードバランシングは別途設定が必要です。'
+  },
+  {
+    id: 'networking-multi-9',
+    category: 'ネットワーキング',
+    question: 'Network Load Balancer (NLB)の特徴として正しいものを3つ選択してください。',
+    options: [
+      'Layer 4（TCP/UDP）で動作',
+      '静的IPアドレスの提供',
+      '超低レイテンシ',
+      'HTTPヘッダーベースルーティング',
+      'SSL終端機能',
+      'WebSocketサポート'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'Network Load Balancer（NLB）の特徴：Layer 4（TCP/UDP）で動作、静的IPアドレス提供、超低レイテンシ（マイクロ秒単位）。HTTPヘッダールーティング、SSL終端、WebSocketサポートはApplication Load Balancer（ALB）の機能です。'
+  },
+  {
+    id: 'networking-multi-10',
+    category: 'ネットワーキング',
+    question: 'AWS Client VPNの機能として正しいものを2つ選択してください。',
+    options: [
+      'リモートユーザーのVPCアクセス',
+      'OpenVPNプロトコルサポート',
+      'サイト間VPN接続',
+      'Direct Connect代替',
+      'NAT Gateway機能',
+      'Internet Gateway機能'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Client VPNの機能：リモートユーザー（個人）のVPCへの安全なアクセス、OpenVPNプロトコルサポート。サイト間VPN接続はSite-to-Site VPN、Direct Connect代替やNAT/Internet Gateway機能は提供しません。'
   },
   {
     id: 'security-1',
@@ -2215,6 +2995,201 @@ const allQuestions = [
     explanation: 'エンベロープ暗号化では、データキー、マスターキー、プレーンテキストキーを使用しますが、ルートキーという概念は使用されません。'
   },
   {
+    id: 'security-multi-1',
+    category: 'セキュリティ',
+    question: 'AWS IAMのベストプラクティスとして正しいものを3つ選択してください。',
+    options: [
+      '最小権限の原則を適用',
+      'ルートアカウントの日常使用',
+      'MFA（多要素認証）の有効化',
+      'アクセスキーの定期的なローテーション',
+      'すべてのユーザーにAdministratorAccess付与',
+      'パスワードポリシーの無効化'
+    ],
+    correct: [
+      0,
+      2,
+      3
+    ],
+    multipleChoice: true,
+    explanation: 'IAMベストプラクティス：最小権限の原則、MFAの有効化、アクセスキーの定期ローテーション。ルートアカウントの日常使用や過度な権限付与は避けるべきです。'
+  },
+  {
+    id: 'security-multi-2',
+    category: 'セキュリティ',
+    question: 'AWS KMSの暗号化方式として正しいものを2つ選択してください。',
+    options: [
+      'エンベロープ暗号化',
+      'クライアントサイド暗号化',
+      'サーバーサイド暗号化',
+      'ハイブリッド暗号化',
+      'ストリーム暗号化',
+      'ブロック暗号化'
+    ],
+    correct: [
+      0,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS KMSは、エンベロープ暗号化（データキーとマスターキーを使用）とサーバーサイド暗号化を提供します。クライアントサイド暗号化も可能ですが、KMSの主要機能ではありません。'
+  },
+  {
+    id: 'security-multi-3',
+    category: 'セキュリティ',
+    question: 'AWS WAFで防御できる攻撃タイプを3つ選択してください。',
+    options: [
+      'SQLインジェクション',
+      'クロスサイトスクリプティング（XSS）',
+      'DDoS攻撃',
+      'DNSスプーフィング',
+      'マンインザミドル攻撃',
+      'フィッシング攻撃'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS WAFは、SQLインジェクション、XSS、DDoS攻撃などのWebアプリケーション層の攻撃を防御できます。DNSスプーフィング、マンインザミドル、フィッシング攻撃は他の対策が必要です。'
+  },
+  {
+    id: 'security-multi-4',
+    category: 'セキュリティ',
+    question: 'AWS Secrets Managerの機能として正しいものを2つ選択してください。',
+    options: [
+      'シークレットの自動ローテーション',
+      'データベース認証情報の管理',
+      'EC2インスタンスのSSHキー管理',
+      'SSL証明書の自動更新',
+      'IAMロールの自動作成',
+      'VPCセキュリティグループの管理'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Secrets Managerは、シークレットの自動ローテーションとデータベース認証情報の安全な管理を提供します。SSHキー、SSL証明書、IAMロール、セキュリティグループの管理は他のサービスの機能です。'
+  },
+  {
+    id: 'security-multi-5',
+    category: 'セキュリティ',
+    question: 'AWS Security Hubの機能として正しいものを3つ選択してください。',
+    options: [
+      'セキュリティ検出結果の一元管理',
+      'コンプライアンス状況の監視',
+      'セキュリティ標準への準拠チェック',
+      'ネットワークトラフィックの暗号化',
+      'IAMユーザーの自動作成',
+      'DDoS攻撃の自動防御'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Security Hubは、セキュリティ検出結果の一元管理、コンプライアンス状況の監視、セキュリティ標準（CIS、PCI DSS等）への準拠チェックを提供します。暗号化、IAM管理、DDoS防御は他のサービスの機能です。'
+  },
+  {
+    id: 'security-multi-6',
+    category: 'セキュリティ',
+    question: 'AWS Certificate Managerの機能として正しいものを2つ選択してください。',
+    options: [
+      'SSL/TLS証明書の自動プロビジョニング',
+      '証明書の自動更新',
+      'コード署名証明書の発行',
+      'S/MIME証明書の管理',
+      'ルート証明書の作成',
+      '証明書失効リストの管理'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Certificate Managerの機能：SSL/TLS証明書の自動プロビジョニング（無料）、証明書の自動更新（期限切れ防止）。コード署名、S/MIME、ルート証明書、CRL管理は対象外です。'
+  },
+  {
+    id: 'security-multi-7',
+    category: 'セキュリティ',
+    question: 'Amazon GuardDutyの検出対象として正しいものを3つ選択してください。',
+    options: [
+      '異常なAPI呼び出し',
+      'マルウェア感染',
+      'データ流出の兆候',
+      'アプリケーションバグ',
+      'パフォーマンス問題',
+      'コスト異常'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon GuardDutyの検出対象：異常なAPI呼び出し（CloudTrail分析）、マルウェア感染（DNS分析）、データ流出の兆候（VPCフローログ分析）。アプリケーションバグ、パフォーマンス問題、コスト異常は他のサービスで監視します。'
+  },
+  {
+    id: 'security-multi-8',
+    category: 'セキュリティ',
+    question: 'AWS CloudHSMの特徴として正しいものを2つ選択してください。',
+    options: [
+      'FIPS 140-2 Level 3認証',
+      '専用ハードウェアセキュリティモジュール',
+      'マルチテナント環境',
+      'AWS管理の暗号化キー',
+      '自動バックアップ機能',
+      'サーバーレスアーキテクチャ'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS CloudHSMの特徴：FIPS 140-2 Level 3認証取得、顧客専用のハードウェアセキュリティモジュール。マルチテナントではなくシングルテナント、顧客がキーを完全制御、手動バックアップ、物理ハードウェアベースです。'
+  },
+  {
+    id: 'security-multi-9',
+    category: 'セキュリティ',
+    question: 'AWS Configのセキュリティ関連機能として正しいものを3つ選択してください。',
+    options: [
+      'リソース設定の継続的監視',
+      'コンプライアンス違反の検出',
+      '設定変更の自動修復',
+      'ネットワークトラフィック分析',
+      'アプリケーション脆弱性スキャン',
+      'ユーザー行動分析'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Configのセキュリティ機能：リソース設定の継続的監視、コンプライアンス違反検出（Config Rules）、設定変更の自動修復（Remediation Actions）。ネットワーク分析、脆弱性スキャン、ユーザー行動分析は他のサービスです。'
+  },
+  {
+    id: 'security-multi-10',
+    category: 'セキュリティ',
+    question: 'Amazon Inspectorの機能として正しいものを2つ選択してください。',
+    options: [
+      'EC2インスタンスの脆弱性評価',
+      'コンテナイメージの脆弱性スキャン',
+      'ネットワーク設定の監査',
+      'IAMポリシーの分析',
+      'データベースの暗号化チェック',
+      'S3バケットのアクセス権限監査'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon Inspectorの機能：EC2インスタンスの脆弱性評価（OS、アプリケーション）、コンテナイメージの脆弱性スキャン（ECR統合）。ネットワーク監査、IAM分析、DB暗号化、S3権限監査は他のサービスの機能です。'
+  },
+  {
     id: 'monitoring-1',
     category: '監視・ログ',
     question: 'AWSリソースの監視とアラートを提供するサービスはどれですか？',
@@ -2540,6 +3515,201 @@ const allQuestions = [
     explanation: 'Managed Service for Prometheusは、フルマネージド、高可用性、セキュアなPrometheusサービスを提供します。'
   },
   {
+    id: 'monitoring-multi-1',
+    category: '監視・ログ',
+    question: 'Amazon CloudWatchで監視できるメトリクスタイプを3つ選択してください。',
+    options: [
+      'システムメトリクス',
+      'カスタムメトリクス',
+      'アプリケーションメトリクス',
+      'ネットワークパケット内容',
+      'ソースコード品質',
+      'ユーザー行動分析'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'CloudWatchは、システムメトリクス（CPU、メモリ等）、カスタムメトリクス（独自定義）、アプリケーションメトリクス（APM）を監視できます。パケット内容、ソースコード品質、ユーザー行動分析は他のサービスの領域です。'
+  },
+  {
+    id: 'monitoring-multi-2',
+    category: '監視・ログ',
+    question: 'AWS X-Rayの機能として正しいものを2つ選択してください。',
+    options: [
+      '分散トレーシング',
+      'サービスマップの可視化',
+      'ログファイルの暗号化',
+      'データベースのバックアップ',
+      'ネットワークトラフィック分析',
+      'コスト分析'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS X-Rayは、分散トレーシング（リクエストの追跡）とサービスマップの可視化（アプリケーション構成の表示）を提供します。ログ暗号化、バックアップ、ネットワーク分析、コスト分析は他のサービスの機能です。'
+  },
+  {
+    id: 'monitoring-multi-3',
+    category: '監視・ログ',
+    question: 'Amazon CloudWatch Logsの機能として正しいものを3つ選択してください。',
+    options: [
+      'ログの集約・保存',
+      'ログのリアルタイム監視',
+      'メトリクスフィルター',
+      'データベースクエリ最適化',
+      'ネットワーク設定の自動化',
+      'コンテナイメージの管理'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'CloudWatch Logsは、ログの集約・保存、リアルタイム監視、メトリクスフィルター（ログからメトリクス生成）を提供します。データベース最適化、ネットワーク自動化、コンテナ管理は他のサービスの機能です。'
+  },
+  {
+    id: 'monitoring-multi-4',
+    category: '監視・ログ',
+    question: 'AWS CloudTrailで記録される情報として正しいものを2つ選択してください。',
+    options: [
+      'API呼び出し履歴',
+      'ユーザーアクティビティ',
+      'ネットワークパケット内容',
+      'アプリケーションパフォーマンス',
+      'データベースクエリ実行時間',
+      'ファイルシステムアクセス'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS CloudTrailは、API呼び出し履歴とユーザーアクティビティ（管理イベント）を記録します。ネットワークパケット、アプリケーション性能、DB性能、ファイルアクセスは他のサービスで監視します。'
+  },
+  {
+    id: 'monitoring-multi-5',
+    category: '監視・ログ',
+    question: 'Amazon EventBridgeの機能として正しいものを3つ選択してください。',
+    options: [
+      'イベントルーティング',
+      'スケジュールベースの実行',
+      'カスタムイベントの処理',
+      'データベースレプリケーション',
+      'ファイル転送',
+      'ユーザー認証'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon EventBridgeは、イベントルーティング（イベントの配信）、スケジュールベースの実行（cron式）、カスタムイベントの処理を提供します。データベースレプリケーション、ファイル転送、ユーザー認証は他のサービスの機能です。'
+  },
+  {
+    id: 'monitoring-multi-6',
+    category: '監視・ログ',
+    question: 'AWS CloudWatch Insightsの機能として正しいものを2つ選択してください。',
+    options: [
+      'ログデータのクエリと分析',
+      'インタラクティブな検索機能',
+      'リアルタイムストリーミング',
+      'データの自動暗号化',
+      'メトリクスの自動生成',
+      'アラートの自動設定'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS CloudWatch Insightsの機能：ログデータのクエリと分析（SQL風の構文）、インタラクティブな検索とフィルタリング。リアルタイムストリーミング、暗号化、メトリクス生成、アラート設定は他の機能です。'
+  },
+  {
+    id: 'monitoring-multi-7',
+    category: '監視・ログ',
+    question: 'Amazon CloudWatch Syntheticsの機能として正しいものを3つ選択してください。',
+    options: [
+      'Webサイトの可用性監視',
+      'APIエンドポイントの監視',
+      'ユーザージャーニーのテスト',
+      'データベースパフォーマンス監視',
+      'ネットワーク帯域幅測定',
+      'サーバーリソース監視'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'CloudWatch Syntheticsの機能：Webサイトの可用性監視（外形監視）、APIエンドポイントの監視、ユーザージャーニーのテスト（Canary）。データベース性能、ネットワーク帯域幅、サーバーリソース監視は他のサービス・機能です。'
+  },
+  {
+    id: 'monitoring-multi-8',
+    category: '監視・ログ',
+    question: 'AWS Personal Health Dashboardの機能として正しいものを2つ選択してください。',
+    options: [
+      'AWSサービス障害の個別通知',
+      'メンテナンス予定の事前通知',
+      'コスト異常の検出',
+      'セキュリティ脆弱性の監視',
+      'パフォーマンス最適化の提案',
+      'リソース使用量の分析'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Personal Health Dashboardの機能：使用中のAWSサービスに影響する障害の個別通知、メンテナンス予定の事前通知。コスト異常、セキュリティ監視、性能最適化、リソース分析は他のサービスの機能です。'
+  },
+  {
+    id: 'monitoring-multi-9',
+    category: '監視・ログ',
+    question: 'Amazon CloudWatch Anomaly Detectionの特徴として正しいものを3つ選択してください。',
+    options: [
+      '機械学習による異常検出',
+      '自動的なベースライン学習',
+      '異常検出時の自動アラート',
+      'リアルタイムデータ修正',
+      'データの自動バックアップ',
+      'メトリクスの自動生成'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'CloudWatch Anomaly Detectionの特徴：機械学習による異常検出、過去データからの自動ベースライン学習、異常検出時の自動アラート送信。データ修正、バックアップ、メトリクス生成は行いません。'
+  },
+  {
+    id: 'monitoring-multi-10',
+    category: '監視・ログ',
+    question: 'AWS Systems Manager OpsCenter の機能として正しいものを2つ選択してください。',
+    options: [
+      '運用上の問題の一元管理',
+      '自動化されたトラブルシューティング',
+      'データベースのバックアップ',
+      'ネットワーク設定の変更',
+      'アプリケーションのデプロイ',
+      'ユーザーアカウントの管理'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Systems Manager OpsCenterの機能：運用上の問題（OpsItems）の一元管理、関連するAWS Configルールやランブックとの統合による自動化されたトラブルシューティング。バックアップ、ネットワーク変更、デプロイ、ユーザー管理は他のサービスです。'
+  },
+  {
     id: 'migration-1',
     category: '移行・統合',
     question: 'データベース移行を支援するAWSサービスはどれですか？',
@@ -2863,6 +4033,201 @@ const allQuestions = [
     ],
     correct: 0,
     explanation: 'Refactoring Toolkitは、レガシーアプリケーションの現代化とクラウド移行を支援します。'
+  },
+  {
+    id: 'migration-multi-1',
+    category: '移行戦略',
+    question: 'AWS移行の6つのR戦略を3つ選択してください。',
+    options: [
+      'Rehost (Lift and Shift)',
+      'Replatform (Lift, Tinker, and Shift)',
+      'Refactor (Re-architect)',
+      'Rebuild',
+      'Replace',
+      'Restore'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS移行の6R戦略：Rehost、Replatform、Refactor、Repurchase、Retain、Retire。RebuildやReplaceは一般的な用語ですが、6Rの正式な戦略ではありません。Restoreは移行戦略ではありません。'
+  },
+  {
+    id: 'migration-multi-2',
+    category: '移行戦略',
+    question: 'AWS Application Migration Service (MGN)の機能として正しいものを2つ選択してください。',
+    options: [
+      'ブロックレベルレプリケーション',
+      '最小限のダウンタイムでの移行',
+      'データベーススキーマ変換',
+      'アプリケーションコードの自動変換',
+      'ネットワーク設定の自動化',
+      'ユーザー認証の移行'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS MGNの機能：ブロックレベルレプリケーション（継続的なデータ同期）、最小限のダウンタイムでの移行（カットオーバー時間短縮）。スキーマ変換はDMS、コード変換は手動、ネットワーク・認証設定は別途対応が必要です。'
+  },
+  {
+    id: 'migration-multi-3',
+    category: '移行戦略',
+    question: 'AWS Database Migration Service (DMS)でサポートされている移行パターンを3つ選択してください。',
+    options: [
+      '同種データベース間の移行',
+      '異種データベース間の移行',
+      '継続的なデータレプリケーション',
+      'ファイルシステムの移行',
+      'アプリケーションコードの移行',
+      'ユーザーインターフェースの移行'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS DMSの移行パターン：同種DB間移行（Oracle→Oracle等）、異種DB間移行（Oracle→PostgreSQL等）、継続的レプリケーション（CDC）。ファイルシステム、アプリケーションコード、UIの移行は対象外です。'
+  },
+  {
+    id: 'migration-multi-4',
+    category: '移行戦略',
+    question: 'AWS Snow Familyのデバイスとして正しいものを2つ選択してください。',
+    options: [
+      'AWS Snowball Edge',
+      'AWS Snowmobile',
+      'AWS Snowflake',
+      'AWS Snowpipe',
+      'AWS Snowball Classic',
+      'AWS Snowstorm'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Snow Familyのデバイス：Snowball Edge（ストレージとコンピューティング）、Snowmobile（エクサバイト規模のデータ転送トラック）。Snowflake、Snowpipeは他社サービス、Snowball Classicは旧世代、Snowstormは存在しません。'
+  },
+  {
+    id: 'migration-multi-5',
+    category: '移行戦略',
+    question: 'クラウド移行の成功要因として正しいものを3つ選択してください。',
+    options: [
+      '経営陣のサポート',
+      '段階的な移行アプローチ',
+      'スキルと知識の習得',
+      '一度にすべてを移行',
+      'コスト削減のみを重視',
+      'セキュリティ要件の無視'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: '移行成功要因：経営陣のサポート（組織的なコミット）、段階的アプローチ（リスク軽減）、スキル習得（技術的準備）。一度にすべて移行、コストのみ重視、セキュリティ無視は失敗要因です。'
+  },
+  {
+    id: 'migration-multi-6',
+    category: '移行戦略',
+    question: 'AWS Schema Conversion Tool (SCT) の機能として正しいものを2つ選択してください。',
+    options: [
+      'データベーススキーマの変換',
+      'アプリケーションコードの変換',
+      'データの実際の移行',
+      'ネットワーク設定の変換',
+      'ユーザーアカウントの移行',
+      'ファイルシステムの変換'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS SCTの機能：データベーススキーマの変換（異種DB間のスキーマ変換）、アプリケーションコードの変換（SQL文等の変換）。データ移行はDMS、ネットワーク設定、ユーザーアカウント、ファイルシステム変換は対象外です。'
+  },
+  {
+    id: 'migration-multi-7',
+    category: '移行戦略',
+    question: 'AWS Migration Hub の機能として正しいものを3つ選択してください。',
+    options: [
+      '移行プロジェクトの一元管理',
+      '移行ツールの統合ダッシュボード',
+      '移行進捗の可視化',
+      'データの自動移行',
+      'アプリケーションの自動変換',
+      'インフラの自動構築'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Migration Hubの機能：移行プロジェクトの一元管理、複数の移行ツール（DMS、MGN等）の統合ダッシュボード、移行進捗の可視化。データ移行、アプリ変換、インフラ構築は他のツールが実行します。'
+  },
+  {
+    id: 'migration-multi-8',
+    category: '移行戦略',
+    question: 'AWS Application Discovery Service の機能として正しいものを2つ選択してください。',
+    options: [
+      'オンプレミス環境の自動検出',
+      'アプリケーション依存関係の分析',
+      'データの自動移行',
+      'アプリケーションの自動変換',
+      'クラウドコストの自動計算',
+      'セキュリティ設定の自動化'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Application Discovery Serviceの機能：オンプレミス環境の自動検出（サーバー、アプリケーション）、アプリケーション依存関係の分析（移行計画策定支援）。データ移行、アプリ変換、コスト計算、セキュリティ設定は他のサービスです。'
+  },
+  {
+    id: 'migration-multi-9',
+    category: '移行戦略',
+    question: 'Large-scale migration のベストプラクティスとして正しいものを3つ選択してください。',
+    options: [
+      'パイロットプロジェクトの実施',
+      '段階的な移行アプローチ',
+      '自動化ツールの活用',
+      '一括での全システム移行',
+      'マニュアル作業の最大化',
+      'テスト工程の省略'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: '大規模移行のベストプラクティス：パイロットプロジェクト（小規模で検証）、段階的移行（リスク分散）、自動化ツール活用（効率化・品質向上）。一括移行、マニュアル作業最大化、テスト省略は失敗要因です。'
+  },
+  {
+    id: 'migration-multi-10',
+    category: '移行戦略',
+    question: 'AWS Migration Acceleration Program (MAP) の特徴として正しいものを2つ選択してください。',
+    options: [
+      '移行プロジェクトの資金支援',
+      '専門家によるガイダンス',
+      'ハードウェアの無償提供',
+      'ソフトウェアライセンスの無償提供',
+      'データセンターの無償利用',
+      'ネットワーク回線の無償提供'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS MAPの特徴：移行プロジェクトの資金支援（クレジット提供）、AWS専門家やパートナーによるガイダンス・サポート。ハードウェア、ソフトウェアライセンス、データセンター、ネットワーク回線の無償提供は含まれません。'
   },
   {
     id: 'analytics-1',
@@ -3515,6 +4880,201 @@ const allQuestions = [
     explanation: 'SageMaker Feature Storeは、数値、文字列、時系列データを管理しますが、動画データの直接管理は対象外です。'
   },
   {
+    id: 'analytics-multi-1',
+    category: 'アナリティクス',
+    question: 'Amazon Redshiftの特徴として正しいものを3つ選択してください。',
+    options: [
+      'カラムナーストレージ',
+      'MPP（大規模並列処理）アーキテクチャ',
+      'データ圧縮機能',
+      'NoSQLデータベース',
+      'リアルタイムトランザクション処理',
+      'グラフデータベース機能'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon Redshiftの特徴：カラムナーストレージ（分析クエリに最適）、MPPアーキテクチャ（並列処理）、データ圧縮（ストレージ効率化）。RedshiftはSQLベースのデータウェアハウスで、NoSQL、リアルタイムOLTP、グラフDBではありません。'
+  },
+  {
+    id: 'analytics-multi-2',
+    category: 'アナリティクス',
+    question: 'AWS Glueの機能として正しいものを2つ選択してください。',
+    options: [
+      'データカタログ管理',
+      'ETL処理の自動化',
+      'リアルタイムストリーミング',
+      'データベースのバックアップ',
+      'ネットワーク監視',
+      'ユーザー認証'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Glueの機能：データカタログ管理（メタデータ管理）、ETL処理の自動化（データ変換・移動）。リアルタイムストリーミングはKinesis、バックアップ・監視・認証は他のサービスの機能です。'
+  },
+  {
+    id: 'analytics-multi-3',
+    category: 'アナリティクス',
+    question: 'Amazon Kinesisのサービスとして正しいものを3つ選択してください。',
+    options: [
+      'Kinesis Data Streams',
+      'Kinesis Data Firehose',
+      'Kinesis Analytics',
+      'Kinesis Database',
+      'Kinesis Storage',
+      'Kinesis Compute'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon Kinesisのサービス：Data Streams（リアルタイムデータストリーミング）、Data Firehose（データ配信）、Analytics（ストリーミング分析）。Database、Storage、Computeは存在しないサービス名です。'
+  },
+  {
+    id: 'analytics-multi-4',
+    category: 'アナリティクス',
+    question: 'Amazon EMRでサポートされているビッグデータフレームワークを2つ選択してください。',
+    options: [
+      'Apache Spark',
+      'Apache Hadoop',
+      'MongoDB',
+      'PostgreSQL',
+      'Redis',
+      'Cassandra'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon EMRでサポートされる主要フレームワーク：Apache Spark（高速分散処理）、Apache Hadoop（分散ストレージ・処理）。MongoDB、PostgreSQL、Redis、CassandraはEMRの主要対象ではありません。'
+  },
+  {
+    id: 'analytics-multi-5',
+    category: 'アナリティクス',
+    question: 'Amazon QuickSightの機能として正しいものを3つ選択してください。',
+    options: [
+      'インタラクティブなダッシュボード',
+      '機械学習による洞察',
+      'モバイルアプリサポート',
+      'データベースの自動バックアップ',
+      'ネットワークセキュリティ',
+      'サーバー管理'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon QuickSightの機能：インタラクティブダッシュボード（可視化）、ML Insights（機械学習による自動洞察）、モバイルアプリサポート（どこでもアクセス）。バックアップ、セキュリティ、サーバー管理は他のサービスの機能です。'
+  },
+  {
+    id: 'analytics-multi-6',
+    category: 'アナリティクス',
+    question: 'Amazon Athena の特徴として正しいものを2つ選択してください。',
+    options: [
+      'サーバーレスクエリサービス',
+      'S3データの直接クエリ',
+      'データの事前ロードが必要',
+      '専用クラスターの管理が必要',
+      'リアルタイムストリーミング処理',
+      'データの自動変換機能'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon Athenaの特徴：サーバーレスクエリサービス（インフラ管理不要）、S3に保存されたデータの直接クエリ（標準SQL使用）。データの事前ロード、専用クラスター管理、リアルタイム処理、自動変換は不要・非対応です。'
+  },
+  {
+    id: 'analytics-multi-7',
+    category: 'アナリティクス',
+    question: 'AWS Lake Formation の機能として正しいものを3つ選択してください。',
+    options: [
+      'データレイクの構築・管理',
+      'データの自動分類・カタログ化',
+      'きめ細かいアクセス制御',
+      'リアルタイムストリーミング',
+      'データの自動暗号化',
+      'アプリケーション開発'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Lake Formationの機能：データレイクの構築・管理（S3ベース）、データの自動分類・カタログ化（Glue統合）、きめ細かいアクセス制御（行・列レベル）。リアルタイム処理、自動暗号化、アプリ開発は対象外です。'
+  },
+  {
+    id: 'analytics-multi-8',
+    category: 'アナリティクス',
+    question: 'Amazon OpenSearch Service の機能として正しいものを2つ選択してください。',
+    options: [
+      '全文検索機能',
+      'ログ分析・可視化',
+      'リレーショナルデータベース',
+      'ファイルストレージ',
+      'バッチ処理エンジン',
+      'メッセージキュー'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon OpenSearch Serviceの機能：全文検索機能（Elasticsearchベース）、ログ分析・可視化（Kibanaダッシュボード）。リレーショナルDB、ファイルストレージ、バッチ処理、メッセージキューは他のサービスです。'
+  },
+  {
+    id: 'analytics-multi-9',
+    category: 'アナリティクス',
+    question: 'Amazon MSK (Managed Streaming for Apache Kafka) の利点として正しいものを3つ選択してください。',
+    options: [
+      'フルマネージドKafkaクラスター',
+      '自動スケーリング',
+      'Multi-AZ配置',
+      'SQLクエリサポート',
+      'データの自動変換',
+      'バッチ処理機能'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon MSKの利点：フルマネージドKafkaクラスター（運用負荷軽減）、自動スケーリング（需要に応じた拡張）、Multi-AZ配置（高可用性）。SQLクエリ、データ変換、バッチ処理は直接サポートしていません。'
+  },
+  {
+    id: 'analytics-multi-10',
+    category: 'アナリティクス',
+    question: 'AWS Data Pipeline の機能として正しいものを2つ選択してください。',
+    options: [
+      'データ処理ワークフローの定義',
+      'スケジュールベースの実行',
+      'リアルタイムストリーミング',
+      'データの自動分類',
+      '機械学習モデルの訓練',
+      'ユーザーインターフェースの提供'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Data Pipelineの機能：データ処理ワークフローの定義（ETL処理等）、スケジュールベースの実行（定期的なデータ処理）。リアルタイム処理、データ分類、ML訓練、UI提供は他のサービスの機能です。'
+  },
+  {
     id: 'integration-1',
     category: 'アプリケーション統合',
     question: 'メッセージキューサービスを提供するAWSサービスはどれですか？',
@@ -3838,6 +5398,201 @@ const allQuestions = [
     ],
     correct: 3,
     explanation: '使用量プランでは、リクエスト数、バースト制限、クォータを制御できますが、レスポンス時間は制御できません。'
+  },
+  {
+    id: 'integration-multi-1',
+    category: '統合サービス',
+    question: 'Amazon SQSの特徴として正しいものを2つ選択してください。',
+    options: [
+      'メッセージの順序保証（FIFO）',
+      'デッドレターキュー機能',
+      'リアルタイムメッセージング',
+      'プッシュ通知機能',
+      'ファイル転送機能',
+      'データベース機能'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon SQSの特徴：FIFO キューでの順序保証、デッドレターキュー（処理失敗メッセージの隔離）。SQSはプル型のメッセージキューで、リアルタイムメッセージング、プッシュ通知、ファイル転送、DB機能は提供しません。'
+  },
+  {
+    id: 'integration-multi-2',
+    category: '統合サービス',
+    question: 'Amazon SNSでサポートされている配信プロトコルを3つ選択してください。',
+    options: [
+      'HTTP/HTTPS',
+      'Email',
+      'SMS',
+      'FTP',
+      'Telnet',
+      'SSH'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon SNSの配信プロトコル：HTTP/HTTPS（Webhook）、Email（電子メール）、SMS（テキストメッセージ）、SQS、Lambda等。FTP、Telnet、SSHは配信プロトコルとしてサポートされていません。'
+  },
+  {
+    id: 'integration-multi-3',
+    category: '統合サービス',
+    question: 'AWS Step Functionsの機能として正しいものを3つ選択してください。',
+    options: [
+      'ワークフローの可視化',
+      'エラーハンドリング',
+      '並列実行制御',
+      'データベース管理',
+      'ファイルストレージ',
+      'ユーザー認証'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Step Functionsの機能：ワークフローの可視化（状態遷移図）、エラーハンドリング（リトライ・キャッチ）、並列実行制御（並行処理）。データベース管理、ファイルストレージ、ユーザー認証は他のサービスの機能です。'
+  },
+  {
+    id: 'integration-multi-4',
+    category: '統合サービス',
+    question: 'Amazon API Gatewayの認証方式として正しいものを2つ選択してください。',
+    options: [
+      'IAM認証',
+      'Cognito User Pools',
+      'Lambda Authorizer',
+      'Active Directory',
+      'LDAP',
+      'Kerberos'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'API Gatewayの認証方式：IAM認証（AWS認証情報）、Cognito User Pools（ユーザープール）、Lambda Authorizer（カスタム認証）。Active Directory、LDAP、KerberosはAPI Gatewayの直接サポート対象ではありません。'
+  },
+  {
+    id: 'integration-multi-5',
+    category: '統合サービス',
+    question: 'Amazon EventBridgeのイベントソースとして正しいものを3つ選択してください。',
+    options: [
+      'AWSサービス',
+      'カスタムアプリケーション',
+      'SaaSパートナー',
+      'オンプレミスデータベース',
+      'ファイルシステム',
+      'プリンター'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'EventBridgeのイベントソース：AWSサービス（EC2、S3等）、カスタムアプリケーション（独自イベント）、SaaSパートナー（Salesforce等）。オンプレミスDB、ファイルシステム、プリンターは直接的なイベントソースではありません。'
+  },
+  {
+    id: 'integration-multi-6',
+    category: '統合サービス',
+    question: 'Amazon MQ の特徴として正しいものを2つ選択してください。',
+    options: [
+      'Apache ActiveMQ サポート',
+      'RabbitMQ サポート',
+      'フルマネージドサービス',
+      'サーバーレスアーキテクチャ',
+      'NoSQL データベース',
+      'ファイルストレージ'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon MQの特徴：Apache ActiveMQサポート（JMSメッセージング）、RabbitMQサポート（AMQPメッセージング）。フルマネージドですがサーバーレスではなく、NoSQLやファイルストレージ機能は提供しません。'
+  },
+  {
+    id: 'integration-multi-7',
+    category: '統合サービス',
+    question: 'AWS AppSync の機能として正しいものを3つ選択してください。',
+    options: [
+      'GraphQL API の提供',
+      'リアルタイムデータ同期',
+      'オフライン機能のサポート',
+      'REST API の提供',
+      'ファイル転送機能',
+      'バッチ処理機能'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS AppSyncの機能：GraphQL APIの提供（効率的なデータクエリ）、リアルタイムデータ同期（サブスクリプション）、オフライン機能サポート（ローカルキャッシュ）。REST API、ファイル転送、バッチ処理は他のサービスです。'
+  },
+  {
+    id: 'integration-multi-8',
+    category: '統合サービス',
+    question: 'Amazon Simple Workflow Service (SWF) の特徴として正しいものを2つ選択してください。',
+    options: [
+      '長時間実行ワークフローのサポート',
+      '人間の介入を含むワークフロー',
+      'サーバーレス実行',
+      '自動スケーリング',
+      'リアルタイムストリーミング',
+      'データベース機能'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'Amazon SWFの特徴：長時間実行ワークフロー（数日〜数ヶ月）のサポート、人間の介入を含むワークフロー（承認プロセス等）。サーバーレスではなく、自動スケーリング、ストリーミング、DB機能は提供しません。'
+  },
+  {
+    id: 'integration-multi-9',
+    category: '統合サービス',
+    question: 'AWS X-Ray の統合機能として正しいものを3つ選択してください。',
+    options: [
+      'Lambda関数のトレーシング',
+      'API Gatewayのトレーシング',
+      'ECS/EKSのトレーシング',
+      'RDSのトレーシング',
+      'S3のトレーシング',
+      'CloudFrontのトレーシング'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS X-Rayの統合機能：Lambda関数のトレーシング（自動統合）、API Gatewayのトレーシング（リクエスト追跡）、ECS/EKSのトレーシング（コンテナアプリ）。RDS、S3、CloudFrontは直接的なトレーシング対象ではありません。'
+  },
+  {
+    id: 'integration-multi-10',
+    category: '統合サービス',
+    question: 'Amazon Kinesis Data Firehose の配信先として正しいものを2つ選択してください。',
+    options: [
+      'Amazon S3',
+      'Amazon Redshift',
+      'Amazon ElastiCache',
+      'Amazon RDS',
+      'Amazon DynamoDB',
+      'Amazon Neptune'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'Kinesis Data Firehoseの配信先：Amazon S3（データレイク）、Amazon Redshift（データウェアハウス）、Amazon OpenSearch Service、Splunk等。ElastiCache、RDS、DynamoDB、Neptuneは直接的な配信先ではありません。'
   },
   {
     id: 'management-1',
@@ -4165,6 +5920,201 @@ const allQuestions = [
     explanation: 'Launch Wizardは、SAP、Microsoft SQL Server等の複雑なワークロードの展開を簡素化します。'
   },
   {
+    id: 'management-multi-1',
+    category: '管理・ガバナンス',
+    question: 'AWS Organizationsの機能として正しいものを3つ選択してください。',
+    options: [
+      '一括請求管理',
+      'Service Control Policies (SCP)',
+      'アカウントの一元管理',
+      'データベース管理',
+      'ネットワーク監視',
+      'アプリケーション開発'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Organizationsの機能：一括請求管理（統合請求）、SCP（アカウント権限制御）、アカウント一元管理（組織単位での管理）。データベース管理、ネットワーク監視、アプリ開発は他のサービスの機能です。'
+  },
+  {
+    id: 'management-multi-2',
+    category: '管理・ガバナンス',
+    question: 'AWS Control Towerの機能として正しいものを2つ選択してください。',
+    options: [
+      'ランディングゾーンの自動セットアップ',
+      'ガードレールによるガバナンス',
+      'データベースの自動バックアップ',
+      'ネットワークトラフィック分析',
+      'アプリケーションパフォーマンス監視',
+      'ユーザーインターフェース設計'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Control Towerの機能：ランディングゾーンの自動セットアップ（マルチアカウント環境の構築）、ガードレール（予防・検出型の統制）。バックアップ、トラフィック分析、性能監視、UI設計は他のサービスの機能です。'
+  },
+  {
+    id: 'management-multi-3',
+    category: '管理・ガバナンス',
+    question: 'AWS Resource Access Manager (RAM)で共有できるリソースを3つ選択してください。',
+    options: [
+      'VPCサブネット',
+      'Route 53 Resolver Rules',
+      'Transit Gateway',
+      'EC2インスタンス',
+      'S3バケット',
+      'Lambda関数'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS RAMで共有可能なリソース：VPCサブネット、Route 53 Resolver Rules、Transit Gateway、License Manager設定等。EC2インスタンス、S3バケット、Lambda関数は直接共有できません。'
+  },
+  {
+    id: 'management-multi-4',
+    category: '管理・ガバナンス',
+    question: 'AWS Trusted Advisorのチェックカテゴリーとして正しいものを2つ選択してください。',
+    options: [
+      'コスト最適化',
+      'セキュリティ',
+      'パフォーマンス',
+      'データベース設計',
+      'アプリケーション開発',
+      'ユーザーエクスペリエンス'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Trusted Advisorのチェックカテゴリー：コスト最適化、セキュリティ、パフォーマンス、耐障害性、サービス制限。データベース設計、アプリ開発、UXは直接的なチェック項目ではありません。'
+  },
+  {
+    id: 'management-multi-5',
+    category: '管理・ガバナンス',
+    question: 'AWS License Managerの機能として正しいものを3つ選択してください。',
+    options: [
+      'ライセンス使用量の追跡',
+      'ライセンス違反の防止',
+      'ライセンスコストの最適化',
+      'データベースパフォーマンス監視',
+      'ネットワークセキュリティ',
+      'アプリケーション開発支援'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS License Managerの機能：ライセンス使用量追跡（利用状況監視）、ライセンス違反防止（ルール適用）、コスト最適化（適切な配分）。DB性能監視、ネットワークセキュリティ、アプリ開発は他のサービスの機能です。'
+  },
+  {
+    id: 'management-multi-6',
+    category: '管理・ガバナンス',
+    question: 'AWS CloudTrail の機能として正しいものを2つ選択してください。',
+    options: [
+      'API呼び出しの記録',
+      'ユーザーアクティビティの追跡',
+      'パフォーマンス監視',
+      'コスト分析',
+      'セキュリティ脆弱性スキャン',
+      'データバックアップ'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS CloudTrailの機能：API呼び出しの記録（管理イベント・データイベント）、ユーザーアクティビティの追跡（誰が何をいつ実行したか）。パフォーマンス監視、コスト分析、脆弱性スキャン、バックアップは他のサービスです。'
+  },
+  {
+    id: 'management-multi-7',
+    category: '管理・ガバナンス',
+    question: 'AWS Compute Optimizer の機能として正しいものを3つ選択してください。',
+    options: [
+      'EC2インスタンスの最適化推奨',
+      'EBSボリュームの最適化推奨',
+      'Lambda関数の最適化推奨',
+      'RDSインスタンスの最適化推奨',
+      'S3ストレージクラスの最適化推奨',
+      'CloudFront設定の最適化推奨'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Compute Optimizerの機能：EC2インスタンスの最適化推奨（サイズ・タイプ）、EBSボリュームの最適化推奨（サイズ・タイプ）、Lambda関数の最適化推奨（メモリ設定）。RDS、S3、CloudFrontは対象外です。'
+  },
+  {
+    id: 'management-multi-8',
+    category: '管理・ガバナンス',
+    question: 'AWS Systems Manager Compliance の機能として正しいものを2つ選択してください。',
+    options: [
+      'パッチコンプライアンスの監視',
+      '設定コンプライアンスの監視',
+      'コストコンプライアンスの監視',
+      'パフォーマンスコンプライアンスの監視',
+      'ユーザーアクセスコンプライアンスの監視',
+      'データバックアップコンプライアンスの監視'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'Systems Manager Complianceの機能：パッチコンプライアンスの監視（パッチ適用状況）、設定コンプライアンスの監視（設定基準への準拠）。コスト、パフォーマンス、ユーザーアクセス、バックアップのコンプライアンスは他のサービスです。'
+  },
+  {
+    id: 'management-multi-9',
+    category: '管理・ガバナンス',
+    question: 'AWS Health API の機能として正しいものを3つ選択してください。',
+    options: [
+      'サービス障害情報の取得',
+      'メンテナンス予定の取得',
+      'アカウント固有の健全性情報',
+      'コスト異常の検出',
+      'セキュリティ脆弱性の検出',
+      'パフォーマンス問題の検出'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Health APIの機能：サービス障害情報の取得、メンテナンス予定の取得、アカウント固有の健全性情報（使用中サービスへの影響）。コスト異常、セキュリティ脆弱性、パフォーマンス問題の検出は他のサービスです。'
+  },
+  {
+    id: 'management-multi-10',
+    category: '管理・ガバナンス',
+    question: 'AWS Application Auto Scaling の対象サービスとして正しいものを2つ選択してください。',
+    options: [
+      'Amazon ECS',
+      'Amazon DynamoDB',
+      'Amazon Aurora',
+      'Amazon EC2',
+      'Amazon S3',
+      'Amazon CloudFront'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Application Auto Scalingの対象：Amazon ECS（タスク数のスケーリング）、Amazon DynamoDB（読み書き容量のスケーリング）、Lambda同時実行数、Aurora Serverless等。EC2は別のAuto Scaling、S3・CloudFrontは自動スケーリング対象外です。'
+  },
+  {
     id: 'disaster-recovery-1',
     category: '災害復旧',
     question: 'RTO（Recovery Time Objective）とは何を表しますか？',
@@ -4488,6 +6438,201 @@ const allQuestions = [
     ],
     correct: 3,
     explanation: '効果的な災害復旧テストには、定期的な実行、詳細な文書化、可能な限りの自動化がすべて重要です。'
+  },
+  {
+    id: 'disaster-recovery-multi-1',
+    category: '災害復旧',
+    question: 'AWS災害復旧戦略の4つのパターンを3つ選択してください。',
+    options: [
+      'Backup and Restore',
+      'Pilot Light',
+      'Warm Standby',
+      'Multi-Site Active/Active',
+      'Cold Storage',
+      'Hot Backup'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS災害復旧の4つのパターン：Backup and Restore、Pilot Light、Warm Standby、Multi-Site Active/Active。Cold StorageやHot Backupは一般的な用語ですが、AWS DRの標準パターンではありません。'
+  },
+  {
+    id: 'disaster-recovery-multi-2',
+    category: '災害復旧',
+    question: 'RTO（Recovery Time Objective）を短縮する方法として正しいものを2つ選択してください。',
+    options: [
+      'Multi-AZ配置の活用',
+      'Auto Scalingの設定',
+      'データのアーカイブ化',
+      'バックアップ頻度の削減',
+      'マニュアル復旧手順の採用',
+      '単一リージョンでの運用'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'RTO短縮方法：Multi-AZ配置（自動フェイルオーバー）、Auto Scaling（迅速な容量調整）。アーカイブ化、バックアップ頻度削減、マニュアル手順、単一リージョン運用はRTOを延長させる要因です。'
+  },
+  {
+    id: 'disaster-recovery-multi-3',
+    category: '災害復旧',
+    question: 'Amazon RDSの災害復旧機能として正しいものを3つ選択してください。',
+    options: [
+      'Multi-AZ配置',
+      'リードレプリカ',
+      '自動バックアップ',
+      'マニュアルスナップショット',
+      'Auto Scaling',
+      'Load Balancing'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'RDSの災害復旧機能：Multi-AZ配置（同期レプリケーション）、リードレプリカ（非同期レプリケーション）、自動バックアップ（ポイントインタイムリカバリ）。マニュアルスナップショットも可能ですが、Auto ScalingやLoad BalancingはRDSの直接機能ではありません。'
+  },
+  {
+    id: 'disaster-recovery-multi-4',
+    category: '災害復旧',
+    question: 'AWS Backupの機能として正しいものを2つ選択してください。',
+    options: [
+      '一元的なバックアップ管理',
+      'クロスリージョンバックアップ',
+      'リアルタイムレプリケーション',
+      'データベースクエリ最適化',
+      'ネットワーク監視',
+      'ユーザー認証'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Backupの機能：一元的なバックアップ管理（複数サービスのバックアップを統合管理）、クロスリージョンバックアップ（地理的分散）。リアルタイムレプリケーション、DB最適化、ネットワーク監視、認証は他のサービスの機能です。'
+  },
+  {
+    id: 'disaster-recovery-multi-5',
+    category: '災害復旧',
+    question: 'RPO（Recovery Point Objective）を短縮する方法として正しいものを3つ選択してください。',
+    options: [
+      'バックアップ頻度の増加',
+      '同期レプリケーションの使用',
+      'Change Data Capture (CDC)の活用',
+      'データ圧縮の強化',
+      'バックアップの暗号化',
+      'アクセス権限の制限'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'RPO短縮方法：バックアップ頻度増加（データ損失期間短縮）、同期レプリケーション（リアルタイム複製）、CDC（変更データのリアルタイム捕捉）。データ圧縮、暗号化、アクセス制限はセキュリティや効率性の向上ですが、RPOには直接影響しません。'
+  },
+  {
+    id: 'disaster-recovery-multi-6',
+    category: '災害復旧',
+    question: 'AWS Elastic Disaster Recovery の機能として正しいものを2つ選択してください。',
+    options: [
+      'ブロックレベルレプリケーション',
+      'ポイントインタイムリカバリ',
+      'データベーススキーマ変換',
+      'アプリケーションコード変換',
+      'ネットワーク設定の自動化',
+      'ユーザーアカウントの移行'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Elastic Disaster Recoveryの機能：ブロックレベルレプリケーション（継続的なデータ同期）、ポイントインタイムリカバリ（任意の時点への復旧）。スキーマ変換、コード変換、ネットワーク自動化、アカウント移行は対象外です。'
+  },
+  {
+    id: 'disaster-recovery-multi-7',
+    category: '災害復旧',
+    question: 'Cross-Region Replication の利点として正しいものを3つ選択してください。',
+    options: [
+      '地理的な分散',
+      'コンプライアンス要件への対応',
+      'レイテンシの改善',
+      'コストの削減',
+      'セキュリティの向上',
+      'パフォーマンスの統一'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'Cross-Region Replicationの利点：地理的分散（災害復旧）、コンプライアンス要件対応（データ保存場所規制）、レイテンシ改善（ユーザーに近い場所からアクセス）。コスト削減、セキュリティ向上、性能統一は直接的な利点ではありません。'
+  },
+  {
+    id: 'disaster-recovery-multi-8',
+    category: '災害復旧',
+    question: 'Amazon S3 の災害復旧機能として正しいものを2つ選択してください。',
+    options: [
+      'Cross-Region Replication',
+      'Versioning',
+      'MFA Delete',
+      'Transfer Acceleration',
+      'Intelligent Tiering',
+      'Inventory'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'S3の災害復旧機能：Cross-Region Replication（他リージョンへの自動複製）、Versioning（オブジェクトの複数バージョン保持）。MFA Delete、Transfer Acceleration、Intelligent Tiering、Inventoryは他の目的の機能です。'
+  },
+  {
+    id: 'disaster-recovery-multi-9',
+    category: '災害復旧',
+    question: 'AWS CloudFormation を使用した災害復旧の利点として正しいものを3つ選択してください。',
+    options: [
+      'インフラストラクチャのコード化',
+      '迅速な環境復旧',
+      '設定の一貫性保証',
+      'データの自動バックアップ',
+      'ネットワーク帯域幅の向上',
+      'アプリケーションの自動修復'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'CloudFormationを使用した災害復旧の利点：インフラストラクチャのコード化（再現可能）、迅速な環境復旧（テンプレート実行）、設定の一貫性保証（同一構成で復旧）。データバックアップ、帯域幅向上、アプリ修復は別の機能です。'
+  },
+  {
+    id: 'disaster-recovery-multi-10',
+    category: '災害復旧',
+    question: 'Database の災害復旧戦略として正しいものを2つ選択してください。',
+    options: [
+      'Read Replica の活用',
+      'Database Snapshot の定期取得',
+      'Connection Pooling の設定',
+      'Query Optimization の実施',
+      'Index の最適化',
+      'Cache の活用'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'データベース災害復旧戦略：Read Replica（読み取り専用レプリカ、フェイルオーバー可能）、Database Snapshot（定期的なバックアップ取得）。Connection Pooling、Query Optimization、Index最適化、Cacheはパフォーマンス向上の手法です。'
   },
   {
     id: 'cost-optimization-1',
@@ -4815,6 +6960,201 @@ const allQuestions = [
     explanation: '効果的なタグベースコスト配分には、一貫したタグ付け、階層化された構造、自動化されたタグ付けが重要です。'
   },
   {
+    id: 'cost-optimization-multi-1',
+    category: 'コスト最適化',
+    question: 'EC2のコスト最適化手法として正しいものを3つ選択してください。',
+    options: [
+      'リザーブドインスタンスの活用',
+      'スポットインスタンスの活用',
+      '適切なインスタンスサイズの選択',
+      '常時最大スペックでの運用',
+      'すべてのインスタンスをオンデマンドで運用',
+      'セキュリティグループの最適化'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'EC2コスト最適化：リザーブドインスタンス（長期利用での割引）、スポットインスタンス（最大90%割引）、適切なサイズ選択（過剰スペック回避）。常時最大スペックやオンデマンドのみの運用はコスト効率が悪いです。'
+  },
+  {
+    id: 'cost-optimization-multi-2',
+    category: 'コスト最適化',
+    question: 'S3のコスト最適化手法として正しいものを2つ選択してください。',
+    options: [
+      'ライフサイクルポリシーの設定',
+      '適切なストレージクラスの選択',
+      'すべてのデータをStandardクラスで保存',
+      'バケット数の最大化',
+      'アクセス頻度に関係なく同一クラス使用',
+      'データの重複保存'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'S3コスト最適化：ライフサイクルポリシー（自動的なストレージクラス移行）、適切なストレージクラス選択（アクセス頻度に応じた選択）。すべてStandardクラスや重複保存はコスト効率が悪いです。'
+  },
+  {
+    id: 'cost-optimization-multi-3',
+    category: 'コスト最適化',
+    question: 'AWS Cost Explorerで分析できる項目を3つ選択してください。',
+    options: [
+      'サービス別コスト',
+      'リージョン別コスト',
+      'タグ別コスト',
+      'ユーザー別アクセス頻度',
+      'ネットワークトラフィック詳細',
+      'セキュリティ脆弱性'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Cost Explorerは、サービス別、リージョン別、タグ別などの様々な軸でコスト分析が可能です。アクセス頻度、ネットワーク詳細、セキュリティ脆弱性は他のサービスで分析します。'
+  },
+  {
+    id: 'cost-optimization-multi-4',
+    category: 'コスト最適化',
+    question: 'AWS Savings Plansの種類として正しいものを2つ選択してください。',
+    options: [
+      'Compute Savings Plans',
+      'EC2 Instance Savings Plans',
+      'S3 Savings Plans',
+      'RDS Savings Plans',
+      'Lambda Savings Plans',
+      'VPC Savings Plans'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Savings Plansの種類：Compute Savings Plans（EC2、Fargate、Lambda対象）、EC2 Instance Savings Plans（特定のEC2インスタンスファミリー対象）。S3、RDS、VPC専用のSavings Plansは存在しません。'
+  },
+  {
+    id: 'cost-optimization-multi-5',
+    category: 'コスト最適化',
+    question: 'データ転送コストを削減する方法として正しいものを3つ選択してください。',
+    options: [
+      'CloudFrontの活用',
+      'VPC Endpointの使用',
+      'Direct Connectの活用',
+      'すべてのデータをパブリックサブネットに配置',
+      'リージョン間転送の最大化',
+      'NAT Gatewayの多用'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'データ転送コスト削減：CloudFront（エッジキャッシュでオリジンアクセス削減）、VPC Endpoint（AWS内部ネットワーク使用）、Direct Connect（専用線で安価な転送）。パブリック配置やリージョン間転送の増加はコスト増加要因です。'
+  },
+  {
+    id: 'cost-optimization-multi-6',
+    category: 'コスト最適化',
+    question: 'AWS Budgetsの機能として正しいものを2つ選択してください。',
+    options: [
+      'コスト予算の設定と監視',
+      '使用量予算の設定と監視',
+      'リソースの自動削除',
+      'インスタンスの自動停止',
+      'データの自動アーカイブ',
+      'アカウントの自動作成'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Budgetsの機能：コスト予算の設定と監視（支出上限設定）、使用量予算の設定と監視（リソース使用量上限）、予算超過時のアラート送信。リソース削除、インスタンス停止、データアーカイブ、アカウント作成は行いません。'
+  },
+  {
+    id: 'cost-optimization-multi-7',
+    category: 'コスト最適化',
+    question: 'RDS のコスト最適化手法として正しいものを3つ選択してください。',
+    options: [
+      'Reserved Instancesの活用',
+      '適切なインスタンスサイズの選択',
+      'Multi-AZ配置の見直し',
+      'すべてのデータベースをMulti-AZ化',
+      'バックアップ保持期間の最大化',
+      'リードレプリカの無制限作成'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'RDSコスト最適化：Reserved Instances（長期利用割引）、適切なインスタンスサイズ選択（過剰スペック回避）、Multi-AZ配置の見直し（必要性に応じた選択）。すべてMulti-AZ化、バックアップ期間最大化、リードレプリカ無制限作成はコスト増加要因です。'
+  },
+  {
+    id: 'cost-optimization-multi-8',
+    category: 'コスト最適化',
+    question: 'AWS Cost and Usage Reportの機能として正しいものを2つ選択してください。',
+    options: [
+      '詳細な使用量データの提供',
+      'カスタムコスト分析の実現',
+      'リソースの自動最適化',
+      'コストの自動削減',
+      'インスタンスの自動リサイズ',
+      'データの自動削除'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Cost and Usage Reportの機能：詳細な使用量データの提供（時間単位、リソース単位）、カスタムコスト分析の実現（BIツールとの連携）。自動最適化、自動削減、自動リサイズ、自動削除は行わず、データ提供のみです。'
+  },
+  {
+    id: 'cost-optimization-multi-9',
+    category: 'コスト最適化',
+    question: 'AWS Trusted Advisorのコスト最適化チェック項目として正しいものを3つ選択してください。',
+    options: [
+      '未使用のEBSボリューム',
+      'アイドル状態のRDSインスタンス',
+      '低使用率のEC2インスタンス',
+      'セキュリティグループの設定',
+      'IAMポリシーの複雑さ',
+      'ネットワーク設定の最適化'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'Trusted Advisorのコスト最適化チェック：未使用EBSボリューム、アイドル状態のRDSインスタンス、低使用率のEC2インスタンス、未使用のElastic IP等。セキュリティグループ、IAMポリシー、ネットワーク設定は他のカテゴリーです。'
+  },
+  {
+    id: 'cost-optimization-multi-10',
+    category: 'コスト最適化',
+    question: 'Lambda のコスト最適化手法として正しいものを2つ選択してください。',
+    options: [
+      'メモリ割り当ての最適化',
+      '実行時間の短縮',
+      'プロビジョンド同時実行の最大化',
+      'タイムアウト値の最大化',
+      'VPC設定の必須化',
+      'デプロイパッケージサイズの最大化'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'Lambdaコスト最適化：メモリ割り当ての最適化（必要最小限に設定）、実行時間の短縮（効率的なコード）。プロビジョンド同時実行の最大化、タイムアウト最大化、VPC必須化、パッケージサイズ最大化はコスト増加要因です。'
+  },
+  {
     id: 'architecture-1',
     category: 'アーキテクチャ',
     question: 'Well-Architected Frameworkの6つの柱に含まれないものはどれですか？',
@@ -5138,6 +7478,202 @@ const allQuestions = [
     ],
     correct: 3,
     explanation: 'Observabilityの3つの柱は、メトリクス、ログ、トレースです。アラートは監視の手段ですが、柱ではありません。'
+  },
+  {
+    id: 'architecture-multi-1',
+    category: 'アーキテクチャパターン',
+    question: 'AWS Well-Architected Frameworkの6つの柱を3つ選択してください。',
+    options: [
+      '運用上の優秀性',
+      'セキュリティ',
+      'コスト最適化',
+      'パフォーマンス効率',
+      'データ整合性',
+      'ユーザビリティ'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'Well-Architected Frameworkの6つの柱：運用上の優秀性、セキュリティ、信頼性、パフォーマンス効率、コスト最適化、持続可能性。データ整合性とユーザビリティは含まれません。'
+  },
+  {
+    id: 'architecture-multi-2',
+    category: 'アーキテクチャパターン',
+    question: 'マイクロサービスアーキテクチャの利点として正しいものを2つ選択してください。',
+    options: [
+      '独立したデプロイメント',
+      '技術スタックの多様性',
+      '運用の簡素化',
+      'データ整合性の保証',
+      'ネットワーク遅延の削減',
+      'セキュリティの向上'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'マイクロサービスの利点：独立したデプロイメント（サービス単位での更新）、技術スタックの多様性（サービスごとに最適な技術選択）。運用は複雑化し、データ整合性やネットワーク遅延は課題となります。'
+  },
+  {
+    id: 'architecture-multi-3',
+    category: 'アーキテクチャパターン',
+    question: 'イベント駆動アーキテクチャで使用されるAWSサービスを3つ選択してください。',
+    options: [
+      'Amazon EventBridge',
+      'Amazon SQS',
+      'Amazon SNS',
+      'Amazon RDS',
+      'Amazon S3',
+      'Amazon EC2'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'イベント駆動アーキテクチャで使用されるサービス：EventBridge（イベントルーティング）、SQS（メッセージキュー）、SNS（通知サービス）。RDS、S3、EC2は基盤サービスですが、イベント駆動の中核ではありません。'
+  },
+  {
+    id: 'architecture-multi-4',
+    category: 'アーキテクチャパターン',
+    question: 'サーバーレスアーキテクチャの特徴として正しいものを2つ選択してください。',
+    options: [
+      '使用量ベースの課金',
+      '自動スケーリング',
+      'サーバー管理が必要',
+      '常時稼働が必要',
+      '固定コスト',
+      'OS管理が必要'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'サーバーレスアーキテクチャの特徴：使用量ベースの課金（実行時間・リクエスト数）、自動スケーリング（需要に応じた拡張・縮小）。サーバー・OS管理は不要で、常時稼働や固定コストではありません。'
+  },
+  {
+    id: 'architecture-multi-5',
+    category: 'アーキテクチャパターン',
+    question: 'CQRS（Command Query Responsibility Segregation）パターンの利点として正しいものを3つ選択してください。',
+    options: [
+      '読み取りと書き込みの独立最適化',
+      'スケーラビリティの向上',
+      'データモデルの柔軟性',
+      'データ整合性の簡素化',
+      '開発の簡素化',
+      'ネットワーク使用量の削減'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'CQRSパターンの利点：読み取りと書き込みの独立最適化（異なるデータストア使用可能）、スケーラビリティ向上（読み書き別々にスケール）、データモデルの柔軟性（用途別最適化）。データ整合性や開発は複雑化します。'
+  },
+  {
+    id: 'architecture-multi-6',
+    category: 'アーキテクチャパターン',
+    question: 'Twelve-Factor Appの原則として正しいものを3つ選択してください。',
+    options: [
+      'コードベースの統一',
+      '設定の外部化',
+      'ステートレスプロセス',
+      'データベースの共有',
+      'サーバーの固定化',
+      'ログの内部保存'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'Twelve-Factor Appの原則：コードベース（一つのアプリ、一つのリポジトリ）、設定の外部化（環境変数使用）、ステートレスプロセス（状態を外部に保存）。データベース共有、サーバー固定化、ログ内部保存は原則に反します。'
+  },
+  {
+    id: 'architecture-multi-7',
+    category: 'アーキテクチャパターン',
+    question: 'Circuit Breakerパターンの利点として正しいものを2つ選択してください。',
+    options: [
+      'カスケード障害の防止',
+      'システムの自己回復',
+      'データの完全性保証',
+      'パフォーマンスの向上',
+      'セキュリティの強化',
+      'コストの削減'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'Circuit Breakerパターンの利点：カスケード障害の防止（障害の連鎖を断つ）、システムの自己回復（障害サービスの回復を検知して再開）。データ完全性、性能向上、セキュリティ、コスト削減は直接的な利点ではありません。'
+  },
+  {
+    id: 'architecture-multi-8',
+    category: 'アーキテクチャパターン',
+    question: 'Strangler Fig パターンの特徴として正しいものを3つ選択してください。',
+    options: [
+      '段階的なシステム移行',
+      'レガシーシステムの段階的置換',
+      'リスクの最小化',
+      '一括でのシステム置換',
+      'ダウンタイムの最大化',
+      'データ損失の許容'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'Strangler Figパターンの特徴：段階的なシステム移行（機能単位で移行）、レガシーシステムの段階的置換、リスクの最小化（小さな変更の積み重ね）。一括置換、ダウンタイム最大化、データ損失許容は逆の特徴です。'
+  },
+  {
+    id: 'architecture-multi-9',
+    category: 'アーキテクチャパターン',
+    question: 'API Gatewayパターンの機能として正しいものを2つ選択してください。',
+    options: [
+      'リクエストルーティング',
+      'レート制限',
+      'データベース管理',
+      'ファイルストレージ',
+      'ユーザーインターフェース',
+      'バッチ処理'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'API Gatewayパターンの機能：リクエストルーティング（適切なマイクロサービスへの転送）、レート制限（API使用量制御）、認証・認可、ログ記録等。データベース管理、ファイルストレージ、UI、バッチ処理は対象外です。'
+  },
+  {
+    id: 'architecture-multi-10',
+    category: 'アーキテクチャパターン',
+    question: 'Bulkhead パターンの利点として正しいものを3つ選択してください。',
+    options: [
+      '障害の分離',
+      'リソースの独立性',
+      'システムの部分的可用性',
+      'パフォーマンスの統一',
+      'リソースの共有最大化',
+      'システムの単純化'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'Bulkheadパターンの利点：障害の分離（一部の障害が全体に影響しない）、リソースの独立性（専用リソース割り当て）、システムの部分的可用性（一部が動作継続）。パフォーマンス統一、リソース共有最大化、システム単純化は逆の特徴です。'
   },
   {
     id: 'use-cases-1',
@@ -5790,6 +8326,202 @@ const allQuestions = [
     explanation: 'Rekognitionで画像・動画分析、Lambdaで処理、SNSで通知を行う組み合わせが最適です。'
   },
   {
+    id: 'use-cases-multi-1',
+    category: 'ユースケース',
+    question: 'グローバルなWebアプリケーションの高可用性を実現するために必要なAWSサービスを3つ選択してください。',
+    options: [
+      'Amazon CloudFront',
+      'Application Load Balancer',
+      'Auto Scaling Groups',
+      'Amazon S3',
+      'Amazon RDS',
+      'AWS Lambda'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'グローバル高可用性の実現：CloudFront（グローバル配信・キャッシュ）、ALB（複数インスタンス間の負荷分散）、Auto Scaling（需要に応じた自動スケール）。S3、RDS、Lambdaも重要ですが、高可用性の中核ではありません。'
+  },
+  {
+    id: 'use-cases-multi-2',
+    category: 'ユースケース',
+    question: 'リアルタイムデータ分析パイプラインを構築するために必要なAWSサービスを2つ選択してください。',
+    options: [
+      'Amazon Kinesis Data Streams',
+      'Amazon Kinesis Analytics',
+      'Amazon S3',
+      'Amazon RDS',
+      'Amazon EC2',
+      'Amazon VPC'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'リアルタイムデータ分析パイプライン：Kinesis Data Streams（ストリーミングデータ収集）、Kinesis Analytics（リアルタイム分析）。S3、RDS、EC2、VPCは基盤サービスですが、リアルタイム分析の中核ではありません。'
+  },
+  {
+    id: 'use-cases-multi-3',
+    category: 'ユースケース',
+    question: 'サーバーレスWebアプリケーションを構築するために必要なAWSサービスを3つ選択してください。',
+    options: [
+      'AWS Lambda',
+      'Amazon API Gateway',
+      'Amazon DynamoDB',
+      'Amazon EC2',
+      'Amazon RDS',
+      'Elastic Load Balancer'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'サーバーレスWebアプリ構築：Lambda（サーバーレス処理）、API Gateway（APIエンドポイント）、DynamoDB（サーバーレスDB）。EC2、RDS、ELBはサーバー管理が必要なサービスです。'
+  },
+  {
+    id: 'use-cases-multi-4',
+    category: 'ユースケース',
+    question: 'ハイブリッドクラウド環境でオンプレミスとAWSを接続するために使用できるサービスを2つ選択してください。',
+    options: [
+      'AWS Direct Connect',
+      'AWS VPN',
+      'AWS Transit Gateway',
+      'Amazon CloudFront',
+      'Amazon Route 53',
+      'AWS Lambda'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'ハイブリッドクラウド接続：Direct Connect（専用線接続）、VPN（暗号化されたインターネット接続）。Transit Gatewayは接続の集約に使用、CloudFront、Route 53、Lambdaは直接的な接続サービスではありません。'
+  },
+  {
+    id: 'use-cases-multi-5',
+    category: 'ユースケース',
+    question: '機械学習モデルの開発・デプロイメントパイプラインに必要なAWSサービスを3つ選択してください。',
+    options: [
+      'Amazon SageMaker',
+      'AWS CodePipeline',
+      'Amazon ECR',
+      'Amazon S3',
+      'Amazon RDS',
+      'Amazon VPC'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'ML開発・デプロイパイプライン：SageMaker（ML開発・訓練・推論）、CodePipeline（CI/CDパイプライン）、ECR（コンテナイメージ管理）。S3はデータ保存、RDS・VPCは基盤サービスですが、MLパイプラインの中核ではありません。'
+  },
+  {
+    id: 'use-cases-multi-6',
+    category: 'ユースケース',
+    question: 'IoTデータ処理パイプラインを構築するために必要なAWSサービスを3つ選択してください。',
+    options: [
+      'AWS IoT Core',
+      'Amazon Kinesis Data Streams',
+      'AWS Lambda',
+      'Amazon RDS',
+      'Amazon EC2',
+      'Amazon CloudFront'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'IoTデータ処理パイプライン：AWS IoT Core（デバイス接続・管理）、Kinesis Data Streams（ストリーミングデータ収集）、Lambda（リアルタイム処理）。RDS、EC2、CloudFrontは基盤サービスですが、IoTパイプラインの中核ではありません。'
+  },
+  {
+    id: 'use-cases-multi-7',
+    category: 'ユースケース',
+    question: 'コンテンツ配信ネットワーク（CDN）を構築するために必要なAWSサービスを2つ選択してください。',
+    options: [
+      'Amazon CloudFront',
+      'Amazon S3',
+      'Amazon Route 53',
+      'Amazon EC2',
+      'Amazon RDS',
+      'Amazon VPC'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'CDN構築：CloudFront（グローバル配信・キャッシュ）、S3（オリジンコンテンツ保存）。Route 53はDNS、EC2・RDS・VPCは基盤サービスですが、CDNの中核ではありません。'
+  },
+  {
+    id: 'use-cases-multi-8',
+    category: 'ユースケース',
+    question: 'ビッグデータ分析基盤を構築するために必要なAWSサービスを3つ選択してください。',
+    options: [
+      'Amazon S3',
+      'Amazon EMR',
+      'Amazon Redshift',
+      'Amazon EC2',
+      'Amazon RDS',
+      'Amazon ElastiCache'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'ビッグデータ分析基盤：S3（データレイク）、EMR（ビッグデータ処理）、Redshift（データウェアハウス）。EC2、RDS、ElastiCacheは基盤サービスですが、ビッグデータ分析の中核ではありません。'
+  },
+  {
+    id: 'use-cases-multi-9',
+    category: 'ユースケース',
+    question: 'マイクロサービスアーキテクチャを構築するために必要なAWSサービスを2つ選択してください。',
+    options: [
+      'Amazon ECS/EKS',
+      'Amazon API Gateway',
+      'AWS Lambda',
+      'Amazon S3',
+      'Amazon RDS',
+      'Amazon CloudWatch'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'マイクロサービスアーキテクチャ：ECS/EKS（コンテナオーケストレーション）、API Gateway（サービス間通信・ルーティング）。Lambda、S3、RDS、CloudWatchも重要ですが、マイクロサービスの中核はコンテナ管理とAPI管理です。'
+  },
+  {
+    id: 'use-cases-multi-10',
+    category: 'ユースケース',
+    question: 'エンタープライズ向けファイル共有システムを構築するために必要なAWSサービスを3つ選択してください。',
+    options: [
+      'Amazon WorkDocs',
+      'Amazon FSx',
+      'AWS Directory Service',
+      'Amazon S3',
+      'Amazon EC2',
+      'Amazon RDS'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'エンタープライズファイル共有システム：WorkDocs（ドキュメント管理・共有）、FSx（高性能ファイルシステム）、Directory Service（Active Directory統合・認証）。S3、EC2、RDSは基盤サービスですが、ファイル共有の中核ではありません。'
+  },
+  {
     id: 'operations-1',
     category: '運用・デプロイ',
     question: 'Blue/Greenデプロイメントを自動化するサービスはどれですか？',
@@ -6113,26 +8845,221 @@ const allQuestions = [
     ],
     correct: 0,
     explanation: 'Application Composerは、サーバーレスアプリケーションのアーキテクチャを視覚的に設計・構築するツールです。'
+  },
+  {
+    id: 'operations-multi-1',
+    category: '運用管理',
+    question: 'AWS Systems Managerの機能として正しいものを3つ選択してください。',
+    options: [
+      'Parameter Store',
+      'Session Manager',
+      'Patch Manager',
+      'Database Manager',
+      'Network Manager',
+      'User Manager'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Systems Managerの機能：Parameter Store（設定管理）、Session Manager（セキュアなシェルアクセス）、Patch Manager（パッチ管理）。Database、Network、User Managerは存在しない機能名です。'
+  },
+  {
+    id: 'operations-multi-2',
+    category: '運用管理',
+    question: 'AWS CloudFormationの機能として正しいものを2つ選択してください。',
+    options: [
+      'Infrastructure as Code',
+      'スタックの作成・更新・削除',
+      'リアルタイムモニタリング',
+      'データベースクエリ最適化',
+      'ネットワークトラフィック分析',
+      'ユーザー行動分析'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS CloudFormationの機能：Infrastructure as Code（テンプレートベースのインフラ管理）、スタック管理（リソースの一括作成・更新・削除）。モニタリング、DB最適化、トラフィック分析、行動分析は他のサービスの機能です。'
+  },
+  {
+    id: 'operations-multi-3',
+    category: '運用管理',
+    question: 'AWS Configの機能として正しいものを3つ選択してください。',
+    options: [
+      'リソース設定の記録',
+      'コンプライアンス監視',
+      '設定変更の追跡',
+      'パフォーマンス最適化',
+      'コスト分析',
+      'ユーザー管理'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Configの機能：リソース設定の記録（構成履歴）、コンプライアンス監視（ルール評価）、設定変更の追跡（変更検出）。パフォーマンス最適化、コスト分析、ユーザー管理は他のサービスの機能です。'
+  },
+  {
+    id: 'operations-multi-4',
+    category: '運用管理',
+    question: 'AWS OpsWorksでサポートされているスタックタイプを2つ選択してください。',
+    options: [
+      'Chef Automate',
+      'Puppet Enterprise',
+      'Ansible Tower',
+      'Terraform Enterprise',
+      'Jenkins',
+      'GitLab'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS OpsWorksでサポートされるスタック：Chef Automate（Chef管理）、Puppet Enterprise（Puppet管理）。Ansible、Terraform、Jenkins、GitLabは他のツールで、OpsWorksの直接サポート対象ではありません。'
+  },
+  {
+    id: 'operations-multi-5',
+    category: '運用管理',
+    question: 'AWS Service Catalogの利点として正しいものを3つ選択してください。',
+    options: [
+      'IT管理の標準化',
+      'セルフサービスプロビジョニング',
+      'ガバナンスの強化',
+      'パフォーマンス向上',
+      'データ暗号化',
+      'ネットワーク最適化'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Service Catalogの利点：IT管理の標準化（承認済み製品の提供）、セルフサービスプロビジョニング（ユーザー自身でのリソース作成）、ガバナンス強化（統制された環境）。パフォーマンス向上、暗号化、ネットワーク最適化は直接的な利点ではありません。'
+  },
+  {
+    id: 'operations-multi-6',
+    category: '運用管理',
+    question: 'AWS CodePipeline の機能として正しいものを2つ選択してください。',
+    options: [
+      '継続的インテグレーション',
+      '継続的デプロイメント',
+      'ソースコード管理',
+      'バグ追跡管理',
+      'プロジェクト管理',
+      'ドキュメント管理'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS CodePipelineの機能：継続的インテグレーション（CI）、継続的デプロイメント（CD）。ソースコード管理はCodeCommit、バグ追跡・プロジェクト・ドキュメント管理は他のツールの機能です。'
+  },
+  {
+    id: 'operations-multi-7',
+    category: '運用管理',
+    question: 'AWS Systems Manager Automation の機能として正しいものを3つ選択してください。',
+    options: [
+      'EC2インスタンスの自動化タスク',
+      'パッチ適用の自動化',
+      'AMI作成の自動化',
+      'データベースのバックアップ',
+      'ネットワーク設定の変更',
+      'ユーザーアカウントの作成'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'Systems Manager Automationの機能：EC2インスタンスの自動化タスク（起動・停止等）、パッチ適用の自動化、AMI作成の自動化。データベースバックアップ、ネットワーク設定変更、ユーザーアカウント作成は対象外です。'
+  },
+  {
+    id: 'operations-multi-8',
+    category: '運用管理',
+    question: 'AWS CodeDeploy の配信戦略として正しいものを2つ選択してください。',
+    options: [
+      'Blue/Green デプロイメント',
+      'Rolling デプロイメント',
+      'Canary デプロイメント',
+      'A/B テストデプロイメント',
+      'Shadow デプロイメント',
+      'Feature Flag デプロイメント'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS CodeDeployの配信戦略：Blue/Greenデプロイメント（新旧環境の切り替え）、Rollingデプロイメント（段階的更新）。Canary、A/B、Shadow、Feature Flagは他のツールや手法です。'
+  },
+  {
+    id: 'operations-multi-9',
+    category: '運用管理',
+    question: 'AWS Well-Architected Tool の機能として正しいものを3つ選択してください。',
+    options: [
+      'アーキテクチャレビューの実施',
+      'ベストプラクティスとの比較',
+      '改善提案の提供',
+      'コストの自動最適化',
+      'セキュリティ設定の自動化',
+      'パフォーマンスの自動調整'
+    ],
+    correct: [
+      0,
+      1,
+      2
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Well-Architected Toolの機能：アーキテクチャレビューの実施、Well-Architected Frameworkのベストプラクティスとの比較、改善提案の提供。自動最適化、自動化、自動調整は行わず、レビューと提案のみです。'
+  },
+  {
+    id: 'operations-multi-10',
+    category: '運用管理',
+    question: 'AWS Resource Groups の機能として正しいものを2つ選択してください。',
+    options: [
+      'リソースの論理的なグループ化',
+      'タグベースのリソース管理',
+      'リソースの自動作成',
+      'コストの自動最適化',
+      'セキュリティ設定の統一',
+      'パフォーマンス監視の自動化'
+    ],
+    correct: [
+      0,
+      1
+    ],
+    multipleChoice: true,
+    explanation: 'AWS Resource Groupsの機能：リソースの論理的なグループ化（プロジェクト・環境別等）、タグベースのリソース管理（タグによる自動グループ化）。リソース作成、コスト最適化、セキュリティ統一、性能監視は他のサービスです。'
   }
 ]
 
 // カテゴリ別統計
 const questionStats = {
-  コンピューティング: 30,
-  ストレージ: 30,
-  データベース: 30,
-  ネットワーキング: 30,
-  セキュリティ: 50,
-  監視・ログ: 25,
-  移行・統合: 25,
-  分析・機械学習: 50,
-  アプリケーション統合: 25,
-  管理・ガバナンス: 25,
-  災害復旧: 25,
-  コスト最適化: 25,
-  アーキテクチャ: 25,
-  ユースケース: 50,
-  運用・デプロイ: 25
+  コンピューティング: 40,
+  ストレージ: 40,
+  データベース: 40,
+  ネットワーキング: 40,
+  セキュリティ: 60,
+  監視・ログ: 35,
+  移行・統合: 35,
+  分析・機械学習: 60,
+  アプリケーション統合: 35,
+  管理・ガバナンス: 35,
+  災害復旧: 35,
+  コスト最適化: 35,
+  アーキテクチャ: 35,
+  ユースケース: 60,
+  運用・デプロイ: 35
 }
 
 // ユーティリティ関数

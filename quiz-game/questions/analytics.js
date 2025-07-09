@@ -399,6 +399,167 @@ const analyticsQuestions = [
     options: ['数値データ', '文字列データ', '時系列データ', '動画データ'],
     correct: 3,
     explanation: 'SageMaker Feature Storeは、数値、文字列、時系列データを管理しますが、動画データの直接管理は対象外です。'
+  },
+  // 複数選択問題
+  {
+    id: 'analytics-multi-1',
+    category: 'アナリティクス',
+    question: 'Amazon Redshiftの特徴として正しいものを3つ選択してください。',
+    options: [
+      'カラムナーストレージ',
+      'MPP（大規模並列処理）アーキテクチャ',
+      'データ圧縮機能',
+      'NoSQLデータベース',
+      'リアルタイムトランザクション処理',
+      'グラフデータベース機能'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'Amazon Redshiftの特徴：カラムナーストレージ（分析クエリに最適）、MPPアーキテクチャ（並列処理）、データ圧縮（ストレージ効率化）。RedshiftはSQLベースのデータウェアハウスで、NoSQL、リアルタイムOLTP、グラフDBではありません。'
+  },
+  {
+    id: 'analytics-multi-2',
+    category: 'アナリティクス',
+    question: 'AWS Glueの機能として正しいものを2つ選択してください。',
+    options: [
+      'データカタログ管理',
+      'ETL処理の自動化',
+      'リアルタイムストリーミング',
+      'データベースのバックアップ',
+      'ネットワーク監視',
+      'ユーザー認証'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS Glueの機能：データカタログ管理（メタデータ管理）、ETL処理の自動化（データ変換・移動）。リアルタイムストリーミングはKinesis、バックアップ・監視・認証は他のサービスの機能です。'
+  },
+  {
+    id: 'analytics-multi-3',
+    category: 'アナリティクス',
+    question: 'Amazon Kinesisのサービスとして正しいものを3つ選択してください。',
+    options: [
+      'Kinesis Data Streams',
+      'Kinesis Data Firehose',
+      'Kinesis Analytics',
+      'Kinesis Database',
+      'Kinesis Storage',
+      'Kinesis Compute'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'Amazon Kinesisのサービス：Data Streams（リアルタイムデータストリーミング）、Data Firehose（データ配信）、Analytics（ストリーミング分析）。Database、Storage、Computeは存在しないサービス名です。'
+  },
+  {
+    id: 'analytics-multi-4',
+    category: 'アナリティクス',
+    question: 'Amazon EMRでサポートされているビッグデータフレームワークを2つ選択してください。',
+    options: [
+      'Apache Spark',
+      'Apache Hadoop',
+      'MongoDB',
+      'PostgreSQL',
+      'Redis',
+      'Cassandra'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'Amazon EMRでサポートされる主要フレームワーク：Apache Spark（高速分散処理）、Apache Hadoop（分散ストレージ・処理）。MongoDB、PostgreSQL、Redis、CassandraはEMRの主要対象ではありません。'
+  },
+  {
+    id: 'analytics-multi-5',
+    category: 'アナリティクス',
+    question: 'Amazon QuickSightの機能として正しいものを3つ選択してください。',
+    options: [
+      'インタラクティブなダッシュボード',
+      '機械学習による洞察',
+      'モバイルアプリサポート',
+      'データベースの自動バックアップ',
+      'ネットワークセキュリティ',
+      'サーバー管理'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'Amazon QuickSightの機能：インタラクティブダッシュボード（可視化）、ML Insights（機械学習による自動洞察）、モバイルアプリサポート（どこでもアクセス）。バックアップ、セキュリティ、サーバー管理は他のサービスの機能です。'
+  },
+  {
+    id: 'analytics-multi-6',
+    category: 'アナリティクス',
+    question: 'Amazon Athena の特徴として正しいものを2つ選択してください。',
+    options: [
+      'サーバーレスクエリサービス',
+      'S3データの直接クエリ',
+      'データの事前ロードが必要',
+      '専用クラスターの管理が必要',
+      'リアルタイムストリーミング処理',
+      'データの自動変換機能'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'Amazon Athenaの特徴：サーバーレスクエリサービス（インフラ管理不要）、S3に保存されたデータの直接クエリ（標準SQL使用）。データの事前ロード、専用クラスター管理、リアルタイム処理、自動変換は不要・非対応です。'
+  },
+  {
+    id: 'analytics-multi-7',
+    category: 'アナリティクス',
+    question: 'AWS Lake Formation の機能として正しいものを3つ選択してください。',
+    options: [
+      'データレイクの構築・管理',
+      'データの自動分類・カタログ化',
+      'きめ細かいアクセス制御',
+      'リアルタイムストリーミング',
+      'データの自動暗号化',
+      'アプリケーション開発'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS Lake Formationの機能：データレイクの構築・管理（S3ベース）、データの自動分類・カタログ化（Glue統合）、きめ細かいアクセス制御（行・列レベル）。リアルタイム処理、自動暗号化、アプリ開発は対象外です。'
+  },
+  {
+    id: 'analytics-multi-8',
+    category: 'アナリティクス',
+    question: 'Amazon OpenSearch Service の機能として正しいものを2つ選択してください。',
+    options: [
+      '全文検索機能',
+      'ログ分析・可視化',
+      'リレーショナルデータベース',
+      'ファイルストレージ',
+      'バッチ処理エンジン',
+      'メッセージキュー'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'Amazon OpenSearch Serviceの機能：全文検索機能（Elasticsearchベース）、ログ分析・可視化（Kibanaダッシュボード）。リレーショナルDB、ファイルストレージ、バッチ処理、メッセージキューは他のサービスです。'
+  },
+  {
+    id: 'analytics-multi-9',
+    category: 'アナリティクス',
+    question: 'Amazon MSK (Managed Streaming for Apache Kafka) の利点として正しいものを3つ選択してください。',
+    options: [
+      'フルマネージドKafkaクラスター',
+      '自動スケーリング',
+      'Multi-AZ配置',
+      'SQLクエリサポート',
+      'データの自動変換',
+      'バッチ処理機能'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'Amazon MSKの利点：フルマネージドKafkaクラスター（運用負荷軽減）、自動スケーリング（需要に応じた拡張）、Multi-AZ配置（高可用性）。SQLクエリ、データ変換、バッチ処理は直接サポートしていません。'
+  },
+  {
+    id: 'analytics-multi-10',
+    category: 'アナリティクス',
+    question: 'AWS Data Pipeline の機能として正しいものを2つ選択してください。',
+    options: [
+      'データ処理ワークフローの定義',
+      'スケジュールベースの実行',
+      'リアルタイムストリーミング',
+      'データの自動分類',
+      '機械学習モデルの訓練',
+      'ユーザーインターフェースの提供'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS Data Pipelineの機能：データ処理ワークフローの定義（ETL処理等）、スケジュールベースの実行（定期的なデータ処理）。リアルタイム処理、データ分類、ML訓練、UI提供は他のサービスの機能です。'
   }
 ]
 

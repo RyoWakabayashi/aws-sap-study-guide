@@ -199,6 +199,167 @@ const architectureQuestions = [
     options: ['メトリクス', 'ログ', 'トレース', 'アラート'],
     correct: 3,
     explanation: 'Observabilityの3つの柱は、メトリクス、ログ、トレースです。アラートは監視の手段ですが、柱ではありません。'
+  },
+  // 複数選択問題
+  {
+    id: 'architecture-multi-1',
+    category: 'アーキテクチャパターン',
+    question: 'AWS Well-Architected Frameworkの6つの柱を3つ選択してください。',
+    options: [
+      '運用上の優秀性',
+      'セキュリティ',
+      'コスト最適化',
+      'パフォーマンス効率',
+      'データ整合性',
+      'ユーザビリティ'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'Well-Architected Frameworkの6つの柱：運用上の優秀性、セキュリティ、信頼性、パフォーマンス効率、コスト最適化、持続可能性。データ整合性とユーザビリティは含まれません。'
+  },
+  {
+    id: 'architecture-multi-2',
+    category: 'アーキテクチャパターン',
+    question: 'マイクロサービスアーキテクチャの利点として正しいものを2つ選択してください。',
+    options: [
+      '独立したデプロイメント',
+      '技術スタックの多様性',
+      '運用の簡素化',
+      'データ整合性の保証',
+      'ネットワーク遅延の削減',
+      'セキュリティの向上'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'マイクロサービスの利点：独立したデプロイメント（サービス単位での更新）、技術スタックの多様性（サービスごとに最適な技術選択）。運用は複雑化し、データ整合性やネットワーク遅延は課題となります。'
+  },
+  {
+    id: 'architecture-multi-3',
+    category: 'アーキテクチャパターン',
+    question: 'イベント駆動アーキテクチャで使用されるAWSサービスを3つ選択してください。',
+    options: [
+      'Amazon EventBridge',
+      'Amazon SQS',
+      'Amazon SNS',
+      'Amazon RDS',
+      'Amazon S3',
+      'Amazon EC2'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'イベント駆動アーキテクチャで使用されるサービス：EventBridge（イベントルーティング）、SQS（メッセージキュー）、SNS（通知サービス）。RDS、S3、EC2は基盤サービスですが、イベント駆動の中核ではありません。'
+  },
+  {
+    id: 'architecture-multi-4',
+    category: 'アーキテクチャパターン',
+    question: 'サーバーレスアーキテクチャの特徴として正しいものを2つ選択してください。',
+    options: [
+      '使用量ベースの課金',
+      '自動スケーリング',
+      'サーバー管理が必要',
+      '常時稼働が必要',
+      '固定コスト',
+      'OS管理が必要'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'サーバーレスアーキテクチャの特徴：使用量ベースの課金（実行時間・リクエスト数）、自動スケーリング（需要に応じた拡張・縮小）。サーバー・OS管理は不要で、常時稼働や固定コストではありません。'
+  },
+  {
+    id: 'architecture-multi-5',
+    category: 'アーキテクチャパターン',
+    question: 'CQRS（Command Query Responsibility Segregation）パターンの利点として正しいものを3つ選択してください。',
+    options: [
+      '読み取りと書き込みの独立最適化',
+      'スケーラビリティの向上',
+      'データモデルの柔軟性',
+      'データ整合性の簡素化',
+      '開発の簡素化',
+      'ネットワーク使用量の削減'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'CQRSパターンの利点：読み取りと書き込みの独立最適化（異なるデータストア使用可能）、スケーラビリティ向上（読み書き別々にスケール）、データモデルの柔軟性（用途別最適化）。データ整合性や開発は複雑化します。'
+  },
+  {
+    id: 'architecture-multi-6',
+    category: 'アーキテクチャパターン',
+    question: 'Twelve-Factor Appの原則として正しいものを3つ選択してください。',
+    options: [
+      'コードベースの統一',
+      '設定の外部化',
+      'ステートレスプロセス',
+      'データベースの共有',
+      'サーバーの固定化',
+      'ログの内部保存'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'Twelve-Factor Appの原則：コードベース（一つのアプリ、一つのリポジトリ）、設定の外部化（環境変数使用）、ステートレスプロセス（状態を外部に保存）。データベース共有、サーバー固定化、ログ内部保存は原則に反します。'
+  },
+  {
+    id: 'architecture-multi-7',
+    category: 'アーキテクチャパターン',
+    question: 'Circuit Breakerパターンの利点として正しいものを2つ選択してください。',
+    options: [
+      'カスケード障害の防止',
+      'システムの自己回復',
+      'データの完全性保証',
+      'パフォーマンスの向上',
+      'セキュリティの強化',
+      'コストの削減'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'Circuit Breakerパターンの利点：カスケード障害の防止（障害の連鎖を断つ）、システムの自己回復（障害サービスの回復を検知して再開）。データ完全性、性能向上、セキュリティ、コスト削減は直接的な利点ではありません。'
+  },
+  {
+    id: 'architecture-multi-8',
+    category: 'アーキテクチャパターン',
+    question: 'Strangler Fig パターンの特徴として正しいものを3つ選択してください。',
+    options: [
+      '段階的なシステム移行',
+      'レガシーシステムの段階的置換',
+      'リスクの最小化',
+      '一括でのシステム置換',
+      'ダウンタイムの最大化',
+      'データ損失の許容'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'Strangler Figパターンの特徴：段階的なシステム移行（機能単位で移行）、レガシーシステムの段階的置換、リスクの最小化（小さな変更の積み重ね）。一括置換、ダウンタイム最大化、データ損失許容は逆の特徴です。'
+  },
+  {
+    id: 'architecture-multi-9',
+    category: 'アーキテクチャパターン',
+    question: 'API Gatewayパターンの機能として正しいものを2つ選択してください。',
+    options: [
+      'リクエストルーティング',
+      'レート制限',
+      'データベース管理',
+      'ファイルストレージ',
+      'ユーザーインターフェース',
+      'バッチ処理'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'API Gatewayパターンの機能：リクエストルーティング（適切なマイクロサービスへの転送）、レート制限（API使用量制御）、認証・認可、ログ記録等。データベース管理、ファイルストレージ、UI、バッチ処理は対象外です。'
+  },
+  {
+    id: 'architecture-multi-10',
+    category: 'アーキテクチャパターン',
+    question: 'Bulkhead パターンの利点として正しいものを3つ選択してください。',
+    options: [
+      '障害の分離',
+      'リソースの独立性',
+      'システムの部分的可用性',
+      'パフォーマンスの統一',
+      'リソースの共有最大化',
+      'システムの単純化'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'Bulkheadパターンの利点：障害の分離（一部の障害が全体に影響しない）、リソースの独立性（専用リソース割り当て）、システムの部分的可用性（一部が動作継続）。パフォーマンス統一、リソース共有最大化、システム単純化は逆の特徴です。'
   }
 ]
 

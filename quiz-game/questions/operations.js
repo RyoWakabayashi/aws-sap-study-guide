@@ -199,6 +199,167 @@ const operationsQuestions = [
     options: ['サーバーレスアプリ設計', 'コンテナアプリ設計', 'Webアプリ設計', 'モバイルアプリ設計'],
     correct: 0,
     explanation: 'Application Composerは、サーバーレスアプリケーションのアーキテクチャを視覚的に設計・構築するツールです。'
+  },
+  // 複数選択問題
+  {
+    id: 'operations-multi-1',
+    category: '運用管理',
+    question: 'AWS Systems Managerの機能として正しいものを3つ選択してください。',
+    options: [
+      'Parameter Store',
+      'Session Manager',
+      'Patch Manager',
+      'Database Manager',
+      'Network Manager',
+      'User Manager'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS Systems Managerの機能：Parameter Store（設定管理）、Session Manager（セキュアなシェルアクセス）、Patch Manager（パッチ管理）。Database、Network、User Managerは存在しない機能名です。'
+  },
+  {
+    id: 'operations-multi-2',
+    category: '運用管理',
+    question: 'AWS CloudFormationの機能として正しいものを2つ選択してください。',
+    options: [
+      'Infrastructure as Code',
+      'スタックの作成・更新・削除',
+      'リアルタイムモニタリング',
+      'データベースクエリ最適化',
+      'ネットワークトラフィック分析',
+      'ユーザー行動分析'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS CloudFormationの機能：Infrastructure as Code（テンプレートベースのインフラ管理）、スタック管理（リソースの一括作成・更新・削除）。モニタリング、DB最適化、トラフィック分析、行動分析は他のサービスの機能です。'
+  },
+  {
+    id: 'operations-multi-3',
+    category: '運用管理',
+    question: 'AWS Configの機能として正しいものを3つ選択してください。',
+    options: [
+      'リソース設定の記録',
+      'コンプライアンス監視',
+      '設定変更の追跡',
+      'パフォーマンス最適化',
+      'コスト分析',
+      'ユーザー管理'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS Configの機能：リソース設定の記録（構成履歴）、コンプライアンス監視（ルール評価）、設定変更の追跡（変更検出）。パフォーマンス最適化、コスト分析、ユーザー管理は他のサービスの機能です。'
+  },
+  {
+    id: 'operations-multi-4',
+    category: '運用管理',
+    question: 'AWS OpsWorksでサポートされているスタックタイプを2つ選択してください。',
+    options: [
+      'Chef Automate',
+      'Puppet Enterprise',
+      'Ansible Tower',
+      'Terraform Enterprise',
+      'Jenkins',
+      'GitLab'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS OpsWorksでサポートされるスタック：Chef Automate（Chef管理）、Puppet Enterprise（Puppet管理）。Ansible、Terraform、Jenkins、GitLabは他のツールで、OpsWorksの直接サポート対象ではありません。'
+  },
+  {
+    id: 'operations-multi-5',
+    category: '運用管理',
+    question: 'AWS Service Catalogの利点として正しいものを3つ選択してください。',
+    options: [
+      'IT管理の標準化',
+      'セルフサービスプロビジョニング',
+      'ガバナンスの強化',
+      'パフォーマンス向上',
+      'データ暗号化',
+      'ネットワーク最適化'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS Service Catalogの利点：IT管理の標準化（承認済み製品の提供）、セルフサービスプロビジョニング（ユーザー自身でのリソース作成）、ガバナンス強化（統制された環境）。パフォーマンス向上、暗号化、ネットワーク最適化は直接的な利点ではありません。'
+  },
+  {
+    id: 'operations-multi-6',
+    category: '運用管理',
+    question: 'AWS CodePipeline の機能として正しいものを2つ選択してください。',
+    options: [
+      '継続的インテグレーション',
+      '継続的デプロイメント',
+      'ソースコード管理',
+      'バグ追跡管理',
+      'プロジェクト管理',
+      'ドキュメント管理'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS CodePipelineの機能：継続的インテグレーション（CI）、継続的デプロイメント（CD）。ソースコード管理はCodeCommit、バグ追跡・プロジェクト・ドキュメント管理は他のツールの機能です。'
+  },
+  {
+    id: 'operations-multi-7',
+    category: '運用管理',
+    question: 'AWS Systems Manager Automation の機能として正しいものを3つ選択してください。',
+    options: [
+      'EC2インスタンスの自動化タスク',
+      'パッチ適用の自動化',
+      'AMI作成の自動化',
+      'データベースのバックアップ',
+      'ネットワーク設定の変更',
+      'ユーザーアカウントの作成'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'Systems Manager Automationの機能：EC2インスタンスの自動化タスク（起動・停止等）、パッチ適用の自動化、AMI作成の自動化。データベースバックアップ、ネットワーク設定変更、ユーザーアカウント作成は対象外です。'
+  },
+  {
+    id: 'operations-multi-8',
+    category: '運用管理',
+    question: 'AWS CodeDeploy の配信戦略として正しいものを2つ選択してください。',
+    options: [
+      'Blue/Green デプロイメント',
+      'Rolling デプロイメント',
+      'Canary デプロイメント',
+      'A/B テストデプロイメント',
+      'Shadow デプロイメント',
+      'Feature Flag デプロイメント'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS CodeDeployの配信戦略：Blue/Greenデプロイメント（新旧環境の切り替え）、Rollingデプロイメント（段階的更新）。Canary、A/B、Shadow、Feature Flagは他のツールや手法です。'
+  },
+  {
+    id: 'operations-multi-9',
+    category: '運用管理',
+    question: 'AWS Well-Architected Tool の機能として正しいものを3つ選択してください。',
+    options: [
+      'アーキテクチャレビューの実施',
+      'ベストプラクティスとの比較',
+      '改善提案の提供',
+      'コストの自動最適化',
+      'セキュリティ設定の自動化',
+      'パフォーマンスの自動調整'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS Well-Architected Toolの機能：アーキテクチャレビューの実施、Well-Architected Frameworkのベストプラクティスとの比較、改善提案の提供。自動最適化、自動化、自動調整は行わず、レビューと提案のみです。'
+  },
+  {
+    id: 'operations-multi-10',
+    category: '運用管理',
+    question: 'AWS Resource Groups の機能として正しいものを2つ選択してください。',
+    options: [
+      'リソースの論理的なグループ化',
+      'タグベースのリソース管理',
+      'リソースの自動作成',
+      'コストの自動最適化',
+      'セキュリティ設定の統一',
+      'パフォーマンス監視の自動化'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS Resource Groupsの機能：リソースの論理的なグループ化（プロジェクト・環境別等）、タグベースのリソース管理（タグによる自動グループ化）。リソース作成、コスト最適化、セキュリティ統一、性能監視は他のサービスです。'
   }
 ]
 

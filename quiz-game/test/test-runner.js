@@ -94,6 +94,9 @@ test('Questions data is valid', () => {
   assert(allQuestions.length > 0, 'allQuestions must not be empty')
   assert(allQuestions.length >= 50, 'Should have at least 50 questions')
 
+  let singleChoiceCount = 0
+  let multipleChoiceCount = 0
+
   // 各問題の構造チェック
   allQuestions.forEach((question, index) => {
     assert(
@@ -113,22 +116,84 @@ test('Questions data is valid', () => {
       `Question ${index + 1}: options must be an array`
     )
     assert(
-      question.options.length === 4,
-      `Question ${index + 1}: must have 4 options`
-    )
-    assert(
-      typeof question.correct === 'number',
-      `Question ${index + 1}: correct must be a number`
-    )
-    assert(
-      question.correct >= 0 && question.correct <= 3,
-      `Question ${index + 1}: correct must be 0-3`
-    )
-    assert(
       typeof question.explanation === 'string',
       `Question ${index + 1}: explanation must be a string`
     )
+
+    // 複数選択問題の場合
+    if (question.multipleChoice) {
+      multipleChoiceCount++
+
+      assert(
+        question.options.length === 6,
+        `Question ${index + 1}: multiple choice question must have 6 options`
+      )
+      assert(
+        Array.isArray(question.correct),
+        `Question ${index + 1}: multiple choice question correct must be an array`
+      )
+      assert(
+        question.correct.length >= 2 && question.correct.length <= 3,
+        `Question ${index + 1}: multiple choice question must have 2-3 correct answers`
+      )
+
+      // 正解の配列の各要素が有効な範囲内かチェック
+      question.correct.forEach((correctIndex, i) => {
+        assert(
+          typeof correctIndex === 'number',
+          `Question ${index + 1}: correct[${i}] must be a number`
+        )
+        assert(
+          correctIndex >= 0 && correctIndex <= 5,
+          `Question ${index + 1}: correct[${i}] must be 0-5`
+        )
+      })
+
+      // 重複した正解がないかチェック
+      const uniqueCorrect = [...new Set(question.correct)]
+      assert(
+        uniqueCorrect.length === question.correct.length,
+        `Question ${index + 1}: correct answers must be unique`
+      )
+
+      // 問題文に選択数の指示があるかチェック
+      const hasSelectionInstruction =
+        question.question.includes('つ選択') ||
+        question.question.includes('個選択') ||
+        question.question.includes('2つ') ||
+        question.question.includes('3つ')
+      assert(
+        hasSelectionInstruction,
+        `Question ${index + 1}: multiple choice question should indicate how many to select`
+      )
+    } else {
+      // 単一選択問題の場合（従来通り）
+      singleChoiceCount++
+
+      assert(
+        question.options.length === 4,
+        `Question ${index + 1}: single choice question must have 4 options`
+      )
+      assert(
+        typeof question.correct === 'number',
+        `Question ${index + 1}: single choice question correct must be a number`
+      )
+      assert(
+        question.correct >= 0 && question.correct <= 3,
+        `Question ${index + 1}: single choice question correct must be 0-3`
+      )
+    }
   })
+
+  // 問題タイプの統計を表示
+  console.log(chalk.gray(`   📊 Single choice questions: ${singleChoiceCount}`))
+  console.log(chalk.gray(`   📊 Multiple choice questions: ${multipleChoiceCount}`))
+
+  // 複数選択問題が存在することを確認
+  assert(
+    multipleChoiceCount > 0,
+    'Should have at least some multiple choice questions'
+  )
 })
 
 // JavaScript構文チェック
@@ -149,6 +214,41 @@ test('JavaScript files are syntactically valid', () => {
   })
 })
 
+// JavaScript機能の存在チェック
+test('JavaScript functions for multiple choice support', () => {
+  const scriptPath = path.join(__dirname, '..', 'script.js')
+  const scriptContent = fs.readFileSync(scriptPath, 'utf8')
+
+  // 複数選択問題用の関数が存在することを確認
+  const requiredFunctions = [
+    'updateMultipleChoiceSelection',
+    'submitMultipleChoice',
+    'createOptionElement'
+  ]
+
+  requiredFunctions.forEach(functionName => {
+    assert(
+      scriptContent.includes(functionName),
+      `Function '${functionName}' should exist in script.js`
+    )
+  })
+
+  // 複数選択問題用のキーワードが存在することを確認
+  const requiredKeywords = [
+    'multipleChoice',
+    'selectedAnswers',
+    'checkbox',
+    'submit-answer-btn'
+  ]
+
+  requiredKeywords.forEach(keyword => {
+    assert(
+      scriptContent.includes(keyword),
+      `Keyword '${keyword}' should exist in script.js for multiple choice support`
+    )
+  })
+})
+
 // CSS構文チェック
 test('CSS file is valid', () => {
   const cssPath = path.join(__dirname, '..', 'styles.css')
@@ -166,11 +266,26 @@ test('CSS file is valid', () => {
     '.screen',
     '.btn',
     '.option',
-    '.quiz-header'
+    '.quiz-header',
+    // 複数選択問題用のクラス
+    '.multiple-choice',
+    '.submit-answer-btn',
+    '.submit-container',
+    '.question-type'
   ]
   requiredClasses.forEach((className) => {
     assert(cssContent.includes(className), `CSS class ${className} not found`)
   })
+
+  // 複数選択問題用の特定スタイルの存在チェック
+  assert(
+    cssContent.includes('input[type="checkbox"]'),
+    'CSS should include checkbox styles for multiple choice questions'
+  )
+  assert(
+    cssContent.includes('.checked'),
+    'CSS should include .checked class for selected multiple choice options'
+  )
 })
 
 // マニフェストファイルテスト
@@ -250,6 +365,105 @@ test('Quiz game basic functionality', () => {
     window.document.getElementById('quiz-screen'),
     'Quiz screen element should exist'
   )
+})
+
+// 複数選択問題の機能テスト
+test('Multiple choice questions functionality', () => {
+  const questionsPath = path.join(__dirname, '..', 'questions.js')
+  const questionsContent = fs
+    .readFileSync(questionsPath, 'utf8')
+    .replace(/const allQuestions = /, 'allQuestions = ')
+
+  // グローバル変数として問題データを定義
+  let allQuestions
+
+  // eslint-disable-next-line no-eval
+  eval(questionsContent)
+
+  // 複数選択問題が存在することを確認
+  const multipleChoiceQuestions = allQuestions.filter(q => q.multipleChoice)
+  assert(
+    multipleChoiceQuestions.length > 0,
+    'Should have multiple choice questions'
+  )
+
+  // 複数選択問題の構造を詳細チェック
+  multipleChoiceQuestions.forEach((question, index) => {
+    // IDの形式チェック（複数選択問題は -multi- を含む）
+    assert(
+      question.id.includes('-multi-'),
+      `Multiple choice question ${index + 1}: ID should contain '-multi-'`
+    )
+
+    // 正解数のチェック
+    assert(
+      question.correct.length >= 2 && question.correct.length <= 3,
+      `Multiple choice question ${index + 1}: should have 2-3 correct answers`
+    )
+
+    // 選択肢数のチェック
+    assert(
+      question.options.length === 6,
+      `Multiple choice question ${index + 1}: should have exactly 6 options`
+    )
+
+    // 正解インデックスの有効性チェック
+    question.correct.forEach(correctIndex => {
+      assert(
+        correctIndex >= 0 && correctIndex <= 5,
+        `Multiple choice question ${index + 1}: correct index must be 0-5`
+      )
+    })
+  })
+
+  console.log(chalk.gray(`   📊 Found ${multipleChoiceQuestions.length} multiple choice questions`))
+})
+
+// カテゴリー別の問題数チェック
+test('Questions distribution by category', () => {
+  const questionsPath = path.join(__dirname, '..', 'questions.js')
+  const questionsContent = fs
+    .readFileSync(questionsPath, 'utf8')
+    .replace(/const allQuestions = /, 'allQuestions = ')
+
+  let allQuestions
+  // eslint-disable-next-line no-eval
+  eval(questionsContent)
+
+  const categoryStats = {}
+  const multipleChoiceStats = {}
+
+  allQuestions.forEach(question => {
+    const category = question.category
+    categoryStats[category] = (categoryStats[category] || 0) + 1
+
+    if (question.multipleChoice) {
+      multipleChoiceStats[category] = (multipleChoiceStats[category] || 0) + 1
+    }
+  })
+
+  // 各カテゴリーに最低限の問題があることを確認
+  Object.keys(categoryStats).forEach(category => {
+    assert(
+      categoryStats[category] >= 5,
+      `Category '${category}' should have at least 5 questions`
+    )
+  })
+
+  // 各カテゴリーに複数選択問題があることを確認
+  Object.keys(multipleChoiceStats).forEach(category => {
+    assert(
+      multipleChoiceStats[category] >= 5,
+      `Category '${category}' should have at least 5 multiple choice questions`
+    )
+  })
+
+  console.log(chalk.gray('   📊 Category distribution:'))
+  Object.keys(categoryStats).forEach(category => {
+    const total = categoryStats[category]
+    const multiple = multipleChoiceStats[category] || 0
+    console.log(chalk.gray(`      ${category}: ${total} total (${multiple} multiple choice)`))
+  })
 })
 
 // テスト結果の表示

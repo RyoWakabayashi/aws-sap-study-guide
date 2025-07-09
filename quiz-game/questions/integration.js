@@ -199,6 +199,167 @@ const integrationQuestions = [
     options: ['リクエスト数', 'バースト制限', 'クォータ', 'レスポンス時間'],
     correct: 3,
     explanation: '使用量プランでは、リクエスト数、バースト制限、クォータを制御できますが、レスポンス時間は制御できません。'
+  },
+  // 複数選択問題
+  {
+    id: 'integration-multi-1',
+    category: '統合サービス',
+    question: 'Amazon SQSの特徴として正しいものを2つ選択してください。',
+    options: [
+      'メッセージの順序保証（FIFO）',
+      'デッドレターキュー機能',
+      'リアルタイムメッセージング',
+      'プッシュ通知機能',
+      'ファイル転送機能',
+      'データベース機能'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'Amazon SQSの特徴：FIFO キューでの順序保証、デッドレターキュー（処理失敗メッセージの隔離）。SQSはプル型のメッセージキューで、リアルタイムメッセージング、プッシュ通知、ファイル転送、DB機能は提供しません。'
+  },
+  {
+    id: 'integration-multi-2',
+    category: '統合サービス',
+    question: 'Amazon SNSでサポートされている配信プロトコルを3つ選択してください。',
+    options: [
+      'HTTP/HTTPS',
+      'Email',
+      'SMS',
+      'FTP',
+      'Telnet',
+      'SSH'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'Amazon SNSの配信プロトコル：HTTP/HTTPS（Webhook）、Email（電子メール）、SMS（テキストメッセージ）、SQS、Lambda等。FTP、Telnet、SSHは配信プロトコルとしてサポートされていません。'
+  },
+  {
+    id: 'integration-multi-3',
+    category: '統合サービス',
+    question: 'AWS Step Functionsの機能として正しいものを3つ選択してください。',
+    options: [
+      'ワークフローの可視化',
+      'エラーハンドリング',
+      '並列実行制御',
+      'データベース管理',
+      'ファイルストレージ',
+      'ユーザー認証'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS Step Functionsの機能：ワークフローの可視化（状態遷移図）、エラーハンドリング（リトライ・キャッチ）、並列実行制御（並行処理）。データベース管理、ファイルストレージ、ユーザー認証は他のサービスの機能です。'
+  },
+  {
+    id: 'integration-multi-4',
+    category: '統合サービス',
+    question: 'Amazon API Gatewayの認証方式として正しいものを2つ選択してください。',
+    options: [
+      'IAM認証',
+      'Cognito User Pools',
+      'Lambda Authorizer',
+      'Active Directory',
+      'LDAP',
+      'Kerberos'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'API Gatewayの認証方式：IAM認証（AWS認証情報）、Cognito User Pools（ユーザープール）、Lambda Authorizer（カスタム認証）。Active Directory、LDAP、KerberosはAPI Gatewayの直接サポート対象ではありません。'
+  },
+  {
+    id: 'integration-multi-5',
+    category: '統合サービス',
+    question: 'Amazon EventBridgeのイベントソースとして正しいものを3つ選択してください。',
+    options: [
+      'AWSサービス',
+      'カスタムアプリケーション',
+      'SaaSパートナー',
+      'オンプレミスデータベース',
+      'ファイルシステム',
+      'プリンター'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'EventBridgeのイベントソース：AWSサービス（EC2、S3等）、カスタムアプリケーション（独自イベント）、SaaSパートナー（Salesforce等）。オンプレミスDB、ファイルシステム、プリンターは直接的なイベントソースではありません。'
+  },
+  {
+    id: 'integration-multi-6',
+    category: '統合サービス',
+    question: 'Amazon MQ の特徴として正しいものを2つ選択してください。',
+    options: [
+      'Apache ActiveMQ サポート',
+      'RabbitMQ サポート',
+      'フルマネージドサービス',
+      'サーバーレスアーキテクチャ',
+      'NoSQL データベース',
+      'ファイルストレージ'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'Amazon MQの特徴：Apache ActiveMQサポート（JMSメッセージング）、RabbitMQサポート（AMQPメッセージング）。フルマネージドですがサーバーレスではなく、NoSQLやファイルストレージ機能は提供しません。'
+  },
+  {
+    id: 'integration-multi-7',
+    category: '統合サービス',
+    question: 'AWS AppSync の機能として正しいものを3つ選択してください。',
+    options: [
+      'GraphQL API の提供',
+      'リアルタイムデータ同期',
+      'オフライン機能のサポート',
+      'REST API の提供',
+      'ファイル転送機能',
+      'バッチ処理機能'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS AppSyncの機能：GraphQL APIの提供（効率的なデータクエリ）、リアルタイムデータ同期（サブスクリプション）、オフライン機能サポート（ローカルキャッシュ）。REST API、ファイル転送、バッチ処理は他のサービスです。'
+  },
+  {
+    id: 'integration-multi-8',
+    category: '統合サービス',
+    question: 'Amazon Simple Workflow Service (SWF) の特徴として正しいものを2つ選択してください。',
+    options: [
+      '長時間実行ワークフローのサポート',
+      '人間の介入を含むワークフロー',
+      'サーバーレス実行',
+      '自動スケーリング',
+      'リアルタイムストリーミング',
+      'データベース機能'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'Amazon SWFの特徴：長時間実行ワークフロー（数日〜数ヶ月）のサポート、人間の介入を含むワークフロー（承認プロセス等）。サーバーレスではなく、自動スケーリング、ストリーミング、DB機能は提供しません。'
+  },
+  {
+    id: 'integration-multi-9',
+    category: '統合サービス',
+    question: 'AWS X-Ray の統合機能として正しいものを3つ選択してください。',
+    options: [
+      'Lambda関数のトレーシング',
+      'API Gatewayのトレーシング',
+      'ECS/EKSのトレーシング',
+      'RDSのトレーシング',
+      'S3のトレーシング',
+      'CloudFrontのトレーシング'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS X-Rayの統合機能：Lambda関数のトレーシング（自動統合）、API Gatewayのトレーシング（リクエスト追跡）、ECS/EKSのトレーシング（コンテナアプリ）。RDS、S3、CloudFrontは直接的なトレーシング対象ではありません。'
+  },
+  {
+    id: 'integration-multi-10',
+    category: '統合サービス',
+    question: 'Amazon Kinesis Data Firehose の配信先として正しいものを2つ選択してください。',
+    options: [
+      'Amazon S3',
+      'Amazon Redshift',
+      'Amazon ElastiCache',
+      'Amazon RDS',
+      'Amazon DynamoDB',
+      'Amazon Neptune'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'Kinesis Data Firehoseの配信先：Amazon S3（データレイク）、Amazon Redshift（データウェアハウス）、Amazon OpenSearch Service、Splunk等。ElastiCache、RDS、DynamoDB、Neptuneは直接的な配信先ではありません。'
   }
 ]
 

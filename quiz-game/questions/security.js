@@ -399,6 +399,167 @@ const securityQuestions = [
     options: ['データキー', 'マスターキー', 'プレーンテキストキー', 'ルートキー'],
     correct: 3,
     explanation: 'エンベロープ暗号化では、データキー、マスターキー、プレーンテキストキーを使用しますが、ルートキーという概念は使用されません。'
+  },
+  // 複数選択問題
+  {
+    id: 'security-multi-1',
+    category: 'セキュリティ',
+    question: 'AWS IAMのベストプラクティスとして正しいものを3つ選択してください。',
+    options: [
+      '最小権限の原則を適用',
+      'ルートアカウントの日常使用',
+      'MFA（多要素認証）の有効化',
+      'アクセスキーの定期的なローテーション',
+      'すべてのユーザーにAdministratorAccess付与',
+      'パスワードポリシーの無効化'
+    ],
+    correct: [0, 2, 3],
+    multipleChoice: true,
+    explanation: 'IAMベストプラクティス：最小権限の原則、MFAの有効化、アクセスキーの定期ローテーション。ルートアカウントの日常使用や過度な権限付与は避けるべきです。'
+  },
+  {
+    id: 'security-multi-2',
+    category: 'セキュリティ',
+    question: 'AWS KMSの暗号化方式として正しいものを2つ選択してください。',
+    options: [
+      'エンベロープ暗号化',
+      'クライアントサイド暗号化',
+      'サーバーサイド暗号化',
+      'ハイブリッド暗号化',
+      'ストリーム暗号化',
+      'ブロック暗号化'
+    ],
+    correct: [0, 2],
+    multipleChoice: true,
+    explanation: 'AWS KMSは、エンベロープ暗号化（データキーとマスターキーを使用）とサーバーサイド暗号化を提供します。クライアントサイド暗号化も可能ですが、KMSの主要機能ではありません。'
+  },
+  {
+    id: 'security-multi-3',
+    category: 'セキュリティ',
+    question: 'AWS WAFで防御できる攻撃タイプを3つ選択してください。',
+    options: [
+      'SQLインジェクション',
+      'クロスサイトスクリプティング（XSS）',
+      'DDoS攻撃',
+      'DNSスプーフィング',
+      'マンインザミドル攻撃',
+      'フィッシング攻撃'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS WAFは、SQLインジェクション、XSS、DDoS攻撃などのWebアプリケーション層の攻撃を防御できます。DNSスプーフィング、マンインザミドル、フィッシング攻撃は他の対策が必要です。'
+  },
+  {
+    id: 'security-multi-4',
+    category: 'セキュリティ',
+    question: 'AWS Secrets Managerの機能として正しいものを2つ選択してください。',
+    options: [
+      'シークレットの自動ローテーション',
+      'データベース認証情報の管理',
+      'EC2インスタンスのSSHキー管理',
+      'SSL証明書の自動更新',
+      'IAMロールの自動作成',
+      'VPCセキュリティグループの管理'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS Secrets Managerは、シークレットの自動ローテーションとデータベース認証情報の安全な管理を提供します。SSHキー、SSL証明書、IAMロール、セキュリティグループの管理は他のサービスの機能です。'
+  },
+  {
+    id: 'security-multi-5',
+    category: 'セキュリティ',
+    question: 'AWS Security Hubの機能として正しいものを3つ選択してください。',
+    options: [
+      'セキュリティ検出結果の一元管理',
+      'コンプライアンス状況の監視',
+      'セキュリティ標準への準拠チェック',
+      'ネットワークトラフィックの暗号化',
+      'IAMユーザーの自動作成',
+      'DDoS攻撃の自動防御'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS Security Hubは、セキュリティ検出結果の一元管理、コンプライアンス状況の監視、セキュリティ標準（CIS、PCI DSS等）への準拠チェックを提供します。暗号化、IAM管理、DDoS防御は他のサービスの機能です。'
+  },
+  {
+    id: 'security-multi-6',
+    category: 'セキュリティ',
+    question: 'AWS Certificate Managerの機能として正しいものを2つ選択してください。',
+    options: [
+      'SSL/TLS証明書の自動プロビジョニング',
+      '証明書の自動更新',
+      'コード署名証明書の発行',
+      'S/MIME証明書の管理',
+      'ルート証明書の作成',
+      '証明書失効リストの管理'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS Certificate Managerの機能：SSL/TLS証明書の自動プロビジョニング（無料）、証明書の自動更新（期限切れ防止）。コード署名、S/MIME、ルート証明書、CRL管理は対象外です。'
+  },
+  {
+    id: 'security-multi-7',
+    category: 'セキュリティ',
+    question: 'Amazon GuardDutyの検出対象として正しいものを3つ選択してください。',
+    options: [
+      '異常なAPI呼び出し',
+      'マルウェア感染',
+      'データ流出の兆候',
+      'アプリケーションバグ',
+      'パフォーマンス問題',
+      'コスト異常'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'Amazon GuardDutyの検出対象：異常なAPI呼び出し（CloudTrail分析）、マルウェア感染（DNS分析）、データ流出の兆候（VPCフローログ分析）。アプリケーションバグ、パフォーマンス問題、コスト異常は他のサービスで監視します。'
+  },
+  {
+    id: 'security-multi-8',
+    category: 'セキュリティ',
+    question: 'AWS CloudHSMの特徴として正しいものを2つ選択してください。',
+    options: [
+      'FIPS 140-2 Level 3認証',
+      '専用ハードウェアセキュリティモジュール',
+      'マルチテナント環境',
+      'AWS管理の暗号化キー',
+      '自動バックアップ機能',
+      'サーバーレスアーキテクチャ'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS CloudHSMの特徴：FIPS 140-2 Level 3認証取得、顧客専用のハードウェアセキュリティモジュール。マルチテナントではなくシングルテナント、顧客がキーを完全制御、手動バックアップ、物理ハードウェアベースです。'
+  },
+  {
+    id: 'security-multi-9',
+    category: 'セキュリティ',
+    question: 'AWS Configのセキュリティ関連機能として正しいものを3つ選択してください。',
+    options: [
+      'リソース設定の継続的監視',
+      'コンプライアンス違反の検出',
+      '設定変更の自動修復',
+      'ネットワークトラフィック分析',
+      'アプリケーション脆弱性スキャン',
+      'ユーザー行動分析'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS Configのセキュリティ機能：リソース設定の継続的監視、コンプライアンス違反検出（Config Rules）、設定変更の自動修復（Remediation Actions）。ネットワーク分析、脆弱性スキャン、ユーザー行動分析は他のサービスです。'
+  },
+  {
+    id: 'security-multi-10',
+    category: 'セキュリティ',
+    question: 'Amazon Inspectorの機能として正しいものを2つ選択してください。',
+    options: [
+      'EC2インスタンスの脆弱性評価',
+      'コンテナイメージの脆弱性スキャン',
+      'ネットワーク設定の監査',
+      'IAMポリシーの分析',
+      'データベースの暗号化チェック',
+      'S3バケットのアクセス権限監査'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'Amazon Inspectorの機能：EC2インスタンスの脆弱性評価（OS、アプリケーション）、コンテナイメージの脆弱性スキャン（ECR統合）。ネットワーク監査、IAM分析、DB暗号化、S3権限監査は他のサービスの機能です。'
   }
 ]
 

@@ -239,6 +239,167 @@ const databaseQuestions = [
     options: ['=', '<>', 'BETWEEN', 'REGEX'],
     correct: 3,
     explanation: 'DynamoDBの条件式では、等価、不等価、BETWEEN演算子は使用できますが、REGEX演算子は使用できません。'
+  },
+  // 複数選択問題
+  {
+    id: 'database-multi-1',
+    category: 'データベース',
+    question: 'Amazon RDSでサポートされているデータベースエンジンを3つ選択してください。',
+    options: [
+      'MySQL',
+      'PostgreSQL',
+      'MongoDB',
+      'Oracle',
+      'Cassandra',
+      'Redis'
+    ],
+    correct: [0, 1, 3],
+    multipleChoice: true,
+    explanation: 'Amazon RDSは、MySQL、PostgreSQL、Oracle、SQL Server、MariaDB、Amazon Auroraをサポートしています。MongoDB、Cassandra、RedisはRDSではサポートされていません。'
+  },
+  {
+    id: 'database-multi-2',
+    category: 'データベース',
+    question: 'DynamoDBのパフォーマンス最適化手法として正しいものを2つ選択してください。',
+    options: [
+      'ホットパーティションの回避',
+      '適切なパーティションキーの選択',
+      'セカンダリインデックスの多用',
+      '大きなアイテムサイズの使用',
+      'スキャン操作の頻繁な実行',
+      'バッチ操作の使用'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'DynamoDBのパフォーマンス最適化には、ホットパーティションの回避と適切なパーティションキーの選択が重要です。セカンダリインデックスの多用、大きなアイテムサイズ、頻繁なスキャン操作は性能低下の原因となります。'
+  },
+  {
+    id: 'database-multi-3',
+    category: 'データベース',
+    question: 'Amazon Auroraの特徴として正しいものを3つ選択してください。',
+    options: [
+      'MySQL・PostgreSQL互換',
+      '最大15個のリードレプリカ',
+      'NoSQLデータベース',
+      '自動バックアップ・ポイントインタイムリカバリ',
+      'シングルAZ展開のみ',
+      'サーバーレス機能'
+    ],
+    correct: [0, 1, 3],
+    multipleChoice: true,
+    explanation: 'Amazon Auroraは、MySQL・PostgreSQL互換のリレーショナルデータベース、最大15個のリードレプリカ、自動バックアップ・ポイントインタイムリカバリをサポートします。マルチAZ展開が可能で、サーバーレス機能も提供しています。'
+  },
+  {
+    id: 'database-multi-4',
+    category: 'データベース',
+    question: 'AWS Database Migration Service (DMS)でサポートされているソースデータベースを3つ選択してください。',
+    options: [
+      'Oracle',
+      'SQL Server',
+      'MongoDB',
+      'Cassandra',
+      'S3',
+      'Redshift'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS DMSは、Oracle、SQL Server、MySQL、PostgreSQL、MongoDB、MariaDBなど多くのデータベースをソースとしてサポートしています。S3やRedshiftもサポートされていますが、主要なソースデータベースとしてはOracle、SQL Server、MongoDBが代表的です。'
+  },
+  {
+    id: 'database-multi-5',
+    category: 'データベース',
+    question: 'Amazon ElastiCacheでサポートされているエンジンを2つ選択してください。',
+    options: [
+      'Redis',
+      'Memcached',
+      'MongoDB',
+      'Cassandra',
+      'DynamoDB',
+      'Neptune'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'Amazon ElastiCacheは、RedisとMemcachedの2つのインメモリキャッシュエンジンをサポートしています。Redisはより高機能で永続化やレプリケーションをサポートし、Memcachedはシンプルで高速なキャッシュを提供します。'
+  },
+  {
+    id: 'database-multi-6',
+    category: 'データベース',
+    question: 'Amazon DocumentDBの特徴として正しいものを3つ選択してください。',
+    options: [
+      'MongoDB互換',
+      'フルマネージドサービス',
+      '自動バックアップ・復元',
+      'SQL言語サポート',
+      'リレーショナルデータベース',
+      'ACID準拠のトランザクション'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'Amazon DocumentDBの特徴：MongoDB互換のドキュメントデータベース、フルマネージドサービス、自動バックアップ・ポイントインタイムリカバリ。SQL言語やリレーショナル機能はサポートせず、NoSQLデータベースです。'
+  },
+  {
+    id: 'database-multi-7',
+    category: 'データベース',
+    question: 'Amazon Neptuneでサポートされているグラフクエリ言語を2つ選択してください。',
+    options: [
+      'Apache TinkerPop Gremlin',
+      'W3C SPARQL',
+      'Cypher',
+      'SQL',
+      'MongoDB Query Language',
+      'GraphQL'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'Amazon Neptuneでサポートされるクエリ言語：Apache TinkerPop Gremlin（プロパティグラフ用）、W3C SPARQL（RDFグラフ用）。Cypher、SQL、MongoDB QL、GraphQLは直接サポートされていません。'
+  },
+  {
+    id: 'database-multi-8',
+    category: 'データベース',
+    question: 'DynamoDB Global Tablesの利点として正しいものを2つ選択してください。',
+    options: [
+      'マルチリージョンレプリケーション',
+      '自動フェイルオーバー',
+      'データの強整合性保証',
+      'SQLクエリサポート',
+      'スキーマ定義の必須化',
+      'JOINクエリの最適化'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'DynamoDB Global Tablesの利点：マルチリージョンでの自動レプリケーション、リージョン障害時の自動フェイルオーバー。結果整合性モデルを採用し、SQLクエリやスキーマ定義、JOINクエリはサポートしていません。'
+  },
+  {
+    id: 'database-multi-9',
+    category: 'データベース',
+    question: 'Amazon RDS Proxyの機能として正しいものを3つ選択してください。',
+    options: [
+      'コネクションプーリング',
+      'フェイルオーバー時間の短縮',
+      'IAM認証のサポート',
+      'データの自動暗号化',
+      'スキーマ変更の自動化',
+      'クエリパフォーマンスの監視'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'Amazon RDS Proxyの機能：コネクションプーリング（接続効率化）、フェイルオーバー時間短縮（66%削減）、IAM認証サポート（セキュリティ強化）。データ暗号化、スキーマ変更、クエリ監視は他のサービス・機能です。'
+  },
+  {
+    id: 'database-multi-10',
+    category: 'データベース',
+    question: 'Amazon Timestreamの特徴として正しいものを2つ選択してください。',
+    options: [
+      '時系列データ専用データベース',
+      'サーバーレスアーキテクチャ',
+      'リレーショナルデータベース',
+      'グラフデータベース',
+      'キー・バリューストア',
+      'ドキュメントデータベース'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'Amazon Timestreamの特徴：時系列データ専用に最適化されたデータベース、サーバーレスでフルマネージド。リレーショナル、グラフ、キー・バリュー、ドキュメントデータベースではなく、IoTやアプリケーション監視データに特化しています。'
   }
 ]
 

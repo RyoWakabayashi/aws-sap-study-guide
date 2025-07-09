@@ -199,6 +199,167 @@ const migrationQuestions = [
     options: ['レガシーアプリケーション', 'モダンアプリケーション', 'クラウドネイティブアプリ', 'すべて正しい'],
     correct: 0,
     explanation: 'Refactoring Toolkitは、レガシーアプリケーションの現代化とクラウド移行を支援します。'
+  },
+  // 複数選択問題
+  {
+    id: 'migration-multi-1',
+    category: '移行戦略',
+    question: 'AWS移行の6つのR戦略を3つ選択してください。',
+    options: [
+      'Rehost (Lift and Shift)',
+      'Replatform (Lift, Tinker, and Shift)',
+      'Refactor (Re-architect)',
+      'Rebuild',
+      'Replace',
+      'Restore'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS移行の6R戦略：Rehost、Replatform、Refactor、Repurchase、Retain、Retire。RebuildやReplaceは一般的な用語ですが、6Rの正式な戦略ではありません。Restoreは移行戦略ではありません。'
+  },
+  {
+    id: 'migration-multi-2',
+    category: '移行戦略',
+    question: 'AWS Application Migration Service (MGN)の機能として正しいものを2つ選択してください。',
+    options: [
+      'ブロックレベルレプリケーション',
+      '最小限のダウンタイムでの移行',
+      'データベーススキーマ変換',
+      'アプリケーションコードの自動変換',
+      'ネットワーク設定の自動化',
+      'ユーザー認証の移行'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS MGNの機能：ブロックレベルレプリケーション（継続的なデータ同期）、最小限のダウンタイムでの移行（カットオーバー時間短縮）。スキーマ変換はDMS、コード変換は手動、ネットワーク・認証設定は別途対応が必要です。'
+  },
+  {
+    id: 'migration-multi-3',
+    category: '移行戦略',
+    question: 'AWS Database Migration Service (DMS)でサポートされている移行パターンを3つ選択してください。',
+    options: [
+      '同種データベース間の移行',
+      '異種データベース間の移行',
+      '継続的なデータレプリケーション',
+      'ファイルシステムの移行',
+      'アプリケーションコードの移行',
+      'ユーザーインターフェースの移行'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS DMSの移行パターン：同種DB間移行（Oracle→Oracle等）、異種DB間移行（Oracle→PostgreSQL等）、継続的レプリケーション（CDC）。ファイルシステム、アプリケーションコード、UIの移行は対象外です。'
+  },
+  {
+    id: 'migration-multi-4',
+    category: '移行戦略',
+    question: 'AWS Snow Familyのデバイスとして正しいものを2つ選択してください。',
+    options: [
+      'AWS Snowball Edge',
+      'AWS Snowmobile',
+      'AWS Snowflake',
+      'AWS Snowpipe',
+      'AWS Snowball Classic',
+      'AWS Snowstorm'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS Snow Familyのデバイス：Snowball Edge（ストレージとコンピューティング）、Snowmobile（エクサバイト規模のデータ転送トラック）。Snowflake、Snowpipeは他社サービス、Snowball Classicは旧世代、Snowstormは存在しません。'
+  },
+  {
+    id: 'migration-multi-5',
+    category: '移行戦略',
+    question: 'クラウド移行の成功要因として正しいものを3つ選択してください。',
+    options: [
+      '経営陣のサポート',
+      '段階的な移行アプローチ',
+      'スキルと知識の習得',
+      '一度にすべてを移行',
+      'コスト削減のみを重視',
+      'セキュリティ要件の無視'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: '移行成功要因：経営陣のサポート（組織的なコミット）、段階的アプローチ（リスク軽減）、スキル習得（技術的準備）。一度にすべて移行、コストのみ重視、セキュリティ無視は失敗要因です。'
+  },
+  {
+    id: 'migration-multi-6',
+    category: '移行戦略',
+    question: 'AWS Schema Conversion Tool (SCT) の機能として正しいものを2つ選択してください。',
+    options: [
+      'データベーススキーマの変換',
+      'アプリケーションコードの変換',
+      'データの実際の移行',
+      'ネットワーク設定の変換',
+      'ユーザーアカウントの移行',
+      'ファイルシステムの変換'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS SCTの機能：データベーススキーマの変換（異種DB間のスキーマ変換）、アプリケーションコードの変換（SQL文等の変換）。データ移行はDMS、ネットワーク設定、ユーザーアカウント、ファイルシステム変換は対象外です。'
+  },
+  {
+    id: 'migration-multi-7',
+    category: '移行戦略',
+    question: 'AWS Migration Hub の機能として正しいものを3つ選択してください。',
+    options: [
+      '移行プロジェクトの一元管理',
+      '移行ツールの統合ダッシュボード',
+      '移行進捗の可視化',
+      'データの自動移行',
+      'アプリケーションの自動変換',
+      'インフラの自動構築'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'AWS Migration Hubの機能：移行プロジェクトの一元管理、複数の移行ツール（DMS、MGN等）の統合ダッシュボード、移行進捗の可視化。データ移行、アプリ変換、インフラ構築は他のツールが実行します。'
+  },
+  {
+    id: 'migration-multi-8',
+    category: '移行戦略',
+    question: 'AWS Application Discovery Service の機能として正しいものを2つ選択してください。',
+    options: [
+      'オンプレミス環境の自動検出',
+      'アプリケーション依存関係の分析',
+      'データの自動移行',
+      'アプリケーションの自動変換',
+      'クラウドコストの自動計算',
+      'セキュリティ設定の自動化'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS Application Discovery Serviceの機能：オンプレミス環境の自動検出（サーバー、アプリケーション）、アプリケーション依存関係の分析（移行計画策定支援）。データ移行、アプリ変換、コスト計算、セキュリティ設定は他のサービスです。'
+  },
+  {
+    id: 'migration-multi-9',
+    category: '移行戦略',
+    question: 'Large-scale migration のベストプラクティスとして正しいものを3つ選択してください。',
+    options: [
+      'パイロットプロジェクトの実施',
+      '段階的な移行アプローチ',
+      '自動化ツールの活用',
+      '一括での全システム移行',
+      'マニュアル作業の最大化',
+      'テスト工程の省略'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: '大規模移行のベストプラクティス：パイロットプロジェクト（小規模で検証）、段階的移行（リスク分散）、自動化ツール活用（効率化・品質向上）。一括移行、マニュアル作業最大化、テスト省略は失敗要因です。'
+  },
+  {
+    id: 'migration-multi-10',
+    category: '移行戦略',
+    question: 'AWS Migration Acceleration Program (MAP) の特徴として正しいものを2つ選択してください。',
+    options: [
+      '移行プロジェクトの資金支援',
+      '専門家によるガイダンス',
+      'ハードウェアの無償提供',
+      'ソフトウェアライセンスの無償提供',
+      'データセンターの無償利用',
+      'ネットワーク回線の無償提供'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS MAPの特徴：移行プロジェクトの資金支援（クレジット提供）、AWS専門家やパートナーによるガイダンス・サポート。ハードウェア、ソフトウェアライセンス、データセンター、ネットワーク回線の無償提供は含まれません。'
   }
 ]
 

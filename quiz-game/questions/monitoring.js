@@ -199,6 +199,167 @@ const monitoringQuestions = [
     options: ['フルマネージド', 'スケーラブル', 'セキュア', 'すべて正しい'],
     correct: 3,
     explanation: 'Managed Service for Prometheusは、フルマネージド、高可用性、セキュアなPrometheusサービスを提供します。'
+  },
+  // 複数選択問題
+  {
+    id: 'monitoring-multi-1',
+    category: '監視・ログ',
+    question: 'Amazon CloudWatchで監視できるメトリクスタイプを3つ選択してください。',
+    options: [
+      'システムメトリクス',
+      'カスタムメトリクス',
+      'アプリケーションメトリクス',
+      'ネットワークパケット内容',
+      'ソースコード品質',
+      'ユーザー行動分析'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'CloudWatchは、システムメトリクス（CPU、メモリ等）、カスタムメトリクス（独自定義）、アプリケーションメトリクス（APM）を監視できます。パケット内容、ソースコード品質、ユーザー行動分析は他のサービスの領域です。'
+  },
+  {
+    id: 'monitoring-multi-2',
+    category: '監視・ログ',
+    question: 'AWS X-Rayの機能として正しいものを2つ選択してください。',
+    options: [
+      '分散トレーシング',
+      'サービスマップの可視化',
+      'ログファイルの暗号化',
+      'データベースのバックアップ',
+      'ネットワークトラフィック分析',
+      'コスト分析'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS X-Rayは、分散トレーシング（リクエストの追跡）とサービスマップの可視化（アプリケーション構成の表示）を提供します。ログ暗号化、バックアップ、ネットワーク分析、コスト分析は他のサービスの機能です。'
+  },
+  {
+    id: 'monitoring-multi-3',
+    category: '監視・ログ',
+    question: 'Amazon CloudWatch Logsの機能として正しいものを3つ選択してください。',
+    options: [
+      'ログの集約・保存',
+      'ログのリアルタイム監視',
+      'メトリクスフィルター',
+      'データベースクエリ最適化',
+      'ネットワーク設定の自動化',
+      'コンテナイメージの管理'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'CloudWatch Logsは、ログの集約・保存、リアルタイム監視、メトリクスフィルター（ログからメトリクス生成）を提供します。データベース最適化、ネットワーク自動化、コンテナ管理は他のサービスの機能です。'
+  },
+  {
+    id: 'monitoring-multi-4',
+    category: '監視・ログ',
+    question: 'AWS CloudTrailで記録される情報として正しいものを2つ選択してください。',
+    options: [
+      'API呼び出し履歴',
+      'ユーザーアクティビティ',
+      'ネットワークパケット内容',
+      'アプリケーションパフォーマンス',
+      'データベースクエリ実行時間',
+      'ファイルシステムアクセス'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS CloudTrailは、API呼び出し履歴とユーザーアクティビティ（管理イベント）を記録します。ネットワークパケット、アプリケーション性能、DB性能、ファイルアクセスは他のサービスで監視します。'
+  },
+  {
+    id: 'monitoring-multi-5',
+    category: '監視・ログ',
+    question: 'Amazon EventBridgeの機能として正しいものを3つ選択してください。',
+    options: [
+      'イベントルーティング',
+      'スケジュールベースの実行',
+      'カスタムイベントの処理',
+      'データベースレプリケーション',
+      'ファイル転送',
+      'ユーザー認証'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'Amazon EventBridgeは、イベントルーティング（イベントの配信）、スケジュールベースの実行（cron式）、カスタムイベントの処理を提供します。データベースレプリケーション、ファイル転送、ユーザー認証は他のサービスの機能です。'
+  },
+  {
+    id: 'monitoring-multi-6',
+    category: '監視・ログ',
+    question: 'AWS CloudWatch Insightsの機能として正しいものを2つ選択してください。',
+    options: [
+      'ログデータのクエリと分析',
+      'インタラクティブな検索機能',
+      'リアルタイムストリーミング',
+      'データの自動暗号化',
+      'メトリクスの自動生成',
+      'アラートの自動設定'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS CloudWatch Insightsの機能：ログデータのクエリと分析（SQL風の構文）、インタラクティブな検索とフィルタリング。リアルタイムストリーミング、暗号化、メトリクス生成、アラート設定は他の機能です。'
+  },
+  {
+    id: 'monitoring-multi-7',
+    category: '監視・ログ',
+    question: 'Amazon CloudWatch Syntheticsの機能として正しいものを3つ選択してください。',
+    options: [
+      'Webサイトの可用性監視',
+      'APIエンドポイントの監視',
+      'ユーザージャーニーのテスト',
+      'データベースパフォーマンス監視',
+      'ネットワーク帯域幅測定',
+      'サーバーリソース監視'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'CloudWatch Syntheticsの機能：Webサイトの可用性監視（外形監視）、APIエンドポイントの監視、ユーザージャーニーのテスト（Canary）。データベース性能、ネットワーク帯域幅、サーバーリソース監視は他のサービス・機能です。'
+  },
+  {
+    id: 'monitoring-multi-8',
+    category: '監視・ログ',
+    question: 'AWS Personal Health Dashboardの機能として正しいものを2つ選択してください。',
+    options: [
+      'AWSサービス障害の個別通知',
+      'メンテナンス予定の事前通知',
+      'コスト異常の検出',
+      'セキュリティ脆弱性の監視',
+      'パフォーマンス最適化の提案',
+      'リソース使用量の分析'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS Personal Health Dashboardの機能：使用中のAWSサービスに影響する障害の個別通知、メンテナンス予定の事前通知。コスト異常、セキュリティ監視、性能最適化、リソース分析は他のサービスの機能です。'
+  },
+  {
+    id: 'monitoring-multi-9',
+    category: '監視・ログ',
+    question: 'Amazon CloudWatch Anomaly Detectionの特徴として正しいものを3つ選択してください。',
+    options: [
+      '機械学習による異常検出',
+      '自動的なベースライン学習',
+      '異常検出時の自動アラート',
+      'リアルタイムデータ修正',
+      'データの自動バックアップ',
+      'メトリクスの自動生成'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'CloudWatch Anomaly Detectionの特徴：機械学習による異常検出、過去データからの自動ベースライン学習、異常検出時の自動アラート送信。データ修正、バックアップ、メトリクス生成は行いません。'
+  },
+  {
+    id: 'monitoring-multi-10',
+    category: '監視・ログ',
+    question: 'AWS Systems Manager OpsCenter の機能として正しいものを2つ選択してください。',
+    options: [
+      '運用上の問題の一元管理',
+      '自動化されたトラブルシューティング',
+      'データベースのバックアップ',
+      'ネットワーク設定の変更',
+      'アプリケーションのデプロイ',
+      'ユーザーアカウントの管理'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS Systems Manager OpsCenterの機能：運用上の問題（OpsItems）の一元管理、関連するAWS Configルールやランブックとの統合による自動化されたトラブルシューティング。バックアップ、ネットワーク変更、デプロイ、ユーザー管理は他のサービスです。'
   }
 ]
 

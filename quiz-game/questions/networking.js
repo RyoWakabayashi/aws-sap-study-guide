@@ -239,6 +239,167 @@ const networkingQuestions = [
     options: ['VPC接続', 'サービス間通信', 'DNS解決', 'ロードバランシング'],
     correct: 1,
     explanation: 'VPC Latticeは、マイクロサービス間の安全で効率的な通信を実現するアプリケーションネットワーキングサービスです。'
+  },
+  // 複数選択問題
+  {
+    id: 'networking-multi-1',
+    category: 'ネットワーキング',
+    question: 'VPCピアリング接続の制限事項として正しいものを3つ選択してください。',
+    options: [
+      'CIDRブロックの重複は不可',
+      '推移的ルーティングは不可',
+      '異なるリージョン間では利用不可',
+      'セキュリティグループの参照は不可',
+      '同一アカウント内でのみ利用可能',
+      'DNS解決はサポートされない'
+    ],
+    correct: [0, 1, 3],
+    multipleChoice: true,
+    explanation: 'VPCピアリングの制限：CIDRブロックの重複不可、推移的ルーティング不可、異なるVPC間でのセキュリティグループ参照不可。異なるリージョン・アカウント間でも利用可能で、DNS解決もサポートされます。'
+  },
+  {
+    id: 'networking-multi-2',
+    category: 'ネットワーキング',
+    question: 'AWS Transit Gatewayの利点として正しいものを2つ選択してください。',
+    options: [
+      'VPC間の複雑な接続を簡素化',
+      'オンプレミスとの接続を一元化',
+      'データ転送料金が無料',
+      'セキュリティグループ機能を提供',
+      'NATゲートウェイ機能を内蔵',
+      'ロードバランサー機能を提供'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'Transit Gatewayは、複数のVPC間の接続を簡素化し、オンプレミスとの接続を一元化できます。データ転送料金は発生し、セキュリティグループやNATゲートウェイ、ロードバランサー機能は提供しません。'
+  },
+  {
+    id: 'networking-multi-3',
+    category: 'ネットワーキング',
+    question: 'Application Load Balancer (ALB)の機能として正しいものを3つ選択してください。',
+    options: [
+      'パスベースルーティング',
+      'ホストベースルーティング',
+      'WebSocketサポート',
+      'UDP負荷分散',
+      'Layer 4負荷分散のみ',
+      'SSL終端'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'ALBは、パスベースルーティング、ホストベースルーティング、WebSocketサポートを提供します。Layer 7（HTTP/HTTPS）で動作し、SSL終端も可能ですが、UDP負荷分散はNetwork Load Balancerの機能です。'
+  },
+  {
+    id: 'networking-multi-4',
+    category: 'ネットワーキング',
+    question: 'AWS Direct Connectの利点として正しいものを2つ選択してください。',
+    options: [
+      '専用線による安定した帯域幅',
+      'インターネット経由より低レイテンシ',
+      '完全無料のデータ転送',
+      '自動的な冗長化',
+      'VPN設定が不要',
+      'パブリックIPアドレスが不要'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'Direct Connectは、専用線による安定した帯域幅とインターネット経由より低いレイテンシを提供します。データ転送料金は発生し、冗長化は手動設定が必要で、VPN設定やパブリックIPアドレスの要否は用途によります。'
+  },
+  {
+    id: 'networking-multi-5',
+    category: 'ネットワーキング',
+    question: 'Amazon CloudFrontのキャッシュ動作を制御する方法として正しいものを3つ選択してください。',
+    options: [
+      'Cache Behaviors',
+      'TTL設定',
+      'Origin Request Policy',
+      'Security Groups',
+      'Route Tables',
+      'Cache Policy'
+    ],
+    correct: [0, 1, 5],
+    multipleChoice: true,
+    explanation: 'CloudFrontのキャッシュ制御：Cache Behaviors（パスパターンベースの動作設定）、TTL設定（キャッシュ保持時間）、Cache Policy（キャッシュキーとTTL設定）。Origin Request Policyはオリジンへのリクエスト制御、Security GroupsやRoute Tablesは関係ありません。'
+  },
+  {
+    id: 'networking-multi-6',
+    category: 'ネットワーキング',
+    question: 'AWS Global Acceleratorの機能として正しいものを2つ選択してください。',
+    options: [
+      'Anycastアドレスの提供',
+      'AWSグローバルネットワークの活用',
+      'コンテンツキャッシュ機能',
+      'SSL証明書の自動管理',
+      'DDoS攻撃の完全防御',
+      'データベース接続の最適化'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS Global Acceleratorの機能：Anycastアドレス（単一IPで複数リージョンにルーティング）、AWSグローバルネットワーク活用（最適経路でトラフィック転送）。コンテンツキャッシュはCloudFront、SSL管理やDDoS防御、DB最適化は他のサービスです。'
+  },
+  {
+    id: 'networking-multi-7',
+    category: 'ネットワーキング',
+    question: 'Amazon Route 53のルーティングポリシーとして正しいものを3つ選択してください。',
+    options: [
+      'Weighted Routing',
+      'Latency-based Routing',
+      'Geolocation Routing',
+      'Cost-based Routing',
+      'Performance-based Routing',
+      'Security-based Routing'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'Route 53のルーティングポリシー：Weighted（重み付け）、Latency-based（レイテンシベース）、Geolocation（地理的位置ベース）、Failover、Multivalue Answer、Geoproximity。Cost-based、Performance-based、Security-basedは存在しないポリシーです。'
+  },
+  {
+    id: 'networking-multi-8',
+    category: 'ネットワーキング',
+    question: 'AWS PrivateLinkの利点として正しいものを2つ選択してください。',
+    options: [
+      'VPC間のプライベート接続',
+      'インターネットゲートウェイ不要',
+      'データ転送料金の無料化',
+      'セキュリティグループの自動設定',
+      'DNS解決の自動化',
+      'ロードバランシング機能'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS PrivateLinkの利点：VPC間またはVPCとAWSサービス間のプライベート接続、インターネットを経由せずAWSバックボーンネットワーク使用。データ転送料金は発生し、セキュリティグループ設定、DNS解決、ロードバランシングは別途設定が必要です。'
+  },
+  {
+    id: 'networking-multi-9',
+    category: 'ネットワーキング',
+    question: 'Network Load Balancer (NLB)の特徴として正しいものを3つ選択してください。',
+    options: [
+      'Layer 4（TCP/UDP）で動作',
+      '静的IPアドレスの提供',
+      '超低レイテンシ',
+      'HTTPヘッダーベースルーティング',
+      'SSL終端機能',
+      'WebSocketサポート'
+    ],
+    correct: [0, 1, 2],
+    multipleChoice: true,
+    explanation: 'Network Load Balancer（NLB）の特徴：Layer 4（TCP/UDP）で動作、静的IPアドレス提供、超低レイテンシ（マイクロ秒単位）。HTTPヘッダールーティング、SSL終端、WebSocketサポートはApplication Load Balancer（ALB）の機能です。'
+  },
+  {
+    id: 'networking-multi-10',
+    category: 'ネットワーキング',
+    question: 'AWS Client VPNの機能として正しいものを2つ選択してください。',
+    options: [
+      'リモートユーザーのVPCアクセス',
+      'OpenVPNプロトコルサポート',
+      'サイト間VPN接続',
+      'Direct Connect代替',
+      'NAT Gateway機能',
+      'Internet Gateway機能'
+    ],
+    correct: [0, 1],
+    multipleChoice: true,
+    explanation: 'AWS Client VPNの機能：リモートユーザー（個人）のVPCへの安全なアクセス、OpenVPNプロトコルサポート。サイト間VPN接続はSite-to-Site VPN、Direct Connect代替やNAT/Internet Gateway機能は提供しません。'
   }
 ]
 
