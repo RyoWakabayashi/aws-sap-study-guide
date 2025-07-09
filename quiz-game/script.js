@@ -371,12 +371,53 @@ class QuizGame {
       if (this.currentStreak > this.maxStreak) {
         this.maxStreak = this.currentStreak
       }
+
+      // 連続正解時の特別演出
+      if (this.currentStreak >= 5) {
+        this.showStreakCelebration(this.currentStreak)
+      }
+
       // アニメーション効果を追加
       this.animateStreakIncrease()
     } else {
       this.currentStreak = 0
     }
     this.updateStreakDisplay()
+  }
+
+  showStreakCelebration (streak) {
+    // 特別な連続正解演出
+    const messages = {
+      5: '🔥 5連続正解！素晴らしい！',
+      10: '🌟 10連続正解！驚異的です！',
+      15: '💎 15連続正解！完璧です！',
+      20: '👑 20連続正解！伝説的です！'
+    }
+
+    const message = messages[streak]
+    if (message) {
+      // 特別な演出を表示
+      setTimeout(() => {
+        this.showCelebration(true, message)
+        this.playStreakSound(streak)
+      }, 1000)
+    }
+  }
+
+  playStreakSound (streak) {
+    // 連続正解時の特別な音効果
+    if (typeof window !== 'undefined' && (window.AudioContext || window.webkitAudioContext)) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext
+      const audioContext = new AudioContextClass()
+
+      // 上昇する音階を連続で再生
+      const notes = [523.25, 587.33, 659.25, 698.46, 783.99] // C5, D5, E5, F5, G5
+      notes.forEach((freq, index) => {
+        setTimeout(() => {
+          this.playTone(audioContext, freq, 0.2)
+        }, index * 100)
+      })
+    }
   }
 
   updateStreakDisplay () {
@@ -709,6 +750,10 @@ class QuizGame {
       })
     }
 
+    // 時間切れ演出を追加
+    this.showCelebration(false, '⏰ 時間切れです！')
+    this.playSound('incorrect')
+
     // Update streak (time up = incorrect)
     this.updateStreak(false)
 
@@ -779,6 +824,14 @@ class QuizGame {
       option.style.pointerEvents = 'none'
     })
 
+    // 派手な演出を追加
+    this.showCelebration(isCorrect, isCorrect
+      ? '素晴らしい！正解です！'
+      : '残念！もう一度チャレンジしましょう！')
+
+    // 音効果を再生
+    this.playSound(isCorrect ? 'correct' : 'incorrect')
+
     // Mark correct and incorrect answers (シャッフル対応)
     options.forEach((option, displayIdx) => {
       // シャッフルされた表示位置から元のインデックスを取得
@@ -786,8 +839,12 @@ class QuizGame {
 
       if (originalIndex === question.correct) {
         option.classList.add('correct')
+        // 正解選択肢にアニメーション
+        this.animateOption(option, true)
       } else if (originalIndex === selectedIndex && !isCorrect) {
         option.classList.add('incorrect')
+        // 不正解選択肢にアニメーション
+        this.animateOption(option, false)
       }
     })
 
@@ -884,6 +941,14 @@ class QuizGame {
       }
     })
 
+    // 派手な演出を追加
+    this.showCelebration(isCorrect, isCorrect
+      ? '完璧！すべて正解です！'
+      : '惜しい！解説を確認しましょう！')
+
+    // 音効果を再生
+    this.playSound(isCorrect ? 'correct' : 'incorrect')
+
     // Mark correct and incorrect answers (シャッフル対応)
     options.forEach((option, displayIdx) => {
       // シャッフルされた表示位置から元のインデックスを取得
@@ -894,12 +959,16 @@ class QuizGame {
 
       if (isCorrectAnswer) {
         option.classList.add('correct')
+        // 正解選択肢にアニメーション
+        this.animateOption(option, true)
       }
 
       if (isUserSelected) {
         option.classList.add('user-selected')
         if (!isCorrectAnswer) {
           option.classList.add('incorrect')
+          // 不正解選択肢にアニメーション
+          this.animateOption(option, false)
         }
       }
     })
@@ -950,6 +1019,9 @@ class QuizGame {
     const incorrectCount = this.totalQuestions - this.score
     const timeoutCount = this.userAnswers.filter(answer => answer.timeUp).length
 
+    // クイズ完了時の特別演出
+    this.showQuizCompletionCelebration(accuracyPercent)
+
     // Update result display
     this.finalScore.textContent = this.score
     this.scoreTotal.textContent = `/ ${this.totalQuestions}`
@@ -964,6 +1036,52 @@ class QuizGame {
       this.getPerformanceMessage(accuracyPercent, timeoutCount)
 
     this.showScreen('result-screen')
+  }
+
+  showQuizCompletionCelebration (accuracy) {
+    let message = ''
+    let isSuccess = false
+
+    if (accuracy >= 90) {
+      message = '🎊 素晴らしい成績です！'
+      isSuccess = true
+    } else if (accuracy >= 70) {
+      message = '👏 よく頑張りました！'
+      isSuccess = true
+    } else if (accuracy >= 50) {
+      message = '📚 復習して再挑戦しましょう！'
+    } else {
+      message = '💪 基礎から学習しましょう！'
+    }
+
+    setTimeout(() => {
+      this.showCelebration(isSuccess, message)
+      if (isSuccess) {
+        this.playCompletionSound()
+      }
+    }, 500)
+  }
+
+  playCompletionSound () {
+    // クイズ完了時の特別な音効果
+    if (typeof window !== 'undefined' && (window.AudioContext || window.webkitAudioContext)) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext
+      const audioContext = new AudioContextClass()
+
+      // ファンファーレ風の音階
+      const fanfare = [
+        { freq: 523.25, time: 0 }, // C5
+        { freq: 659.25, time: 200 }, // E5
+        { freq: 783.99, time: 400 }, // G5
+        { freq: 1046.50, time: 600 } // C6
+      ]
+
+      fanfare.forEach(note => {
+        setTimeout(() => {
+          this.playTone(audioContext, note.freq, 0.3)
+        }, note.time)
+      })
+    }
   }
 
   getPerformanceMessage (accuracy, timeoutCount) {
@@ -1250,4 +1368,112 @@ QuizGame.prototype.createMultipleChoiceResultSummary = function (question, corre
 
   summary += '</div>'
   return summary
+}
+
+// 派手な演出関数
+QuizGame.prototype.showCelebration = function (isCorrect, message = '') {
+  // 既存の演出を削除
+  this.removeCelebration()
+
+  // オーバーレイを作成
+  const overlay = document.createElement('div')
+  overlay.className = 'celebration-overlay'
+  overlay.id = 'celebration-overlay'
+
+  const content = document.createElement('div')
+  content.className = 'celebration-content'
+
+  const mainText = document.createElement('div')
+  mainText.className = isCorrect ? 'celebration-correct' : 'celebration-incorrect'
+  mainText.textContent = isCorrect ? '🎉 正解！' : '❌ 不正解'
+
+  const messageText = document.createElement('div')
+  messageText.className = 'celebration-message'
+  messageText.textContent = message || (isCorrect ? 'よくできました！' : '次は頑張りましょう！')
+
+  content.appendChild(mainText)
+  content.appendChild(messageText)
+  overlay.appendChild(content)
+
+  // 正解時は紙吹雪を追加
+  if (isCorrect) {
+    this.createConfetti(overlay)
+  }
+
+  document.body.appendChild(overlay)
+
+  // 画面フラッシュ効果
+  const quizScreen = document.getElementById('quiz-screen')
+  quizScreen.classList.add(isCorrect ? 'screen-flash-correct' : 'screen-flash-incorrect')
+
+  // 演出を自動削除
+  setTimeout(() => {
+    this.removeCelebration()
+    quizScreen.classList.remove('screen-flash-correct', 'screen-flash-incorrect')
+  }, 2000)
+}
+
+QuizGame.prototype.createConfetti = function (container) {
+  const colors = ['#f39c12', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6', '#f1c40f']
+
+  for (let i = 0; i < 50; i++) {
+    const confetti = document.createElement('div')
+    confetti.className = 'confetti'
+    confetti.style.left = Math.random() * 100 + '%'
+    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]
+    confetti.style.animationDelay = Math.random() * 3 + 's'
+    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's'
+    container.appendChild(confetti)
+  }
+}
+
+QuizGame.prototype.removeCelebration = function () {
+  const existing = document.getElementById('celebration-overlay')
+  if (existing) {
+    existing.remove()
+  }
+}
+
+QuizGame.prototype.animateOption = function (option, isCorrect) {
+  option.classList.add(isCorrect ? 'correct-animation' : 'incorrect-animation')
+
+  setTimeout(() => {
+    option.classList.remove('correct-animation', 'incorrect-animation')
+  }, 1000)
+}
+
+QuizGame.prototype.playSound = function (type) {
+  // Web Audio APIを使用した簡単な音効果
+  if (typeof window !== 'undefined' && (window.AudioContext || window.webkitAudioContext)) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext
+    const audioContext = new AudioContextClass()
+
+    if (type === 'correct') {
+      // 正解音: 上昇する音階
+      this.playTone(audioContext, 523.25, 0.1) // C5
+      setTimeout(() => this.playTone(audioContext, 659.25, 0.1), 100) // E5
+      setTimeout(() => this.playTone(audioContext, 783.99, 0.2), 200) // G5
+    } else if (type === 'incorrect') {
+      // 不正解音: 下降する音
+      this.playTone(audioContext, 392.00, 0.3) // G4
+      setTimeout(() => this.playTone(audioContext, 329.63, 0.3), 150) // E4
+    }
+  }
+}
+
+QuizGame.prototype.playTone = function (audioContext, frequency, duration) {
+  const oscillator = audioContext.createOscillator()
+  const gainNode = audioContext.createGain()
+
+  oscillator.connect(gainNode)
+  gainNode.connect(audioContext.destination)
+
+  oscillator.frequency.value = frequency
+  oscillator.type = 'sine'
+
+  gainNode.gain.setValueAtTime(0.1, audioContext.currentTime)
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration)
+
+  oscillator.start(audioContext.currentTime)
+  oscillator.stop(audioContext.currentTime + duration)
 }

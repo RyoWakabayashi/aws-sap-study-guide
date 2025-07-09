@@ -565,10 +565,250 @@ header p {
     font-weight: 500;
 }
 
-.explanation-divider {
-    height: 1px;
-    background: #dee2e6;
-    margin: 1rem 0;
+/* 正解・不正解時の派手な演出 */
+.celebration-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.celebration-content {
+    text-align: center;
+    animation: celebrationBounce 1.5s ease-out;
+}
+
+.celebration-correct {
+    color: #28a745;
+    font-size: 4rem;
+    font-weight: bold;
+    text-shadow: 0 0 20px rgba(40, 167, 69, 0.8);
+    animation: correctCelebration 2s ease-out;
+}
+
+.celebration-incorrect {
+    color: #dc3545;
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 0 0 20px rgba(220, 53, 69, 0.8);
+    animation: incorrectShake 1.5s ease-out;
+}
+
+.celebration-message {
+    font-size: 1.5rem;
+    margin-top: 1rem;
+    opacity: 0;
+    animation: messageSlideIn 0.8s ease-out 0.5s forwards;
+}
+
+/* 正解時のアニメーション */
+@keyframes correctCelebration {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.3) rotate(180deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1) rotate(360deg);
+        opacity: 0.9;
+    }
+}
+
+@keyframes celebrationBounce {
+    0% {
+        transform: translateY(-100px) scale(0.5);
+        opacity: 0;
+    }
+    60% {
+        transform: translateY(20px) scale(1.1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(0) scale(1);
+        opacity: 0;
+    }
+}
+
+/* 不正解時のアニメーション */
+@keyframes incorrectShake {
+    0%, 100% {
+        transform: translateX(0) scale(1);
+        opacity: 0;
+    }
+    10% {
+        transform: translateX(-10px) scale(1.1);
+        opacity: 1;
+    }
+    20% {
+        transform: translateX(10px) scale(1.1);
+        opacity: 1;
+    }
+    30% {
+        transform: translateX(-8px) scale(1.05);
+        opacity: 1;
+    }
+    40% {
+        transform: translateX(8px) scale(1.05);
+        opacity: 1;
+    }
+    50% {
+        transform: translateX(-5px) scale(1);
+        opacity: 1;
+    }
+    60% {
+        transform: translateX(5px) scale(1);
+        opacity: 1;
+    }
+    70% {
+        transform: translateX(-2px) scale(1);
+        opacity: 0.8;
+    }
+    80% {
+        transform: translateX(2px) scale(1);
+        opacity: 0.6;
+    }
+    90% {
+        transform: translateX(0) scale(1);
+        opacity: 0.3;
+    }
+}
+
+@keyframes messageSlideIn {
+    0% {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* 紙吹雪エフェクト */
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #f39c12;
+    animation: confettiFall 3s linear infinite;
+}
+
+.confetti:nth-child(odd) {
+    background: #e74c3c;
+    animation-delay: -0.5s;
+}
+
+.confetti:nth-child(even) {
+    background: #3498db;
+    animation-delay: -1s;
+}
+
+.confetti:nth-child(3n) {
+    background: #2ecc71;
+    animation-delay: -1.5s;
+}
+
+.confetti:nth-child(4n) {
+    background: #9b59b6;
+    animation-delay: -2s;
+}
+
+@keyframes confettiFall {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* 選択肢の派手なアニメーション */
+.option.correct-animation {
+    animation: correctPulse 1s ease-in-out;
+    transform-origin: center;
+}
+
+.option.incorrect-animation {
+    animation: incorrectWiggle 0.8s ease-in-out;
+}
+
+@keyframes correctPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+    }
+    25% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(40, 167, 69, 0.4);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 20px rgba(40, 167, 69, 0.2);
+    }
+    75% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(40, 167, 69, 0.1);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+    }
+}
+
+@keyframes incorrectWiggle {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(-3deg) scale(1.02);
+    }
+    75% {
+        transform: rotate(3deg) scale(1.02);
+    }
+}
+
+/* 画面全体の効果 */
+.screen-flash-correct {
+    animation: flashCorrect 0.5s ease-out;
+}
+
+.screen-flash-incorrect {
+    animation: flashIncorrect 0.5s ease-out;
+}
+
+@keyframes flashCorrect {
+    0% {
+        background-color: rgba(40, 167, 69, 0);
+    }
+    50% {
+        background-color: rgba(40, 167, 69, 0.1);
+    }
+    100% {
+        background-color: rgba(40, 167, 69, 0);
+    }
+}
+
+@keyframes flashIncorrect {
+    0% {
+        background-color: rgba(220, 53, 69, 0);
+    }
+    50% {
+        background-color: rgba(220, 53, 69, 0.1);
+    }
+    100% {
+        background-color: rgba(220, 53, 69, 0);
+    }
 }
 
 /* Multiple Choice Options */
@@ -1234,3 +1474,28 @@ footer {
 .option:nth-child(4) { animation-delay: 0.4s; }
 .option:nth-child(5) { animation-delay: 0.5s; }
 .option:nth-child(6) { animation-delay: 0.6s; }
+
+/* 派手な演出のレスポンシブ対応 */
+@media (max-width: 768px) {
+    .celebration-correct {
+        font-size: 3rem;
+    }
+    
+    .celebration-incorrect {
+        font-size: 2.5rem;
+    }
+    
+    .celebration-message {
+        font-size: 1.2rem;
+        padding: 0 1rem;
+    }
+    
+    .confetti {
+        width: 8px;
+        height: 8px;
+    }
+    
+    .celebration-overlay {
+        padding: 1rem;
+    }
+}
