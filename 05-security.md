@@ -1,193 +1,123 @@
 # セキュリティ
 
+<!-- 
+Copyright (c) 2025 AWS SAP Study Guide
+Licensed under the MIT License. See LICENSE file for details.
+-->
+
 ## 目次
 
 1. [IAM (Identity and Access Management)](#iam-identity-and-access-management)
-2. [AWS WAF](#aws-waf)
-3. [AWS Shield](#aws-shield)
-4. [GuardDuty](#guardduty)
-5. [Security Hub](#security-hub)
-6. [KMS (Key Management Service)](#kms-key-management-service)
-7. [Secrets Manager](#secrets-manager)
-8. [Certificate Manager](#certificate-manager)
+2. [データ保護・暗号化](#データ保護暗号化)
+3. [ネットワークセキュリティ](#ネットワークセキュリティ)
+4. [脅威検知・対応](#脅威検知対応)
+5. [コンプライアンス・ガバナンス](#コンプライアンスガバナンス)
+6. [セキュリティ設計パターン](#セキュリティ設計パターン)
 
 ---
 
 ## IAM (Identity and Access Management)
 
-### 概要
+### 基本概念と原則
 
-AWS リソースへのアクセスを安全に制御するサービス。
+IAMの基本要素
 
-### 基本コンポーネント
+- **ユーザー**: 個人またはアプリケーションのアイデンティティ
+- **グループ**: ユーザーの論理的な集合
+- **ロール**: 一時的な権限の付与
+- **ポリシー**: 権限の定義（JSON形式）
 
-#### ユーザー
+セキュリティ原則
 
-```json
-{
-  "UserName": "john-doe",
-  "Path": "/developers/",
-  "Tags": [
-    { "Key": "Department", "Value": "Engineering" },
-    { "Key": "Project", "Value": "WebApp" }
-  ],
-  "PermissionsBoundary": {
-    "PermissionsBoundaryType": "PermissionsBoundaryPolicy",
-    "PermissionsBoundaryArn": "arn:aws:iam::account:policy/DeveloperBoundary"
-  }
-}
-```
+- **最小権限の原則**: 必要最小限の権限のみ付与
+- **職務分離**: 責任の分散、権限の分離
+- **定期的なレビュー**: アクセス権限の定期見直し
+- **多要素認証**: 追加の認証要素
 
-#### グループ
+### ユーザー・グループ管理
 
-```json
-{
-  "GroupName": "Developers",
-  "Path": "/",
-  "AttachedManagedPolicies": [
-    {
-      "PolicyName": "PowerUserAccess",
-      "PolicyArn": "arn:aws:iam::aws:policy/PowerUserAccess"
-    }
-  ]
-}
-```
+ユーザー管理のベストプラクティス
 
-#### ロール
+- **個人アカウント**: 共有アカウントの禁止
+- **強力なパスワード**: パスワードポリシーの設定
+- **MFA有効化**: 特に特権ユーザー
+- **アクセスキー管理**: 定期的なローテーション
 
-```json
-{
-  "RoleName": "EC2-S3-Access-Role",
-  "AssumeRolePolicyDocument": {
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Principal": {
-          "Service": "ec2.amazonaws.com"
-        },
-        "Action": "sts:AssumeRole"
-      }
-    ]
-  },
-  "ManagedPolicyArns": ["arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
-}
-```
+グループ設計
+
+- **職務ベース**: 職務に応じたグループ分け
+- **階層構造**: 権限レベルに応じた階層化
+- **管理効率**: グループ単位での権限管理
+- **監査性**: 権限付与の透明性
+
+### ロールベースアクセス制御
+
+IAMロールの利点
+
+- **一時的認証情報**: セキュリティトークンの自動ローテーション
+- **クロスアカウント**: 異なるAWSアカウント間のアクセス
+- **フェデレーション**: 外部IDプロバイダーとの統合
+- **サービス統合**: AWSサービス間の安全な連携
+
+ロール設計パターン
+
+- **サービスロール**: EC2、Lambda等のサービス用
+- **クロスアカウントロール**: アカウント間アクセス
+- **フェデレーションロール**: SAML、OIDC統合
+- **一時的ロール**: 短期間の特権アクセス
+
+信頼関係とAssumeRole
+
+- **信頼ポリシー**: ロールを引き受け可能なプリンシパル
+- **条件**: IP制限、時間制限、MFA要求
+- **外部ID**: クロスアカウントアクセスの追加セキュリティ
+- **セッション期間**: 一時的認証情報の有効期間
 
 ### ポリシー設計
 
-#### 最小権限の原則
+ポリシータイプ
 
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": ["s3:GetObject", "s3:PutObject"],
-      "Resource": "arn:aws:s3:::my-bucket/user-data/${aws:username}/*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": "s3:ListBucket",
-      "Resource": "arn:aws:s3:::my-bucket",
-      "Condition": {
-        "StringLike": {
-          "s3:prefix": "user-data/${aws:username}/*"
-        }
-      }
-    }
-  ]
-}
-```
+- **管理ポリシー**: 再利用可能、バージョン管理
+- **インラインポリシー**: 特定のプリンシパルに直接アタッチ
+- **AWSマネージドポリシー**: AWS提供の標準ポリシー
+- **カスタマーマネージドポリシー**: 組織固有のポリシー
 
-#### 条件付きアクセス
+ポリシー要素
 
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": "*",
-      "Resource": "*",
-      "Condition": {
-        "IpAddress": {
-          "aws:SourceIp": ["203.0.113.0/24", "198.51.100.0/24"]
-        },
-        "DateGreaterThan": {
-          "aws:CurrentTime": "2023-01-01T00:00:00Z"
-        },
-        "Bool": {
-          "aws:SecureTransport": "true"
-        }
-      }
-    }
-  ]
-}
-```
+- **Effect**: Allow/Deny
+- **Action**: 許可/拒否するアクション
+- **Resource**: 対象リソース
+- **Condition**: 条件付きアクセス
 
-### クロスアカウントアクセス
+条件キーの活用
 
-#### 信頼関係
+- **時間ベース**: 特定時間帯のみアクセス許可
+- **IPベース**: 特定IPからのみアクセス許可
+- **MFA**: 多要素認証必須
+- **リクエスト属性**: User-Agent、リファラー等
 
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "arn:aws:iam::TRUSTED-ACCOUNT-ID:root"
-      },
-      "Action": "sts:AssumeRole",
-      "Condition": {
-        "StringEquals": {
-          "sts:ExternalId": "unique-external-id"
-        }
-      }
-    }
-  ]
-}
-```
+### フェデレーション
 
-#### 外部 ID 使用
+SAML 2.0フェデレーション
 
-```python
-import boto3
+- **用途**: 企業のActive Directory統合
+- **メリット**: 既存ID基盤の活用、SSO実現
+- **実装**: ADFS、Okta、Azure AD等との統合
+- **考慮事項**: 証明書管理、属性マッピング
 
-# 外部IDを使用したロール引き受け
-sts_client = boto3.client('sts')
-response = sts_client.assume_role(
-    RoleArn='arn:aws:iam::ACCOUNT-ID:role/CrossAccountRole',
-    RoleSessionName='CrossAccountSession',
-    ExternalId='unique-external-id'
-)
+OpenID Connect (OIDC)
 
-credentials = response['Credentials']
-```
+- **用途**: Web/モバイルアプリケーション
+- **プロバイダー**: Google、Facebook、Amazon Cognito
+- **メリット**: 標準プロトコル、簡単な実装
+- **セキュリティ**: JWTトークンの検証
 
-### Permission Boundary
+AWS SSO (Identity Center)
 
-#### 設定例
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": ["ec2:*", "s3:*", "rds:*"],
-      "Resource": "*"
-    },
-    {
-      "Effect": "Deny",
-      "Action": ["ec2:TerminateInstances", "rds:DeleteDBInstance"],
-      "Resource": "*"
-    }
-  ]
-}
-```
+- **統合管理**: 複数AWSアカウントの統一管理
+- **外部統合**: Active Directory、外部IDプロバイダー
+- **アプリケーション統合**: SaaSアプリケーションのSSO
+- **権限セット**: 標準化された権限管理
 
 ### 公式リソース
 
@@ -196,912 +126,465 @@ credentials = response['Credentials']
 
 ---
 
-## AWS WAF
+## データ保護・暗号化
 
-### 概要
+### 暗号化の基本概念
 
-Web アプリケーションファイアウォール。SQL インジェクション、XSS 等から保護。
+暗号化の種類
 
-### Web ACL 設定
+- **保存時暗号化**: データストレージでの暗号化
+- **転送時暗号化**: 通信経路での暗号化
+- **処理時暗号化**: メモリ上での暗号化
+- **エンドツーエンド暗号化**: 送信者から受信者まで
 
-#### 基本構成
+暗号化レベル
 
-```json
-{
-  "Name": "WebApplicationFirewall",
-  "Scope": "CLOUDFRONT",
-  "DefaultAction": {
-    "Allow": {}
-  },
-  "Rules": [
-    {
-      "Name": "AWSManagedRulesCommonRuleSet",
-      "Priority": 1,
-      "OverrideAction": {
-        "None": {}
-      },
-      "Statement": {
-        "ManagedRuleGroupStatement": {
-          "VendorName": "AWS",
-          "Name": "AWSManagedRulesCommonRuleSet"
-        }
-      },
-      "VisibilityConfig": {
-        "SampledRequestsEnabled": true,
-        "CloudWatchMetricsEnabled": true,
-        "MetricName": "CommonRuleSetMetric"
-      }
-    }
-  ]
-}
-```
+- **アプリケーションレベル**: アプリケーション内での暗号化
+- **データベースレベル**: データベースエンジンでの暗号化
+- **ファイルシステムレベル**: OSレベルでの暗号化
+- **ハードウェアレベル**: ハードウェアでの暗号化
 
-#### カスタムルール
+### AWS Key Management Service (KMS)
 
-```json
-{
-  "Name": "BlockSQLInjection",
-  "Priority": 2,
-  "Action": {
-    "Block": {}
-  },
-  "Statement": {
-    "SqliMatchStatement": {
-      "FieldToMatch": {
-        "Body": {}
-      },
-      "TextTransformations": [
-        {
-          "Priority": 0,
-          "Type": "URL_DECODE"
-        },
-        {
-          "Priority": 1,
-          "Type": "HTML_ENTITY_DECODE"
-        }
-      ]
-    }
-  }
-}
-```
+基本概念
 
-### レート制限
+- **マネージドサービス**: キー管理の自動化
+- **HSM**: ハードウェアセキュリティモジュール
+- **キーローテーション**: 自動的なキー更新
+- **監査**: CloudTrailでのキー使用ログ
 
-#### IP ベースレート制限
+キータイプ
 
-```json
-{
-  "Name": "RateLimitRule",
-  "Priority": 3,
-  "Action": {
-    "Block": {}
-  },
-  "Statement": {
-    "RateBasedStatement": {
-      "Limit": 2000,
-      "AggregateKeyType": "IP"
-    }
-  }
-}
-```
+- **AWS管理キー**: AWSサービスが自動作成・管理
+- **カスタマー管理キー**: 顧客が作成・管理
+- **カスタマー提供キー**: 顧客がキーマテリアルを提供
+- **CloudHSM**: 専用HSMでのキー管理
 
-#### 地理的制限
+キーポリシー
 
-```json
-{
-  "Name": "GeoBlockRule",
-  "Priority": 4,
-  "Action": {
-    "Block": {}
-  },
-  "Statement": {
-    "GeoMatchStatement": {
-      "CountryCodes": ["CN", "RU", "KP"]
-    }
-  }
-}
-```
+- **リソースベース**: キー自体に設定されるポリシー
+- **プリンシパル**: キーを使用可能なユーザー・ロール
+- **アクション**: 暗号化、復号化、キー管理
+- **条件**: 使用条件の制限
 
-### マネージドルールグループ
-
-| ルールグループ             | 用途                 | 特徴               |
-| -------------------------- | -------------------- | ------------------ |
-| **Core Rule Set**          | 基本保護             | OWASP Top 10       |
-| **Known Bad Inputs**       | 悪意のある入力       | 既知の攻撃パターン |
-| **SQL Database**           | SQL インジェクション | データベース保護   |
-| **Linux Operating System** | Linux 固有攻撃       | OS レベル保護      |
-| **POSIX Operating System** | POSIX 攻撃           | Unix 系 OS 保護    |
-
-### ログ設定
-
-#### Kinesis Data Firehose
-
-```json
-{
-  "ResourceArn": "arn:aws:wafv2:region:account:global/webacl/WebACL/12345678-1234-1234-1234-123456789012",
-  "LogDestinationConfigs": [
-    "arn:aws:firehose:region:account:deliverystream/aws-waf-logs-firehose"
-  ],
-  "RedactedFields": [
-    {
-      "SingleHeader": {
-        "Name": "authorization"
-      }
-    }
-  ]
-}
-```
-
-### 公式リソース
-
-- [WAF サービス紹介](https://aws.amazon.com/jp/waf/)
-- [WAF Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/202206_AWS_Black_Belt_AWS_FirewallManager_For_AWS_WAF.pdf)
-
----
-
-## AWS Shield
-
-### 概要
-
-DDoS 攻撃からの保護サービス。Standard（無料）と Advanced（有料）を提供。
-
-### Shield Standard
-
-```
-保護対象:
-- CloudFront
-- Route 53
-- ELB
-- Global Accelerator
-
-機能:
-- Layer 3/4 DDoS保護
-- 自動検知・軽減
-- 追加料金なし
-```
-
-### Shield Advanced
-
-```
-追加保護:
-- EC2
-- ELB
-- CloudFront
-- Route 53
-- Global Accelerator
-
-追加機能:
-- 24/7 DRTサポート
-- 高度な攻撃診断
-- コスト保護
-- リアルタイム通知
-```
-
-### DDoS Response Team (DRT)
-
-#### サポート内容
-
-```
-事前準備:
-- アーキテクチャレビュー
-- 最適化提案
-- プレイブック作成
-
-攻撃時対応:
-- 攻撃分析
-- 軽減策実装
-- リアルタイムサポート
-```
-
-### 設定例
-
-```json
-{
-  "ResourceArn": "arn:aws:elasticloadbalancing:region:account:loadbalancer/app/my-alb/1234567890123456",
-  "Name": "MyALBProtection",
-  "EmergencyContactList": [
-    {
-      "EmailAddress": "security@example.com",
-      "PhoneNumber": "+1-555-0123",
-      "ContactNotes": "Primary security contact"
-    }
-  ]
-}
-```
-
-### 公式リソース
-
-- [Shield サービス紹介](https://aws.amazon.com/jp/shield/)
-- [Shield Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/20200818_AWS_BlackBelt_AWS_Shield_Advanced.pdf)
-
----
-
-## GuardDuty
-
-### 概要
-
-機械学習を使用した脅威検知サービス。異常なアクティビティを自動検知。
-
-### データソース
-
-```
-VPC Flow Logs:
-- ネットワークトラフィック分析
-- 異常な通信パターン検知
-
-DNS Logs:
-- 悪意のあるドメインアクセス
-- DGAドメイン検知
-
-CloudTrail Event Logs:
-- API呼び出し分析
-- 異常な管理操作検知
-
-S3 Data Events:
-- オブジェクトレベル操作
-- データ漏洩検知
-```
-
-### 脅威タイプ
-
-#### Reconnaissance
-
-```
-例:
-- Recon:EC2/PortProbeUnprotectedPort
-- Recon:EC2/Portscan
-
-説明:
-- ポートスキャン
-- 偵察活動
-- 脆弱性調査
-```
-
-#### Instance Compromise
-
-```
-例:
-- Trojan:EC2/BlackholeTraffic
-- Backdoor:EC2/C&CActivity.B
-
-説明:
-- マルウェア感染
-- C&C通信
-- データ窃取
-```
-
-#### Account Compromise
-
-```
-例:
-- UnauthorizedAPICall:IAMUser/InstanceCredentialsExfiltration
-- Stealth:IAMUser/CloudTrailLoggingDisabled
-
-説明:
-- 認証情報漏洩
-- 権限昇格
-- ログ無効化
-```
-
-### 設定
-
-#### 基本設定
-
-```json
-{
-  "DetectorId": "12345678901234567890123456789012",
-  "Enable": true,
-  "FindingPublishingFrequency": "FIFTEEN_MINUTES",
-  "DataSources": {
-    "S3Logs": {
-      "Enable": true
-    },
-    "KubernetesAuditLogs": {
-      "Enable": true
-    },
-    "MalwareProtection": {
-      "ScanEc2InstanceWithFindings": {
-        "EbsVolumes": true
-      }
-    }
-  }
-}
-```
-
-#### 抑制ルール
-
-```json
-{
-  "Name": "SuppressTestEnvironment",
-  "Description": "Suppress findings from test environment",
-  "Action": "ARCHIVE",
-  "Rank": 1,
-  "FindingCriteria": {
-    "Criterion": {
-      "service.resourceRole": {
-        "Eq": ["TARGET"]
-      },
-      "resource.instanceDetails.tags.Environment": {
-        "Eq": ["test"]
-      }
-    }
-  }
-}
-```
-
-### EventBridge 統合
-
-#### 自動対応
-
-```python
-import boto3
-import json
-
-def lambda_handler(event, context):
-    # GuardDuty finding詳細
-    detail = event['detail']
-    finding_type = detail['type']
-    severity = detail['severity']
-
-    if severity >= 7.0:  # High severity
-        # セキュリティグループ更新
-        if 'Recon:EC2' in finding_type:
-            block_suspicious_ip(detail)
-
-        # SNS通知
-        send_alert_notification(detail)
-
-    return {'statusCode': 200}
-
-def block_suspicious_ip(detail):
-    ec2 = boto3.client('ec2')
-
-    # 攻撃元IPを取得
-    remote_ip = detail['service']['remoteIpDetails']['ipAddressV4']
-
-    # セキュリティグループルール追加
-    ec2.authorize_security_group_ingress(
-        GroupId='sg-emergency-block',
-        IpPermissions=[
-            {
-                'IpProtocol': '-1',
-                'IpRanges': [{'CidrIp': f'{remote_ip}/32', 'Description': 'GuardDuty Block'}]
-            }
-        ]
-    )
-```
-
-### 公式リソース
-
-- [GuardDuty サービス紹介](https://aws.amazon.com/jp/guardduty/)
-- [GuardDuty Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2025_Amazon-GuardDuty-Basic_0131_v1.pdf)
-
----
-
-## Security Hub
-
-### 概要
-
-セキュリティ状況の統合管理サービス。複数のセキュリティサービスを統合。
-
-### 統合サービス
-
-```
-AWS サービス:
-- GuardDuty
-- Inspector
-- Macie
-- IAM Access Analyzer
-- Systems Manager Patch Manager
-
-サードパーティ:
-- Splunk
-- IBM QRadar
-- Rapid7
-- Tenable
-- Trend Micro
-```
-
-### セキュリティ標準
-
-#### AWS Foundational Security Standard
-
-```
-カテゴリ:
-- IAM
-- EC2
-- S3
-- RDS
-- Lambda
-- CloudTrail
-- Config
-```
-
-#### CIS AWS Foundations Benchmark
-
-```
-レベル:
-- Level 1: 基本的なセキュリティ
-- Level 2: 高度なセキュリティ
-
-チェック項目:
-- パスワードポリシー
-- MFA設定
-- ログ設定
-- ネットワーク設定
-```
-
-#### PCI DSS
-
-```
-要件:
-- カード会員データ保護
-- 暗号化
-- アクセス制御
-- 監視・テスト
-```
-
-### カスタムインサイト
-
-#### 設定例
-
-```json
-{
-  "Name": "High Severity Findings by Resource",
-  "Filters": {
-    "SeverityLabel": [
-      {
-        "Value": "HIGH",
-        "Comparison": "EQUALS"
-      }
-    ],
-    "RecordState": [
-      {
-        "Value": "ACTIVE",
-        "Comparison": "EQUALS"
-      }
-    ]
-  },
-  "GroupByAttribute": "ResourceId"
-}
-```
-
-### 自動修復
-
-#### Lambda 統合
-
-```python
-import boto3
-
-def lambda_handler(event, context):
-    findings = event['detail']['findings']
-
-    for finding in findings:
-        finding_type = finding['Types'][0]
-
-        if finding_type == 'Sensitive Data Identifications/PII/Financial':
-            # S3バケットのパブリックアクセスをブロック
-            remediate_s3_public_access(finding)
-        elif finding_type == 'Software and Configuration Checks/AWS Security Best Practices':
-            # セキュリティグループの修復
-            remediate_security_group(finding)
-
-    return {'statusCode': 200}
-```
-
-### 公式リソース
-
-- [Security Hub サービス紹介](https://aws.amazon.com/jp/security-hub/)
-- [Security Hub Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20201013_AWS-BlackBelt-AWSSecurityHub.pdf)
-
----
-
-## KMS (Key Management Service)
-
-### 概要
-
-暗号化キーの作成・管理サービス。FIPS 140-2 Level 2 準拠。
-
-### キータイプ
-
-#### Customer Managed Keys
-
-```json
-{
-  "Description": "Key for S3 bucket encryption",
-  "KeyUsage": "ENCRYPT_DECRYPT",
-  "KeySpec": "SYMMETRIC_DEFAULT",
-  "Origin": "AWS_KMS",
-  "MultiRegion": false,
-  "Policy": {
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Sid": "Enable IAM User Permissions",
-        "Effect": "Allow",
-        "Principal": {
-          "AWS": "arn:aws:iam::account:root"
-        },
-        "Action": "kms:*",
-        "Resource": "*"
-      }
-    ]
-  }
-}
-```
-
-#### AWS Managed Keys
-
-```
-特徴:
-- AWS サービス専用
-- 自動ローテーション
-- 削除不可
-- 無料
-
-例:
-- aws/s3
-- aws/rds
-- aws/lambda
-```
-
-### キーローテーション
-
-#### 自動ローテーション
-
-```json
-{
-  "KeyId": "arn:aws:kms:region:account:key/12345678-1234-1234-1234-123456789012",
-  "KeyRotationEnabled": true
-}
-```
-
-#### 手動ローテーション
-
-```python
-import boto3
-
-kms = boto3.client('kms')
-
-# 新しいキー作成
-new_key = kms.create_key(
-    Description='Rotated encryption key',
-    KeyUsage='ENCRYPT_DECRYPT'
-)
-
-# エイリアス更新
-kms.update_alias(
-    AliasName='alias/my-app-key',
-    TargetKeyId=new_key['KeyMetadata']['KeyId']
-)
-```
-
-### 暗号化コンテキスト
-
-#### 使用例
-
-```python
-import boto3
-
-kms = boto3.client('kms')
-
-# 暗号化
-response = kms.encrypt(
-    KeyId='alias/my-key',
-    Plaintext=b'sensitive data',
-    EncryptionContext={
-        'Department': 'Finance',
-        'Project': 'Budget2024'
-    }
-)
-
-# 復号化（同じコンテキストが必要）
-decrypted = kms.decrypt(
-    CiphertextBlob=response['CiphertextBlob'],
-    EncryptionContext={
-        'Department': 'Finance',
-        'Project': 'Budget2024'
-    }
-)
-```
-
-### CloudHSM
-
-#### 比較
-
-| 項目                 | KMS            | CloudHSM      |
-| -------------------- | -------------- | ------------- |
-| **管理**             | AWS 管理       | ユーザー管理  |
-| **専有性**           | マルチテナント | 専有          |
-| **コンプライアンス** | FIPS 140-2 L2  | FIPS 140-2 L3 |
-| **統合**             | AWS 統合       | PKCS#11, JCE  |
-| **コスト**           | 低             | 高            |
-
-### 公式リソース
+#### 公式リソース
 
 - [KMS サービス紹介](https://aws.amazon.com/jp/kms/)
 - [KMS Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20160928_AWS-BlackBelt-KMS.pdf)
 
----
+### サービス別暗号化
 
-## Secrets Manager
+S3暗号化
 
-### 概要
+- **SSE-S3**: S3管理キー（AES-256）
+- **SSE-KMS**: KMS管理キー、アクセスログ
+- **SSE-C**: 顧客提供キー
+- **クライアント側暗号化**: アプリケーションレベル
 
-機密情報の安全な保存・管理サービス。自動ローテーション対応。
+EBS暗号化
 
-### シークレット作成
+- **デフォルト暗号化**: アカウントレベルでの有効化
+- **既存ボリューム**: スナップショット経由での暗号化
+- **パフォーマンス**: 暗号化による性能影響は最小限
+- **キー管理**: KMSとの統合
 
-#### データベース認証情報
+RDS暗号化
 
-```json
-{
-  "Name": "prod/myapp/db",
-  "Description": "Database credentials for production",
-  "SecretString": {
-    "username": "admin",
-    "password": "mySecretPassword123",
-    "engine": "mysql",
-    "host": "mydb.cluster-xyz.rds.amazonaws.com",
-    "port": 3306,
-    "dbname": "myapp"
-  },
-  "KmsKeyId": "alias/secrets-manager-key"
-}
-```
+- **保存時暗号化**: データベース、ログ、バックアップ
+- **転送時暗号化**: SSL/TLS接続
+- **透過的暗号化**: アプリケーション変更不要
+- **キー管理**: KMS統合、自動ローテーション
 
-#### API キー
+### 証明書管理
 
-```json
-{
-  "Name": "prod/myapp/apikey",
-  "Description": "Third-party API key",
-  "SecretString": {
-    "api_key": "sk-1234567890abcdef",
-    "api_secret": "abcdef1234567890"
-  }
-}
-```
+AWS Certificate Manager (ACM)
 
-### 自動ローテーション
+- **SSL/TLS証明書**: 無料のパブリック証明書
+- **自動更新**: 証明書の自動更新
+- **統合**: CloudFront、ELB、API Gateway
+- **プライベート証明書**: 内部用途の証明書
 
-#### Lambda 関数設定
+証明書のライフサイクル
 
-```python
-import boto3
-import json
-import mysql.connector
+- **発行**: ドメイン検証、組織検証
+- **デプロイ**: AWSサービスへの自動デプロイ
+- **更新**: 期限前の自動更新
+- **失効**: 必要に応じた証明書失効
 
-def lambda_handler(event, context):
-    secret_arn = event['Step1']['SecretArn']
-    token = event['Step1']['ClientRequestToken']
-    step = event['Step1']['Step']
-
-    if step == "createSecret":
-        create_secret(secret_arn, token)
-    elif step == "setSecret":
-        set_secret(secret_arn, token)
-    elif step == "testSecret":
-        test_secret(secret_arn, token)
-    elif step == "finishSecret":
-        finish_secret(secret_arn, token)
-
-def create_secret(secret_arn, token):
-    # 新しいパスワード生成
-    new_password = generate_password()
-
-    # AWSPENDING バージョンに保存
-    secrets_client = boto3.client('secretsmanager')
-    secrets_client.put_secret_value(
-        SecretId=secret_arn,
-        VersionId=token,
-        VersionStage='AWSPENDING',
-        SecretString=json.dumps({
-            'username': 'admin',
-            'password': new_password
-        })
-    )
-```
-
-### アプリケーション統合
-
-#### Python 例
-
-```python
-import boto3
-import json
-
-def get_secret(secret_name, region_name="us-east-1"):
-    session = boto3.session.Session()
-    client = session.client(
-        service_name='secretsmanager',
-        region_name=region_name
-    )
-
-    try:
-        get_secret_value_response = client.get_secret_value(
-            SecretId=secret_name
-        )
-        secret = json.loads(get_secret_value_response['SecretString'])
-        return secret
-    except Exception as e:
-        raise e
-
-# 使用例
-db_credentials = get_secret("prod/myapp/db")
-connection = mysql.connector.connect(
-    host=db_credentials['host'],
-    user=db_credentials['username'],
-    password=db_credentials['password'],
-    database=db_credentials['dbname']
-)
-```
-
-### 公式リソース
-
-- [Secrets Manager サービス紹介](https://aws.amazon.com/jp/secrets-manager/)
-- [Secrets Manager Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AWS-Secrets-Manager_0901_v1.pdf)
-
----
-
-## Certificate Manager
-
-### 概要
-
-SSL/TLS 証明書の管理サービス。自動更新、AWS 統合。
-
-### 証明書タイプ
-
-#### パブリック証明書
-
-```
-特徴:
-- 無料
-- 自動更新
-- AWS統合のみ
-- DV (Domain Validation)
-
-対応サービス:
-- CloudFront
-- ALB/NLB
-- API Gateway
-- CloudFormation
-```
-
-#### プライベート証明書
-
-```
-特徴:
-- 有料
-- 内部使用
-- カスタムCA
-- 組織検証可能
-
-用途:
-- 内部API
-- マイクロサービス
-- VPN
-- コード署名
-```
-
-### ドメイン検証
-
-#### DNS 検証
-
-```json
-{
-  "DomainName": "example.com",
-  "SubjectAlternativeNames": ["www.example.com", "api.example.com"],
-  "ValidationMethod": "DNS",
-  "DomainValidationOptions": [
-    {
-      "DomainName": "example.com",
-      "ValidationDomain": "example.com"
-    }
-  ]
-}
-```
-
-#### Email 検証
-
-```json
-{
-  "DomainName": "example.com",
-  "ValidationMethod": "EMAIL",
-  "DomainValidationOptions": [
-    {
-      "DomainName": "example.com",
-      "ValidationDomain": "example.com"
-    }
-  ]
-}
-```
-
-### 自動更新
-
-#### CloudFormation 統合
-
-```yaml
-Resources:
-  Certificate:
-    Type: AWS::CertificateManager::Certificate
-    Properties:
-      DomainName: example.com
-      SubjectAlternativeNames:
-        - www.example.com
-        - api.example.com
-
-      ValidationMethod: DNS
-      DomainValidationOptions:
-        - DomainName: example.com
-
-          HostedZoneId: !Ref HostedZone
-```
-
-### 公式リソース
+#### 公式リソース
 
 - [Certificate Manager サービス紹介](https://aws.amazon.com/jp/certificate-manager/)
 - [Certificate Manager Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AWS-Certificate-Manager_v1.pdf)
 
 ---
 
-## セキュリティベストプラクティス
+## ネットワークセキュリティ
 
-### 多層防御
+### VPCセキュリティ
 
-```
-レイヤー1: ネットワーク
-- VPC、セキュリティグループ
-- WAF、Shield
+セキュリティグループ
 
-レイヤー2: アプリケーション
-- 入力検証
-- 認証・認可
+- **ステートフル**: 戻りトラフィックの自動許可
+- **ホワイトリスト**: 許可ルールのみ
+- **動的参照**: 他のセキュリティグループの参照
+- **最小権限**: 必要最小限のポート・プロトコル
 
-レイヤー3: データ
-- 暗号化（保存時・転送時）
-- アクセス制御
+Network ACL
 
-レイヤー4: 監視
-- CloudTrail、GuardDuty
-- Security Hub
-```
+- **ステートレス**: 明示的な双方向ルール
+- **サブネットレベル**: サブネット全体への適用
+- **ルール評価**: 番号順での評価
+- **追加防御**: セキュリティグループとの多層防御
 
-### ゼロトラストアーキテクチャ
+VPC設計のセキュリティ
 
-```
-原則:
-- 信頼しない、常に検証
-- 最小権限アクセス
-- 継続的監視
+- **プライベートサブネット**: 外部からの直接アクセス遮断
+- **NAT Gateway**: アウトバウンド通信の制御
+- **VPC Endpoint**: AWS内部通信、インターネット回避
+- **Flow Logs**: ネットワークトラフィックの監視
 
-実装:
-- IAM ロールベースアクセス
-- MFA必須
-- ネットワークセグメンテーション
-- 暗号化通信
-```
+### Web Application Firewall (WAF)
 
-### インシデント対応
+基本機能
 
-```
-準備:
-- プレイブック作成
-- 連絡先リスト
-- 自動化スクリプト
+- **SQLインジェクション**: データベース攻撃の防御
+- **XSS**: クロスサイトスクリプティング対策
+- **レート制限**: 過度なリクエストの制限
+- **地理的制限**: 特定地域からのアクセス制御
 
-検知:
-- GuardDuty、Security Hub
-- CloudWatch アラーム
-- サードパーティツール
+ルール管理
 
-対応:
-- 影響範囲特定
-- 封じ込め
-- 根本原因分析
-- 復旧・改善
-```
+- **マネージドルール**: AWS、サードパーティ提供
+- **カスタムルール**: 独自の脅威パターン
+- **ルールグループ**: 関連ルールの論理的グループ化
+- **優先度**: ルール評価の順序制御
+
+統合サービス
+
+- **CloudFront**: グローバルな保護
+- **Application Load Balancer**: リージョナルな保護
+- **API Gateway**: API特化の保護
+- **AppSync**: GraphQL API の保護
+
+#### 公式リソース
+
+- [WAF サービス紹介](https://aws.amazon.com/jp/waf/)
+- [WAF Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/202206_AWS_Black_Belt_AWS_FirewallManager_For_AWS_WAF.pdf)
+
+### DDoS保護
+
+AWS Shield Standard
+
+- **自動保護**: すべてのAWSリソース
+- **Layer 3/4**: ネットワーク・トランスポート層
+- **無料**: 追加コストなし
+- **基本的な攻撃**: 一般的なDDoS攻撃への対応
+
+AWS Shield Advanced
+
+- **高度な保護**: アプリケーション層攻撃
+- **24/7サポート**: DDoS Response Team (DRT)
+- **攻撃分析**: 詳細な攻撃レポート
+- **コスト保護**: DDoS攻撃によるスケーリングコスト保護
+
+DDoS対策設計
+
+- **分散アーキテクチャ**: 単一障害点の排除
+- **Auto Scaling**: 攻撃時の自動スケーリング
+- **CloudFront**: エッジでの攻撃軽減
+- **Route 53**: DNS レベルでの保護
+
+#### 公式リソース
+
+- [Shield サービス紹介](https://aws.amazon.com/jp/shield/)
+- [Shield Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/20200818_AWS_BlackBelt_AWS_Shield_Advanced.pdf)
 
 ---
 
-_次のセクション: [06. 監視・ログ](./06-monitoring.md)_
+## 脅威検知・対応
+
+### Amazon GuardDuty
+
+基本概念
+
+- **脅威検知**: 機械学習による異常検知
+- **データソース**: VPC Flow Logs、DNS Logs、CloudTrail
+- **脅威インテリジェンス**: 既知の悪意のあるIPアドレス
+- **継続監視**: 24/7の自動監視
+
+検知対象
+
+- **不正アクセス**: 異常なログイン、権限昇格
+- **データ漏洩**: 異常なデータ転送
+- **マルウェア**: C&C通信、暗号化マイニング
+- **偵察活動**: ポートスキャン、脆弱性探索
+
+対応アクション
+
+- **EventBridge統合**: 自動対応の実装
+- **Lambda統合**: カスタム対応ロジック
+- **SNS通知**: アラート通知
+- **Security Hub統合**: 統合セキュリティ管理
+
+#### 公式リソース
+
+- [GuardDuty サービス紹介](https://aws.amazon.com/jp/guardduty/)
+- [GuardDuty Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2025_Amazon-GuardDuty-Basic_0131_v1.pdf)
+
+### AWS Security Hub
+
+統合セキュリティ管理
+
+- **中央集約**: 複数セキュリティサービスの統合
+- **標準化**: AWS Security Finding Format
+- **優先度付け**: 脅威の重要度評価
+- **ダッシュボード**: 統一されたセキュリティ状況表示
+
+統合サービス
+
+- **GuardDuty**: 脅威検知
+- **Inspector**: 脆弱性評価
+- **Macie**: データ分類・保護
+- **Config**: 設定コンプライアンス
+
+コンプライアンス標準
+
+- **AWS Foundational Security Standard**: AWS基本セキュリティ
+- **CIS**: Center for Internet Security
+- **PCI DSS**: Payment Card Industry
+- **SOC**: Service Organization Control
+
+#### 公式リソース
+
+- [Security Hub サービス紹介](https://aws.amazon.com/jp/security-hub/)
+- [Security Hub Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20201013_AWS-BlackBelt-AWSSecurityHub.pdf)
+
+### Amazon Inspector
+
+脆弱性評価
+
+- **EC2インスタンス**: OS、アプリケーション脆弱性
+- **コンテナイメージ**: ECR内のイメージスキャン
+- **Lambda関数**: 関数コード、依存関係
+- **継続的評価**: 新しい脆弱性の自動検知
+
+評価ルール
+
+- **セキュリティベストプラクティス**: AWS推奨設定
+- **ネットワーク到達性**: 不要なネットワークアクセス
+- **ランタイム動作**: 実行時の異常動作
+- **CVE**: Common Vulnerabilities and Exposures
+
+### Amazon Macie
+
+データ分類・保護
+
+- **機械学習**: 自動的なデータ分類
+- **個人情報検知**: PII、PHI、クレジットカード情報
+- **S3監視**: バケット、オブジェクトの継続監視
+- **異常検知**: 通常と異なるアクセスパターン
+
+データ保護
+
+- **データインベントリ**: データ資産の可視化
+- **リスク評価**: データ露出リスクの評価
+- **アクセス分析**: データアクセスパターンの分析
+- **アラート**: 高リスクデータの検知通知
+
+---
+
+## コンプライアンス・ガバナンス
+
+### AWS Config
+
+設定管理・監査
+
+- **設定記録**: AWSリソースの設定変更履歴
+- **コンプライアンス評価**: 設定ルールとの適合性
+- **変更追跡**: 設定変更の詳細記録
+- **関係性**: リソース間の依存関係
+
+Config Rules
+
+- **AWS管理ルール**: AWS提供の標準ルール
+- **カスタムルール**: Lambda関数による独自ルール
+- **修復アクション**: 非準拠時の自動修復
+- **評価トリガー**: 設定変更時、定期実行
+
+### AWS CloudTrail
+
+API監査ログ
+
+- **全API記録**: すべてのAWS API呼び出し
+- **データイベント**: S3オブジェクト、Lambda実行
+- **管理イベント**: リソース作成・変更・削除
+- **インサイトイベント**: 異常なAPI活動
+
+ログ管理
+
+- **S3保存**: 長期保存、ライフサイクル管理
+- **CloudWatch統合**: リアルタイム監視、アラート
+- **暗号化**: KMS暗号化、ログファイル整合性
+- **マルチリージョン**: 全リージョンでの統一ログ
+
+### AWS Organizations
+
+マルチアカウント管理
+
+- **組織単位**: 階層的なアカウント管理
+- **統合請求**: 一元的な請求管理
+- **Service Control Policy**: アカウント権限の制限
+- **アカウント作成**: 自動化されたアカウント作成
+
+ガバナンス
+
+- **SCP**: 最大権限の制限
+- **タグポリシー**: 統一されたタグ付けルール
+- **バックアップポリシー**: 組織全体のバックアップ
+- **AI Opt-out**: AI/ML サービスの利用制限
+
+### AWS Control Tower
+
+ランディングゾーン
+
+- **マルチアカウント環境**: 標準化された環境構築
+- **ガードレール**: 予防的・検知的統制
+- **Account Factory**: 標準化されたアカウント作成
+- **ダッシュボード**: 統合管理画面
+
+ガードレール
+
+- **必須ガードレール**: 基本的なセキュリティ統制
+- **強く推奨**: ベストプラクティス統制
+- **選択的**: 組織固有の要件
+- **予防的・検知的**: 事前防止と事後検知
+
+---
+
+## セキュリティ設計パターン
+
+### 多層防御 (Defense in Depth)
+
+ネットワーク層
+
+- **VPC分離**: ワークロード別の論理分離
+- **セキュリティグループ**: インスタンスレベル制御
+- **NACL**: サブネットレベル制御
+- **WAF**: アプリケーション層保護
+
+アプリケーション層
+
+- **認証・認可**: 強固なアクセス制御
+- **入力検証**: SQLインジェクション、XSS対策
+- **セッション管理**: 安全なセッション処理
+- **ログ記録**: セキュリティイベントの記録
+
+データ層
+
+- **暗号化**: 保存時・転送時暗号化
+- **アクセス制御**: 最小権限の原則
+- **バックアップ**: データ保護・復旧
+- **監査**: データアクセスの記録
+
+### ゼロトラストアーキテクチャ
+
+基本原則
+
+- **信頼の検証**: すべてのアクセスを検証
+- **最小権限**: 必要最小限のアクセス
+- **継続的監視**: 常時セキュリティ監視
+- **動的ポリシー**: 状況に応じた動的制御
+
+実装要素
+
+- **アイデンティティ**: 強固な認証・認可
+- **デバイス**: デバイス信頼性の検証
+- **ネットワーク**: マイクロセグメンテーション
+- **アプリケーション**: アプリケーションレベル制御
+
+### セキュリティ自動化
+
+Infrastructure as Code
+
+- **CloudFormation**: セキュリティ設定の標準化
+- **CDK**: プログラマティックなセキュリティ実装
+- **Terraform**: マルチクラウド対応
+- **バージョン管理**: 設定変更の追跡
+
+自動対応
+
+- **EventBridge**: イベント駆動の自動対応
+- **Lambda**: カスタム対応ロジック
+- **Systems Manager**: 自動パッチ適用
+- **Security Hub**: 統合的な自動対応
+
+### インシデント対応
+
+準備フェーズ
+
+- **対応計画**: インシデント対応手順書
+- **チーム体制**: 役割・責任の明確化
+- **ツール準備**: 対応ツールの事前準備
+- **訓練**: 定期的な対応訓練
+
+検知・分析
+
+- **監視**: 24/7セキュリティ監視
+- **アラート**: 重要度に応じたアラート
+- **分析**: インシデントの影響範囲特定
+- **分類**: インシデントの重要度分類
+
+封じ込め・根絶
+
+- **隔離**: 影響範囲の拡大防止
+- **証拠保全**: フォレンジック証拠の保全
+- **根本原因**: 攻撃手法・脆弱性の特定
+- **対策実装**: 再発防止策の実装
+
+復旧・事後対応
+
+- **システム復旧**: 正常状態への復旧
+- **監視強化**: 再発監視の強化
+- **報告**: ステークホルダーへの報告
+- **改善**: 対応プロセスの改善
+
+---
+
+## まとめ
+
+### 試験でのポイント
+
+セキュリティ設計の判断基準
+
+1. **脅威モデル**: 想定される脅威・攻撃手法
+2. **リスク評価**: ビジネス影響度・発生確率
+3. **コンプライアンス**: 法的・規制要件
+4. **コスト**: セキュリティ投資とリスクのバランス
+5. **運用性**: 管理負荷・ユーザビリティ
+
+よくあるセキュリティパターン
+
+- **多層防御**: 複数レイヤーでの保護
+- **ゼロトラスト**: 信頼の検証・最小権限
+- **自動化**: セキュリティ運用の自動化
+- **統合管理**: 統一されたセキュリティ管理
+
+IAM設計のベストプラクティス
+
+- **最小権限**: 必要最小限の権限付与
+- **ロール活用**: 一時的認証情報の使用
+- **MFA**: 多要素認証の実装
+- **定期レビュー**: アクセス権限の見直し
+
+データ保護戦略
+
+- **暗号化**: 保存時・転送時の暗号化
+- **キー管理**: 適切なキーライフサイクル
+- **アクセス制御**: データへの適切なアクセス制御
+- **監査**: データアクセスの記録・監視
+
+---
+
+## ライセンス
+
+このコンテンツは MIT License の下で公開されています。詳細は [LICENSE](./LICENSE) ファイルをご確認ください。

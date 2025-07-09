@@ -1,221 +1,101 @@
 # 監視・ログ
 
+<!-- 
+Copyright (c) 2025 AWS SAP Study Guide
+Licensed under the MIT License. See LICENSE file for details.
+-->
+
 ## 目次
 
-1. [CloudWatch](#cloudwatch)
-2. [X-Ray](#x-ray)
-3. [CloudTrail](#cloudtrail)
-4. [Config](#config)
-5. [Systems Manager](#systems-manager)
-6. [監視戦略](#監視戦略)
+1. [Amazon CloudWatch](#amazon-cloudwatch)
+2. [AWS X-Ray](#aws-x-ray)
+3. [ログ管理](#ログ管理)
+4. [アプリケーション監視](#アプリケーション監視)
+5. [運用監視戦略](#運用監視戦略)
+6. [監視設計パターン](#監視設計パターン)
 
 ---
 
-## CloudWatch
+## Amazon CloudWatch
 
-### 概要
+### 基本概念と特徴
 
-AWS リソースとアプリケーションの監視サービス。メトリクス、ログ、アラームを統合管理。
+CloudWatchの役割
 
-### メトリクス
+- AWSリソースとアプリケーションの統合監視プラットフォーム
+- メトリクス収集、ログ管理、アラーム、自動化の統合
+- リアルタイム監視と履歴データ分析
+- 運用の可視化と自動化の基盤
 
-#### 標準メトリクス
+主要コンポーネント
 
-```
-EC2:
-- CPUUtilization
-- NetworkIn/Out
-- DiskReadOps/WriteOps
-- StatusCheckFailed
+- **Metrics**: 数値データの時系列収集
+- **Logs**: ログデータの収集・分析
+- **Alarms**: 閾値ベースのアラート
+- **Events/EventBridge**: イベント駆動の自動化
+- **Dashboards**: 可視化とレポート
 
-RDS:
-- DatabaseConnections
-- ReadLatency/WriteLatency
-- FreeableMemory
-- CPUUtilization
+### メトリクス監視
 
-S3:
-- BucketSizeBytes
-- NumberOfObjects
-- AllRequests
-- 4xxErrors/5xxErrors
-```
+標準メトリクス
 
-#### カスタムメトリクス
+- **EC2**: CPU使用率、ネットワーク、ディスクI/O
+- **RDS**: 接続数、CPU、読み書きレイテンシ
+- **ELB**: リクエスト数、レスポンス時間、エラー率
+- **S3**: リクエスト数、エラー、データ転送量
 
-```python
-import boto3
-import time
+カスタムメトリクス
 
-cloudwatch = boto3.client('cloudwatch')
+- **アプリケーション固有**: ビジネスメトリクス
+- **詳細監視**: 1分間隔での高頻度監視
+- **ディメンション**: メトリクスの分類・フィルタリング
+- **統計**: 平均、最大、最小、合計、サンプル数
 
-# カスタムメトリクス送信
-cloudwatch.put_metric_data(
-    Namespace='MyApp/Performance',
-    MetricData=[
-        {
-            'MetricName': 'ProcessingTime',
-            'Value': 123.45,
-            'Unit': 'Seconds',
-            'Dimensions': [
-                {
-                    'Name': 'Environment',
-                    'Value': 'Production'
-                },
-                {
-                    'Name': 'Service',
-                    'Value': 'OrderProcessor'
-                }
-            ],
-            'Timestamp': time.time()
-        }
-    ]
-)
-```
+メトリクス設計の考慮事項
 
-### CloudWatch Logs
+- **粒度**: 監視間隔とコストのバランス
+- **保持期間**: データ保持期間とストレージコスト
+- **ディメンション**: 適切な分類軸の設定
+- **統計**: 用途に応じた統計値の選択
 
-#### ロググループ・ストリーム
+### アラーム設計
 
-```json
-{
-  "logGroupName": "/aws/lambda/my-function",
-  "retentionInDays": 14,
-  "kmsKeyId": "arn:aws:kms:region:account:key/12345678-1234-1234-1234-123456789012",
-  "tags": {
-    "Environment": "Production",
-    "Application": "MyApp"
-  }
-}
-```
+アラーム設定の原則
 
-#### ログ収集設定
+- **アクションにつながるアラート**: 対応可能な問題のみアラート
+- **適切な閾値**: 偽陽性・偽陰性の最小化
+- **段階的エスカレーション**: 重要度に応じた通知先
+- **自動復旧**: 可能な限りの自動対応
 
-```json
-{
-  "agent": {
-    "metrics_collection_interval": 60,
-    "run_as_user": "cwagent"
-  },
-  "logs": {
-    "logs_collected": {
-      "files": {
-        "collect_list": [
-          {
-            "file_path": "/var/log/messages",
-            "log_group_name": "/aws/ec2/system",
-            "log_stream_name": "{instance_id}",
-            "timezone": "UTC"
-          },
-          {
-            "file_path": "/var/log/httpd/access_log",
-            "log_group_name": "/aws/ec2/httpd",
-            "log_stream_name": "{instance_id}",
-            "timestamp_format": "%b %d %H:%M:%S"
-          }
-        ]
-      }
-    }
-  }
-}
-```
+アラーム状態
 
-### CloudWatch Insights
+- **OK**: 正常状態
+- **ALARM**: 閾値超過状態
+- **INSUFFICIENT_DATA**: データ不足状態
+- **状態遷移**: 状態変化時のアクション実行
 
-#### クエリ例
+複合アラーム
 
-```sql
--- エラーログの分析
-fields @timestamp, @message
-| filter @message like /ERROR/
-| stats count() by bin(5m)
-| sort @timestamp desc
--- レスポンス時間の分析
-fields @timestamp, @duration
-| filter @type = "REPORT"
-| stats avg(@duration), max(@duration), min(@duration) by bin(5m)
--- 特定IPからのアクセス
-fields @timestamp, @message
-| filter @message like /192.168.1.100/
-| sort @timestamp desc
-| limit 100
-```
+- **論理演算**: AND、OR、NOTによる条件組み合わせ
+- **複雑な条件**: 複数メトリクスの相関監視
+- **アラーム疲れ**: 不要なアラートの削減
+- **ビジネス影響**: ビジネス観点での重要度設定
 
-### アラーム設定
+### ダッシュボード設計
 
-#### メトリクスアラーム
+ダッシュボードの種類
 
-```json
-{
-  "AlarmName": "HighCPUUtilization",
-  "AlarmDescription": "Alarm when CPU exceeds 80%",
-  "MetricName": "CPUUtilization",
-  "Namespace": "AWS/EC2",
-  "Statistic": "Average",
-  "Period": 300,
-  "EvaluationPeriods": 2,
-  "Threshold": 80.0,
-  "ComparisonOperator": "GreaterThanThreshold",
-  "Dimensions": [
-    {
-      "Name": "InstanceId",
-      "Value": "i-1234567890abcdef0"
-    }
-  ],
-  "AlarmActions": [
-    "arn:aws:sns:region:account:high-cpu-topic",
-    "arn:aws:autoScaling:region:account:scalingPolicy:policy-id"
-  ]
-}
-```
+- **運用ダッシュボード**: リアルタイム監視用
+- **ビジネスダッシュボード**: KPI・ビジネスメトリクス
+- **トラブルシューティング**: 問題分析用
+- **エグゼクティブ**: 経営層向けサマリー
 
-#### 複合アラーム
+効果的なダッシュボード設計
 
-```json
-{
-  "AlarmName": "ApplicationHealthAlarm",
-  "AlarmRule": "(ALARM(HighCPUAlarm) OR ALARM(HighMemoryAlarm)) AND ALARM(HighErrorRateAlarm)",
-  "ActionsEnabled": true,
-  "AlarmActions": ["arn:aws:sns:region:account:critical-alert-topic"]
-}
-```
-
-### ダッシュボード
-
-#### 設定例
-
-```json
-{
-  "widgets": [
-    {
-      "type": "metric",
-      "properties": {
-        "metrics": [
-          ["AWS/EC2", "CPUUtilization", "InstanceId", "i-1234567890abcdef0"],
-          [
-            "AWS/ApplicationELB",
-            "TargetResponseTime",
-            "LoadBalancer",
-            "app/my-alb/50dc6c495c0c9188"
-          ]
-        ],
-        "period": 300,
-        "stat": "Average",
-        "region": "us-east-1",
-        "title": "EC2 Instance CPU and ALB Response Time"
-      }
-    },
-    {
-      "type": "log",
-      "properties": {
-        "query": "SOURCE '/aws/lambda/my-function' | fields @timestamp, @message\n| filter @message like /ERROR/\n| sort @timestamp desc\n| limit 20",
-        "region": "us-east-1",
-        "title": "Recent Errors"
-      }
-    }
-  ]
-}
-```
+- **階層化**: 概要から詳細への段階的表示
+- **関連性**: 相関のあるメトリクスのグループ化
+- **時間軸**: 適切な時間範囲の設定
+- **自動更新**: リアルタイム性の確保
 
 ### 公式リソース
 
@@ -224,149 +104,55 @@ fields @timestamp, @message
 
 ---
 
-## X-Ray
+## AWS X-Ray
 
-### 概要
+### 基本概念と特徴
 
-分散アプリケーションのトレーシングサービス。リクエストの流れを可視化。
+分散トレーシング
 
-### トレーシング設定
+- マイクロサービス間のリクエスト追跡
+- エンドツーエンドのパフォーマンス可視化
+- ボトルネック特定と根本原因分析
+- サービス依存関係の可視化
 
-#### Lambda 統合
+主要コンポーネント
 
-```python
-from aws_xray_sdk.core import xray_recorder
-from aws_xray_sdk.core import patch_all
+- **トレース**: 単一リクエストの完全な経路
+- **セグメント**: サービス内での処理単位
+- **サブセグメント**: セグメント内の詳細処理
+- **アノテーション**: 検索・フィルタリング用メタデータ
 
-# AWS SDK自動トレーシング
-patch_all()
+### トレース分析
 
-@xray_recorder.capture('lambda_handler')
-def lambda_handler(event, context):
-    # サブセグメント作成
-    subsegment = xray_recorder.begin_subsegment('database_query')
-    try:
-        result = query_database()
-        subsegment.put_metadata('query_result', result)
-        return result
-    except Exception as e:
-        subsegment.add_exception(e)
-        raise
-    finally:
-        xray_recorder.end_subsegment()
+サービスマップ
 
-@xray_recorder.capture('query_database')
-def query_database():
-    # データベースクエリ処理
-    pass
-```
+- **依存関係**: サービス間の呼び出し関係
+- **レスポンス時間**: 各サービスの処理時間
+- **エラー率**: サービス別のエラー発生率
+- **スループット**: リクエスト処理量
 
-#### ECS 統合
+パフォーマンス分析
 
-```json
-{
-  "family": "xray-app",
-  "containerDefinitions": [
-    {
-      "name": "xray-daemon",
-      "image": "amazon/aws-xray-daemon:latest",
-      "cpu": 32,
-      "memory": 256,
-      "portMappings": [
-        {
-          "containerPort": 2000,
-          "protocol": "udp"
-        }
-      ]
-    },
-    {
-      "name": "app",
-      "image": "my-app:latest",
-      "environment": [
-        {
-          "name": "_X_AMZN_TRACE_ID",
-          "value": "Root=1-5e1b4151-5ac6c58f5b5daa6532e4f1c2"
-        },
-        {
-          "name": "AWS_XRAY_DAEMON_ADDRESS",
-          "value": "xray-daemon:2000"
-        }
-      ],
-      "links": ["xray-daemon"]
-    }
-  ]
-}
-```
+- **レイテンシ分布**: レスポンス時間の分布
+- **ボトルネック特定**: 最も時間のかかる処理
+- **エラー分析**: エラーの発生パターン
+- **異常検知**: 通常と異なるパフォーマンス
 
-### サービスマップ
+### 統合とサンプリング
 
-#### 分析項目
+サービス統合
 
-```
-レスポンス時間:
-- 平均、P50、P90、P99
-- 時系列変化
-- サービス間比較
+- **Lambda**: 自動的なトレース収集
+- **EC2**: X-Ray エージェントによる収集
+- **ECS/EKS**: コンテナでのトレース収集
+- **API Gateway**: APIレベルでのトレース
 
-エラー率:
-- HTTP 4xx/5xx
-- 例外発生率
-- タイムアウト
+サンプリング戦略
 
-スループット:
-- リクエスト数/秒
-- 同時実行数
-- キューイング時間
-```
-
-### アノテーション・メタデータ
-
-#### 使い分け
-
-```python
-# アノテーション（検索・フィルタ可能）
-xray_recorder.put_annotation('user_id', '12345')
-xray_recorder.put_annotation('payment_method', 'credit_card')
-
-# メタデータ（詳細情報）
-xray_recorder.put_metadata('request_details', {
-    'headers': request.headers,
-    'body': request.body,
-    'user_agent': request.user_agent
-})
-```
-
-### サンプリング
-
-#### サンプリングルール
-
-```json
-{
-  "version": 2,
-  "default": {
-    "fixed_target": 1,
-    "rate": 0.1
-  },
-  "rules": [
-    {
-      "description": "High priority endpoints",
-      "service_name": "payment-service",
-      "http_method": "POST",
-      "url_path": "/api/payment/*",
-      "fixed_target": 2,
-      "rate": 0.5
-    },
-    {
-      "description": "Health checks",
-      "service_name": "*",
-      "http_method": "GET",
-      "url_path": "/health",
-      "fixed_target": 0,
-      "rate": 0.0
-    }
-  ]
-}
-```
+- **固定レート**: 一定割合でのサンプリング
+- **リザーバー**: 最小サンプル数の確保
+- **動的サンプリング**: 負荷に応じた調整
+- **コスト最適化**: サンプリング率とコストのバランス
 
 ### 公式リソース
 
@@ -375,563 +161,278 @@ xray_recorder.put_metadata('request_details', {
 
 ---
 
-## CloudTrail
+## ログ管理
 
-### 概要
+### CloudWatch Logs
 
-AWS API 呼び出しの記録・監査サービス。ガバナンス、コンプライアンス対応。
+基本機能
 
-### 証跡設定
+- **ログ収集**: 様々なソースからのログ集約
+- **リアルタイム監視**: ログストリームのリアルタイム表示
+- **検索・フィルタ**: ログデータの検索・分析
+- **保持期間**: ログの自動削除・アーカイブ
 
-#### 基本設定
+ロググループ・ストリーム
 
-```json
-{
-  "Name": "management-events-trail",
-  "S3BucketName": "my-cloudtrail-logs",
-  "S3KeyPrefix": "management-events/",
-  "IncludeGlobalServiceEvents": true,
-  "IsMultiRegionTrail": true,
-  "EnableLogFileValidation": true,
-  "KMSKeyId": "arn:aws:kms:region:account:key/12345678-1234-1234-1234-123456789012",
-  "EventSelectors": [
-    {
-      "ReadWriteType": "All",
-      "IncludeManagementEvents": true,
-      "DataResources": []
-    }
-  ]
-}
-```
+- **ロググループ**: 関連ログの論理的グループ
+- **ログストリーム**: 同一ソースからのログシーケンス
+- **保持設定**: グループ単位での保持期間設定
+- **暗号化**: KMS暗号化によるログ保護
 
-#### データイベント設定
+メトリクスフィルタ
 
-```json
-{
-  "EventSelectors": [
-    {
-      "ReadWriteType": "All",
-      "IncludeManagementEvents": false,
-      "DataResources": [
-        {
-          "Type": "AWS::S3::Object",
-          "Values": ["arn:aws:s3:::sensitive-bucket/*"]
-        },
-        {
-          "Type": "AWS::Lambda::Function",
-          "Values": ["arn:aws:lambda:*:*:function:critical-function"]
-        }
-      ]
-    }
-  ]
-}
-```
-
-### CloudTrail Insights
-
-#### 異常検知
-
-```
-検知対象:
-- API呼び出し頻度の異常
-- エラー率の急増
-- 新しいユーザーアクティビティ
-- 地理的異常
-
-通知:
-- CloudWatch Events
-- SNS
-- Lambda
-```
+- **ログベースメトリクス**: ログからのメトリクス生成
+- **パターンマッチング**: 特定パターンの検出
+- **カウント**: エラー発生回数等の集計
+- **アラーム連携**: メトリクスベースのアラート
 
 ### ログ分析
 
-#### CloudWatch Logs Insights
+CloudWatch Insights
 
-```sql
--- 失敗したAPI呼び出し
-fields @timestamp, sourceIPAddress, userIdentity.type, eventName, errorCode
-| filter errorCode exists
-| stats count() by errorCode
-| sort count desc
--- 特定ユーザーのアクティビティ
-fields @timestamp, eventName, sourceIPAddress
-| filter userIdentity.userName = "suspicious-user"
-| sort @timestamp desc
--- 管理者権限の使用
-fields @timestamp, userIdentity.userName, eventName
-| filter eventName like /Create|Delete|Put/
-| filter userIdentity.type = "IAMUser"
-| sort @timestamp desc
-```
+- **クエリ言語**: 専用クエリ言語による分析
+- **リアルタイム分析**: ログデータのリアルタイム分析
+- **可視化**: グラフ・チャートでの結果表示
+- **保存クエリ**: 頻繁に使用するクエリの保存
 
-### セキュリティ分析
+ログ分析パターン
 
-#### 異常検知パターン
+- **エラー分析**: エラーログの傾向分析
+- **パフォーマンス分析**: レスポンス時間の分析
+- **セキュリティ分析**: 不正アクセスの検知
+- **ビジネス分析**: ユーザー行動の分析
 
-```python
-import boto3
-import json
+### ログ統合・転送
 
-def analyze_cloudtrail_logs(event, context):
-    # 異常なAPI呼び出しパターンを検知
+ログソース
 
-    # 1. 短時間での大量API呼び出し
-    detect_api_burst()
+- **EC2**: CloudWatch エージェント
+- **Lambda**: 自動的なログ収集
+- **VPC Flow Logs**: ネットワークトラフィック
+- **CloudTrail**: API呼び出しログ
 
-    # 2. 通常と異なる地域からのアクセス
-    detect_geographic_anomaly()
+ログ転送・統合
 
-    # 3. 権限昇格の試行
-    detect_privilege_escalation()
-
-    # 4. データ漏洩の兆候
-    detect_data_exfiltration()
-
-def detect_api_burst():
-    # 5分間で100回以上のAPI呼び出し
-    query = """
-    fields @timestamp, sourceIPAddress, userIdentity.userName
-    | stats count() by sourceIPAddress, userIdentity.userName, bin(5m)
-    | sort count desc
-    | limit 10
-    """
-    # CloudWatch Logs Insightsで実行
-```
-
-### 公式リソース
-
-- [CloudTrail サービス紹介](https://aws.amazon.com/jp/cloudtrail/)
-- [CloudTrail Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AWS-CloudTrail_0228_v1.pdf)
+- **Kinesis Data Firehose**: S3、Redshift への転送
+- **Elasticsearch**: 高度な検索・分析
+- **サードパーティ**: Splunk、Datadog等への統合
+- **Lambda**: カスタムログ処理
 
 ---
 
-## Config
+## アプリケーション監視
 
-### 概要
+### Application Performance Monitoring (APM)
 
-AWS リソースの設定変更を記録・評価するサービス。コンプライアンス監視。
+パフォーマンス監視の観点
 
-### 設定記録
+- **レスポンス時間**: エンドユーザー体験
+- **スループット**: 処理能力・容量
+- **エラー率**: 可用性・品質
+- **リソース使用率**: インフラ効率性
 
-#### Configuration Recorder
+監視レイヤー
 
-```json
-{
-  "name": "default",
-  "roleARN": "arn:aws:iam::account:role/aws-config-role",
-  "recordingGroup": {
-    "allSupported": true,
-    "includeGlobalResourceTypes": true,
-    "resourceTypes": []
-  }
-}
-```
+- **インフラ層**: CPU、メモリ、ネットワーク
+- **プラットフォーム層**: OS、ミドルウェア
+- **アプリケーション層**: アプリケーション固有メトリクス
+- **ビジネス層**: ビジネスKPI、ユーザー体験
 
-#### Delivery Channel
+### Real User Monitoring (RUM)
 
-```json
-{
-  "name": "default",
-  "s3BucketName": "my-config-bucket",
-  "s3KeyPrefix": "config-history/",
-  "snsTopicARN": "arn:aws:sns:region:account:config-topic",
-  "configSnapshotDeliveryProperties": {
-    "deliveryFrequency": "TwentyFour_Hours"
-  }
-}
-```
+CloudWatch RUM
 
-### Config Rules
+- **実ユーザー監視**: 実際のユーザー体験測定
+- **Webバイタル**: Core Web Vitals の監視
+- **エラー追跡**: JavaScript エラーの収集
+- **セッション分析**: ユーザーセッションの詳細分析
 
-#### AWS 管理ルール
+合成監視 vs 実ユーザー監視
 
-```json
-{
-  "ConfigRuleName": "s3-bucket-public-access-prohibited",
-  "Source": {
-    "Owner": "AWS",
-    "SourceIdentifier": "S3_BUCKET_PUBLIC_ACCESS_PROHIBITED"
-  },
-  "Scope": {
-    "ComplianceResourceTypes": ["AWS::S3::Bucket"]
-  }
-}
-```
+- **合成監視**: 定期的な自動テスト、予防的監視
+- **実ユーザー監視**: 実際のユーザー体験、事後的分析
+- **組み合わせ**: 両方を活用した包括的監視
+- **用途**: 異なる目的での使い分け
 
-#### カスタムルール
+### データベース監視
 
-```python
-import boto3
-import json
+RDS Performance Insights
 
-def lambda_handler(event, context):
-    # Config評価イベント
-    config_item = event['configurationItem']
-    resource_type = config_item['resourceType']
+- **データベース負荷**: 待機イベント分析
+- **SQLクエリ**: 重いクエリの特定
+- **リソース使用率**: CPU、メモリ、I/O
+- **履歴分析**: 過去のパフォーマンス傾向
 
-    if resource_type == 'AWS::EC2::Instance':
-        return evaluate_ec2_instance(config_item)
-    elif resource_type == 'AWS::S3::Bucket':
-        return evaluate_s3_bucket(config_item)
+DynamoDB監視
 
-    return {
-        'compliance_type': 'NOT_APPLICABLE',
-        'annotation': 'Resource type not supported'
-    }
-
-def evaluate_ec2_instance(config_item):
-    # EC2インスタンスの評価ロジック
-    configuration = config_item['configuration']
-
-    # 必須タグの確認
-    tags = configuration.get('tags', {})
-    required_tags = ['Environment', 'Owner', 'Project']
-
-    missing_tags = [tag for tag in required_tags if tag not in tags]
-
-    if missing_tags:
-        return {
-            'compliance_type': 'NON_COMPLIANT',
-            'annotation': f'Missing required tags: {", ".join(missing_tags)}'
-        }
-
-    return {
-        'compliance_type': 'COMPLIANT',
-        'annotation': 'All required tags present'
-    }
-```
-
-### 修復アクション
-
-#### Systems Manager 統合
-
-```json
-{
-  "ConfigRuleName": "s3-bucket-ssl-requests-only",
-  "RemediationConfigurations": [
-    {
-      "ConfigRuleName": "s3-bucket-ssl-requests-only",
-      "TargetType": "SSM_DOCUMENT",
-      "TargetId": "AWSConfigRemediation-RemoveS3BucketPublicAccess",
-      "TargetVersion": "1",
-      "Parameters": {
-        "AutomationAssumeRole": {
-          "StaticValue": {
-            "Values": ["arn:aws:iam::account:role/ConfigRemediationRole"]
-          }
-        },
-        "BucketName": {
-          "ResourceValue": {
-            "Value": "RESOURCE_ID"
-          }
-        }
-      },
-      "Automatic": true,
-      "ExecutionControls": {
-        "SsmControls": {
-          "ConcurrentExecutionRatePercentage": 10,
-          "ErrorPercentage": 10
-        }
-      }
-    }
-  ]
-}
-```
-
-### 公式リソース
-
-- [Config サービス紹介](https://aws.amazon.com/jp/config/)
-- [Config Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AWS-Config_0228_v1.pdf)
+- **スロットリング**: 容量超過の監視
+- **レイテンシ**: 読み書きレスポンス時間
+- **エラー**: システムエラー、ユーザーエラー
+- **容量使用率**: プロビジョンド容量の効率性
 
 ---
 
-## Systems Manager
+## 運用監視戦略
 
-### 概要
+### 監視レベルの設計
 
-AWS リソースの運用管理を統合するサービス。パッチ管理、設定管理、運用自動化。
+レベル1: インフラ監視
 
-### Parameter Store
+- **基本メトリクス**: CPU、メモリ、ディスク、ネットワーク
+- **可用性**: サービス稼働状況
+- **容量**: リソース使用率・残容量
+- **自動対応**: Auto Scaling、自動復旧
 
-#### パラメータ管理
+レベル2: アプリケーション監視
 
-```python
-import boto3
+- **APM**: アプリケーションパフォーマンス
+- **ビジネスメトリクス**: トランザクション数、売上等
+- **ユーザー体験**: レスポンス時間、エラー率
+- **依存関係**: 外部サービスとの連携状況
 
-ssm = boto3.client('ssm')
+レベル3: ビジネス監視
 
-# パラメータ作成
-ssm.put_parameter(
-    Name='/myapp/database/host',
-    Value='db.example.com',
-    Type='String',
-    Description='Database host endpoint',
-    Tags=[
-        {'Key': 'Environment', 'Value': 'Production'},
-        {'Key': 'Application', 'Value': 'MyApp'}
-    ]
-)
-
-# 暗号化パラメータ
-ssm.put_parameter(
-    Name='/myapp/database/password',
-    Value='mySecretPassword',
-    Type='SecureString',
-    KeyId='alias/parameter-store-key',
-    Description='Database password'
-)
-
-# パラメータ取得
-response = ssm.get_parameter(
-    Name='/myapp/database/host',
-    WithDecryption=True
-)
-```
-
-#### 階層構造
-
-```
-/myapp/
-├── database/
-│   ├── host
-│   ├── port
-│   ├── username
-│   └── password
-├── api/
-│   ├── endpoint
-│   └── key
-└── cache/
-    ├── host
-    └── port
-```
-
-### Session Manager
-
-#### 設定
-
-```json
-{
-  "schemaVersion": "1.0",
-  "description": "Session Manager preferences",
-  "sessionType": "Standard_Stream",
-  "inputs": {
-    "s3BucketName": "session-manager-logs",
-    "s3KeyPrefix": "session-logs/",
-    "s3EncryptionEnabled": true,
-    "cloudWatchLogGroupName": "/aws/sessionmanager/sessions",
-    "cloudWatchEncryptionEnabled": true,
-    "kmsKeyId": "alias/session-manager-key",
-    "runAsEnabled": false,
-    "runAsDefaultUser": "ec2-user",
-    "idleSessionTimeout": "20",
-    "maxSessionDuration": "60",
-    "shellProfile": {
-      "windows": "date",
-      "linux": "pwd; ls -la"
-    }
-  }
-}
-```
-
-### Patch Manager
-
-#### パッチベースライン
-
-```json
-{
-  "Name": "ProductionBaseline",
-  "OperatingSystem": "AMAZON_LINUX_2",
-  "ApprovalRules": {
-    "PatchRules": [
-      {
-        "PatchFilterGroup": {
-          "PatchFilters": [
-            {
-              "Key": "CLASSIFICATION",
-              "Values": ["Security", "Bugfix", "Critical"]
-            },
-            {
-              "Key": "SEVERITY",
-              "Values": ["Critical", "Important"]
-            }
-          ]
-        },
-        "ComplianceLevel": "CRITICAL",
-        "ApproveAfterDays": 7,
-        "EnableNonSecurity": false
-      }
-    ]
-  },
-  "ApprovedPatches": [],
-  "RejectedPatches": ["KB2999226"],
-  "Sources": []
-}
-```
-
-### Automation
-
-#### ドキュメント例
-
-```yaml
-schemaVersion: "0.3"
-description: "Restart EC2 instance with approval"
-assumeRole: "{{ AutomationAssumeRole }}"
-parameters:
-  InstanceId:
-    type: String
-    description: "EC2 Instance ID to restart"
-  AutomationAssumeRole:
-    type: String
-    description: "IAM role for automation"
-    default: ""
-
-mainSteps:
-  - name: ApprovalStep
-
-    action: "aws:approve"
-    inputs:
-      NotificationArn: "arn:aws:sns:region:account:approval-topic"
-      Message: "Please approve restart of instance {{ InstanceId }}"
-      MinRequiredApprovals: 1
-      Approvers:
-        - "arn:aws:iam::account:user/admin"
-
-  - name: StopInstance
-
-    action: "aws:changeInstanceState"
-    inputs:
-      InstanceIds:
-        - "{{ InstanceId }}"
-
-      DesiredState: "stopped"
-
-  - name: StartInstance
-
-    action: "aws:changeInstanceState"
-    inputs:
-      InstanceIds:
-        - "{{ InstanceId }}"
-
-      DesiredState: "running"
-```
-
-### 公式リソース
-
-- [Systems Manager サービス紹介](https://aws.amazon.com/jp/systems-manager/)
-- [Systems Manager Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AWS-SystemsManager-Hybrid-Activations_0602_v1.pdf)
-
----
-
-## 監視戦略
-
-### 監視レベル
-
-#### インフラストラクチャ監視
-
-```
-メトリクス:
-- CPU、メモリ、ディスク使用率
-- ネットワークトラフィック
-- システム負荷
-
-ツール:
-- CloudWatch標準メトリクス
-- CloudWatch Agent
-- カスタムメトリクス
-```
-
-#### アプリケーション監視
-
-```
-メトリクス:
-- レスポンス時間
-- エラー率
-- スループット
-- ビジネスメトリクス
-
-ツール:
-- X-Ray
-- カスタムメトリクス
-- APMツール
-```
-
-#### ログ監視
-
-```
-対象:
-- アプリケーションログ
-- システムログ
-- セキュリティログ
-- 監査ログ
-
-ツール:
-- CloudWatch Logs
-- CloudWatch Insights
-- 外部ログ分析ツール
-```
+- **KPI**: 主要業績指標
+- **SLA**: サービスレベル目標
+- **顧客満足度**: ユーザー体験指標
+- **ビジネス影響**: 収益・コストへの影響
 
 ### アラート戦略
 
-#### 重要度分類
+アラート分類
 
-```
-Critical (P1):
-- サービス停止
-- セキュリティ侵害
-- データ損失
+- **P1 (Critical)**: 即座の対応が必要
+- **P2 (High)**: 数時間以内の対応
+- **P3 (Medium)**: 営業時間内の対応
+- **P4 (Low)**: 計画的な対応
 
-High (P2):
-- 性能劣化
-- 部分的障害
-- 容量不足
+通知チャネル
 
-Medium (P3):
-- 警告レベル
-- 予防的アラート
-- 設定変更
+- **即時通知**: SMS、電話、Slack
+- **定期レポート**: メール、ダッシュボード
+- **エスカレーション**: 段階的な通知先拡大
+- **抑制**: 重複アラートの削減
 
-Low (P4):
-- 情報提供
-- 定期レポート
-- 統計情報
-```
+### 運用自動化
 
-#### 通知チャネル
+自動対応パターン
 
-```
-即座通知:
-- SMS
-- 電話
-- Slack/Teams
+- **Auto Scaling**: 負荷に応じたスケーリング
+- **自動復旧**: 障害インスタンスの置換
+- **自動パッチ**: セキュリティパッチの適用
+- **バックアップ**: 定期的なデータバックアップ
 
-遅延許容:
-- Email
-- チケットシステム
-- ダッシュボード
-```
+EventBridge活用
 
-### ダッシュボード設計
-
-#### 階層構造
-
-```
-Level 1: 概要ダッシュボード
-- 全体的な健全性
-- 主要KPI
-- 重要アラート
-
-Level 2: サービス別ダッシュボード
-- サービス固有メトリクス
-- 依存関係
-- パフォーマンス詳細
-
-Level 3: 詳細ダッシュボード
-- トラブルシューティング
-- 詳細分析
-- 履歴データ
-```
+- **イベント駆動**: 状態変化に応じた自動処理
+- **ルーティング**: 適切な処理先への振り分け
+- **変換**: イベントデータの変換・加工
+- **統合**: 外部システムとの連携
 
 ---
 
-_次のセクション: [07. アーキテクチャパターン](./07-architecture.md)_
+## 監視設計パターン
+
+### 階層化監視
+
+ピラミッド型監視
+
+- **基盤層**: インフラ・プラットフォーム監視
+- **アプリケーション層**: アプリケーション固有監視
+- **ビジネス層**: ビジネス価値の監視
+- **統合**: 各層の相関分析
+
+サービス指向監視
+
+- **サービス単位**: マイクロサービス毎の監視
+- **依存関係**: サービス間の影響分析
+- **エンドツーエンド**: ユーザージャーニー全体
+- **SLI/SLO**: サービスレベル指標・目標
+
+### 可観測性 (Observability)
+
+3つの柱
+
+- **メトリクス**: 数値データによる状態把握
+- **ログ**: 詳細な実行履歴
+- **トレース**: 分散システムでのリクエスト追跡
+
+相関分析
+
+- **メトリクス相関**: 複数メトリクスの関係性
+- **ログ相関**: 関連ログの統合分析
+- **トレース相関**: 分散処理の全体像
+- **時系列相関**: 時間軸での因果関係
+
+### コスト効率的な監視
+
+監視コスト最適化
+
+- **メトリクス選択**: 必要なメトリクスのみ収集
+- **保持期間**: 適切なデータ保持期間
+- **サンプリング**: 統計的に有意なサンプリング
+- **アーカイブ**: 長期保存データの低コスト化
+
+ROI重視の監視
+
+- **ビジネス価値**: 監視によるビジネス価値
+- **予防効果**: 障害予防による損失回避
+- **効率化**: 運用効率化による工数削減
+- **継続改善**: 監視データによる改善活動
+
+### セキュリティ監視
+
+セキュリティイベント監視
+
+- **不正アクセス**: 異常なログインパターン
+- **権限昇格**: 通常と異なる権限使用
+- **データアクセス**: 機密データへの異常アクセス
+- **ネットワーク**: 不審な通信パターン
+
+統合セキュリティ監視
+
+- **SIEM**: セキュリティ情報・イベント管理
+- **脅威インテリジェンス**: 既知の脅威情報
+- **行動分析**: ユーザー・エンティティ行動分析
+- **自動対応**: セキュリティインシデントの自動対応
+
+---
+
+## まとめ
+
+### 試験でのポイント
+
+監視設計の判断基準
+
+1. **監視目的**: 可用性、性能、セキュリティ、コスト
+2. **監視対象**: インフラ、アプリケーション、ビジネス
+3. **監視レベル**: 詳細度と粒度の適切な設定
+4. **アラート戦略**: 重要度に応じた通知・対応
+5. **コスト効率**: 監視コストとビジネス価値のバランス
+
+よくある監視パターン
+
+- **階層化監視**: インフラからビジネスまでの段階的監視
+- **サービス指向**: マイクロサービス単位での監視
+- **可観測性**: メトリクス、ログ、トレースの統合
+- **自動化**: イベント駆動の自動対応
+
+CloudWatch活用のベストプラクティス
+
+- **適切なメトリクス**: 必要十分なメトリクス選択
+- **効果的なアラーム**: アクションにつながるアラート
+- **ダッシュボード**: 役割に応じた可視化
+- **ログ分析**: Insights による高度な分析
+
+運用監視の成熟度
+
+- **レベル1**: 基本的なインフラ監視
+- **レベル2**: アプリケーション・ビジネス監視
+- **レベル3**: 予測的監視・自動対応
+- **レベル4**: AI/ML による高度な分析・最適化
+
+---
+
+## ライセンス
+
+このコンテンツは MIT License の下で公開されています。詳細は [LICENSE](./LICENSE) ファイルをご確認ください。

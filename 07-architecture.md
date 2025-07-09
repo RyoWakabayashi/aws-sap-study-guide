@@ -1,131 +1,175 @@
 # アーキテクチャパターン
 
+<!-- 
+Copyright (c) 2025 AWS SAP Study Guide
+Licensed under the MIT License. See LICENSE file for details.
+-->
+
 ## 目次
 
 1. [Well-Architected Framework](#well-architected-framework)
 2. [マイクロサービスアーキテクチャ](#マイクロサービスアーキテクチャ)
 3. [サーバーレスアーキテクチャ](#サーバーレスアーキテクチャ)
-4. [データレイクアーキテクチャ](#データレイクアーキテクチャ)
-5. [ハイブリッドクラウド](#ハイブリッドクラウド)
-6. [マルチリージョン設計](#マルチリージョン設計)
+4. [データアーキテクチャパターン](#データアーキテクチャパターン)
+5. [ハイブリッド・マルチクラウド](#ハイブリッドマルチクラウド)
+6. [高可用性・災害復旧パターン](#高可用性災害復旧パターン)
 
 ---
 
 ## Well-Architected Framework
 
-### 概要
+### 基本概念
 
-AWS が提唱するクラウドアーキテクチャの設計原則。6 つの柱で構成。
+Well-Architected Frameworkの目的
 
-### 6 つの柱
+- クラウドアーキテクチャの設計原則を体系化
+- 一貫した評価基準の提供
+- ベストプラクティスの共有
+- 継続的な改善の促進
 
-#### 1. 運用上の優秀性 (Operational Excellence)
+6つの柱の相互関係
 
-```
-原則:
-- 運用をコードとして実行
-- 頻繁で小さく可逆的な変更
-- 運用手順の定期的な改良
-- 障害を予測し、対応手順を準備
-- 運用イベントと障害から学習
+- 各柱は独立しているが相互に影響
+- トレードオフの関係を理解することが重要
+- ビジネス要件に応じた優先順位付けが必要
 
-実装:
-- Infrastructure as Code (CloudFormation, CDK)
-- CI/CD パイプライン
-- 自動化された監視・アラート
-- ランブック・プレイブック
-- ポストモーテム分析
-```
+### 1. 運用上の優秀性 (Operational Excellence)
 
-#### 2. セキュリティ (Security)
+基本原則
 
-```
-原則:
-- 強固なアイデンティティ基盤の実装
-- 全レイヤーでのセキュリティ適用
-- セキュリティベストプラクティスの自動化
-- 転送中・保存中データの保護
-- セキュリティイベントへの準備
+- **運用をコードとして実行**: Infrastructure as Code、自動化
+- **頻繁で小さく可逆的な変更**: 継続的デプロイメント、ロールバック可能性
+- **運用手順の定期的な改良**: プロセスの継続的改善
+- **障害を予測**: 事前の障害対策、ランブック作成
+- **運用イベントから学習**: ポストモーテム、改善アクション
 
-実装:
-- IAM ロールベースアクセス制御
-- 多要素認証 (MFA)
-- 暗号化 (KMS, SSL/TLS)
-- ネットワークセグメンテーション
-- セキュリティ監視 (GuardDuty, Security Hub)
-```
+設計上の考慮事項
 
-#### 3. 信頼性 (Reliability)
+- **自動化の推進**: 手動作業の削減、人的エラーの防止
+- **監視とアラート**: 適切な監視指標、アクションにつながるアラート
+- **文書化**: 運用手順、アーキテクチャ決定の記録
+- **チーム体制**: DevOps文化、責任の明確化
 
-```
-原則:
-- 障害からの自動復旧
-- 復旧手順のテスト
-- 水平スケーリング
-- キャパシティの推測停止
-- 自動化による変更管理
+実装パターン
 
-実装:
-- Multi-AZ 配置
-- Auto Scaling
-- ヘルスチェック・自動復旧
-- バックアップ・復旧戦略
-- カオスエンジニアリング
-```
+- **CI/CD パイプライン**: 自動テスト、段階的デプロイ
+- **Infrastructure as Code**: CloudFormation、CDK、Terraform
+- **監視・ログ**: CloudWatch、X-Ray、集約ログ
+- **自動復旧**: Auto Scaling、自動フェイルオーバー
 
-#### 4. パフォーマンス効率 (Performance Efficiency)
+### 2. セキュリティ (Security)
 
-```
-原則:
-- 最新技術の民主化
-- グローバル展開の迅速化
-- サーバーレスアーキテクチャの使用
-- 実験頻度の向上
-- メカニカルシンパシーの考慮
+基本原則
 
-実装:
-- 適切なインスタンスタイプ選択
-- CDN (CloudFront) 活用
-- キャッシュ戦略
-- データベース最適化
-- パフォーマンス監視・分析
-```
+- **強固なアイデンティティ基盤**: 最小権限の原則、多要素認証
+- **全レイヤーでのセキュリティ**: 多層防御、深層防御
+- **セキュリティの自動化**: 手動プロセスの自動化
+- **転送中・保存時のデータ保護**: 暗号化、アクセス制御
+- **セキュリティイベントへの準備**: インシデント対応、フォレンジック
 
-#### 5. コスト最適化 (Cost Optimization)
+設計上の考慮事項
 
-```
-原則:
-- クラウド財務管理の実装
-- 消費モデルの採用
-- 全体的な効率の測定
-- 差別化につながらない重労働の停止
-- 支出の分析と帰属
+- **ゼロトラストモデル**: 信頼の検証、継続的な認証
+- **データ分類**: 機密度に応じた保護レベル
+- **アクセス制御**: RBAC、ABAC、時限アクセス
+- **脅威検出**: 異常検知、行動分析
 
-実装:
-- リザーブドインスタンス・Savings Plans
-- スポットインスタンス活用
-- 適切なサイジング
-- ライフサイクル管理
-- コスト監視・アラート
-```
+実装パターン
 
-#### 6. 持続可能性 (Sustainability)
+- **IAM**: ロールベースアクセス、一時的認証情報
+- **ネットワークセキュリティ**: VPC、セキュリティグループ、NACL
+- **データ暗号化**: KMS、CloudHSM、SSL/TLS
+- **脅威検出**: GuardDuty、Security Hub、Config
 
-```
-原則:
-- 影響の理解
-- 持続可能性目標の確立
-- 使用率の最大化
-- より効率的なハードウェア・ソフトウェア
-- マネージドサービスの使用
-- クラウドワークロードの環境影響削減
+### 3. 信頼性 (Reliability)
 
-実装:
-- リソース使用率最適化
-- 効率的なアーキテクチャ選択
-- データ管理の最適化
-- 開発・テスト環境の効率化
-```
+基本原則
+
+- **障害から自動復旧**: 自動フェイルオーバー、自己修復
+- **復旧手順のテスト**: 定期的な災害復旧訓練
+- **水平スケーリング**: 単一リソースへの依存回避
+- **キャパシティ推測の停止**: 自動スケーリング、需要予測
+- **自動化による変更管理**: 手動変更の削減
+
+設計上の考慮事項
+
+- **単一障害点の排除**: 冗長化、分散配置
+- **障害分離**: 障害の影響範囲限定
+- **復旧時間目標**: RTO、RPOの設定
+- **キャパシティ管理**: 需要変動への対応
+
+実装パターン
+
+- **マルチAZ配置**: 可用性ゾーン間での冗長化
+- **Auto Scaling**: 需要に応じた自動スケーリング
+- **ロードバランシング**: トラフィック分散、ヘルスチェック
+- **バックアップ・復旧**: 自動バックアップ、ポイントインタイム復旧
+
+### 4. パフォーマンス効率 (Performance Efficiency)
+
+基本原則
+
+- **最新技術の民主化**: マネージドサービスの活用
+- **グローバル展開**: 世界規模でのリソース配置
+- **サーバーレスアーキテクチャ**: インフラ管理の削減
+- **実験の頻度向上**: A/Bテスト、カナリアデプロイ
+- **メカニカルシンパシー**: 技術選択の理解
+
+設計上の考慮事項
+
+- **適切なリソース選択**: ワークロードに最適化されたインスタンス
+- **パフォーマンス監視**: メトリクス収集、ボトルネック特定
+- **スケーラビリティ**: 垂直・水平スケーリング
+- **キャッシュ戦略**: 複数レイヤーでのキャッシュ活用
+
+実装パターン
+
+- **コンピューティング最適化**: 適切なインスタンスタイプ選択
+- **ストレージ最適化**: ワークロードに応じたストレージ選択
+- **ネットワーク最適化**: CDN、エッジロケーション活用
+- **データベース最適化**: 読み取りレプリカ、キャッシュ層
+
+### 5. コスト最適化 (Cost Optimization)
+
+基本原則
+
+- **クラウド財務管理**: コスト可視化、予算管理
+- **消費モデルの採用**: 従量課金、リザーブド容量
+- **全体効率の測定**: コスト効率指標、ROI測定
+- **差別化につながらない作業の停止**: マネージドサービス活用
+- **費用分析と帰属**: コスト配分、チャージバック
+
+設計上の考慮事項
+
+- **適切なサイジング**: 過剰スペックの回避
+- **購入オプション**: オンデマンド、リザーブド、スポット
+- **ライフサイクル管理**: 不要リソースの自動削除
+- **コスト監視**: 異常検知、予算アラート
+
+実装パターン
+
+- **リソース最適化**: 使用率監視、適切なサイジング
+- **購入オプション活用**: Savings Plans、リザーブドインスタンス
+- **自動化**: スケジュール停止、ライフサイクル管理
+- **コスト可視化**: Cost Explorer、Budgets、Billing Alarms
+
+### 6. 持続可能性 (Sustainability)
+
+基本原則
+
+- **影響の理解**: カーボンフットプリントの測定
+- **持続可能性目標の確立**: 環境目標の設定
+- **使用率の最大化**: リソース効率の向上
+- **より効率的なハードウェア・ソフトウェア**: 最新技術の活用
+- **マネージドサービスの使用**: 効率的なサービス選択
+- **クラウドワークロードの環境影響の削減**: 最適化の継続
+
+設計上の考慮事項
+
+- **エネルギー効率**: 効率的なリソース利用
+- **リソース最適化**: 無駄の削減、効率化
+- **地域選択**: 再生可能エネルギー利用地域の選択
+- **ライフサイクル管理**: 長期的な環境影響考慮
 
 ### 公式リソース
 
@@ -136,1561 +180,390 @@ AWS が提唱するクラウドアーキテクチャの設計原則。6 つの�
 
 ## マイクロサービスアーキテクチャ
 
-### 概要
+### 基本概念と特徴
 
-アプリケーションを小さな独立したサービスに分割するアーキテクチャパターン。
+マイクロサービスの定義
+
+- 小さく独立したサービスの集合
+- 各サービスは特定のビジネス機能を担当
+- 独立したデプロイメント、スケーリング、開発が可能
+- 異なる技術スタックの選択が可能
+
+モノリスとの比較
+
+- **モノリス**: 単一のデプロイ単位、技術統一、シンプルな運用
+- **マイクロサービス**: 独立性、技術多様性、複雑な運用
+- **選択基準**: チーム規模、システム複雑性、変更頻度
 
 ### 設計原則
 
-#### サービス分割戦略
+サービス境界の設計
 
-```
-ドメイン駆動設計 (DDD):
-- 境界付けられたコンテキスト
-- ドメインモデル
-- ユビキタス言語
+- **ドメイン駆動設計**: ビジネスドメインに基づく分割
+- **データ所有権**: サービス毎の専用データストア
+- **API契約**: 明確なインターフェース定義
+- **疎結合**: サービス間の依存関係最小化
 
-例:
-├── User Service
-│   ├── ユーザー登録・認証
-│   ├── プロフィール管理
-│   └── 権限管理
-├── Order Service
-│   ├── 注文作成・更新
-│   ├── 注文履歴
-│   └── 注文状態管理
-├── Payment Service
-│   ├── 決済処理
-│   ├── 請求管理
-│   └── 返金処理
-└── Inventory Service
-    ├── 在庫管理
-    ├── 商品カタログ
-    └── 価格管理
-```
+通信パターン
 
-#### データ管理
+- **同期通信**: REST API、GraphQL
+- **非同期通信**: メッセージキュー、イベント駆動
+- **サービスメッシュ**: 通信の抽象化、可観測性
+- **API Gateway**: 統一エントリーポイント、認証・認可
 
-```
-Database per Service:
-- 各サービスが専用データベース
-- データの独立性
-- 技術選択の自由度
+### AWS実装パターン
 
-例:
-User Service → RDS (PostgreSQL)
-Order Service → DynamoDB
-Payment Service → RDS (MySQL)
-Inventory Service → DocumentDB
-```
+コンテナベース
 
-### 通信パターン
+- **ECS**: AWS統合、シンプル運用
+- **EKS**: Kubernetes標準、ポータビリティ
+- **Fargate**: サーバーレスコンテナ、運用負荷軽減
+- **App Mesh**: サービスメッシュ、通信制御
 
-#### 同期通信
+サーバーレスベース
 
-```
-REST API:
-API Gateway → Lambda → RDS
-- HTTP/HTTPS
-- リクエスト/レスポンス
-- 直接的な依存関係
+- **Lambda**: 関数単位のマイクロサービス
+- **API Gateway**: RESTful API、認証統合
+- **EventBridge**: イベント駆動アーキテクチャ
+- **Step Functions**: ワークフローオーケストレーション
 
-GraphQL:
-AppSync → Lambda → Multiple Data Sources
-- 単一エンドポイント
-- クライアント主導のデータ取得
-- リアルタイム更新
-```
+データ管理
 
-#### 非同期通信
+- **Database per Service**: サービス毎の専用DB
+- **DynamoDB**: NoSQL、高スケーラビリティ
+- **RDS**: リレーショナルDB、マネージド
+- **EventSourcing**: イベントベースのデータ管理
 
-```
-イベント駆動:
-Service A → SNS → Service B
-Service A → SQS → Service B
-Service A → EventBridge → Service B
+### 運用上の考慮事項
 
-利点:
-- 疎結合
-- 障害分離
-- スケーラビリティ
+監視・可観測性
 
-パターン:
-- Publish/Subscribe
-- Event Sourcing
-- CQRS (Command Query Responsibility Segregation)
-```
+- **分散トレーシング**: X-Ray、リクエスト追跡
+- **メトリクス収集**: CloudWatch、カスタムメトリクス
+- **ログ集約**: CloudWatch Logs、構造化ログ
+- **ヘルスチェック**: サービス健全性監視
 
-### 実装例
+デプロイメント
 
-#### API Gateway + Lambda
+- **CI/CD**: 独立したパイプライン
+- **カナリアデプロイ**: 段階的リリース
+- **ブルーグリーンデプロイ**: 無停止デプロイ
+- **フィーチャーフラグ**: 機能の段階的公開
 
-```yaml
-# SAM Template
-Resources:
-  UserAPI:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: prod
-      Cors:
-        AllowMethods: "'*'"
-        AllowHeaders: "'*'"
-        AllowOrigin: "'*'"
+セキュリティ
 
-  UserFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: user-service/
-      Handler: app.lambda_handler
-      Runtime: python3.9
-      Environment:
-        Variables:
-          USER_TABLE: !Ref UserTable
-      Events:
-        GetUser:
-          Type: Api
-          Properties:
-            RestApiId: !Ref UserAPI
-            Path: /users/{id}
-            Method: get
-        CreateUser:
-          Type: Api
-          Properties:
-            RestApiId: !Ref UserAPI
-            Path: /users
-            Method: post
-
-  UserTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      BillingMode: PAY_PER_REQUEST
-      AttributeDefinitions:
-        - AttributeName: userId
-
-          AttributeType: S
-      KeySchema:
-        - AttributeName: userId
-
-          KeyType: HASH
-```
-
-#### ECS + Fargate
-
-```json
-{
-  "family": "microservice-task",
-  "networkMode": "awsvpc",
-  "requiresCompatibilities": ["FARGATE"],
-  "cpu": "512",
-  "memory": "1024",
-  "executionRoleArn": "arn:aws:iam::account:role/ecsTaskExecutionRole",
-  "taskRoleArn": "arn:aws:iam::account:role/ecsTaskRole",
-  "containerDefinitions": [
-    {
-      "name": "user-service",
-      "image": "user-service:latest",
-      "portMappings": [
-        {
-          "containerPort": 8080,
-          "protocol": "tcp"
-        }
-      ],
-      "environment": [
-        {
-          "name": "DATABASE_URL",
-          "value": "postgresql://user:pass@db.example.com:5432/userdb"
-        }
-      ],
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/ecs/user-service",
-          "awslogs-region": "us-east-1",
-          "awslogs-stream-prefix": "ecs"
-        }
-      }
-    }
-  ]
-}
-```
-
-### サービスメッシュ
-
-#### AWS App Mesh
-
-```yaml
-apiVersion: appmesh.k8s.aws/v1beta2
-kind: VirtualService
-metadata:
-  name: user-service
-spec:
-  awsName: user-service
-  provider:
-    virtualRouter:
-      virtualRouterRef:
-        name: user-service-router
----
-apiVersion: appmesh.k8s.aws/v1beta2
-kind: VirtualRouter
-metadata:
-  name: user-service-router
-spec:
-  awsName: user-service-router
-  listeners:
-    - portMapping:
-        port: 8080
-        protocol: http
-  routes:
-    - name: user-service-route
-
-      httpRoute:
-        match:
-          prefix: /
-        action:
-          weightedTargets:
-            - virtualNodeRef:
-                name: user-service-v1
-              weight: 90
-            - virtualNodeRef:
-                name: user-service-v2
-              weight: 10
-```
-
-### 監視・観測性
-
-#### 分散トレーシング
-
-```python
-from aws_xray_sdk.core import xray_recorder
-from aws_xray_sdk.core import patch_all
-import requests
-
-# AWS SDK自動トレーシング
-patch_all()
-
-@xray_recorder.capture('user_service.get_user')
-def get_user(user_id):
-    # ユーザー情報取得
-    user = get_user_from_db(user_id)
-
-    # 他のサービス呼び出し
-    orders = call_order_service(user_id)
-    payments = call_payment_service(user_id)
-
-    return {
-        'user': user,
-        'orders': orders,
-        'payments': payments
-    }
-
-@xray_recorder.capture('user_service.call_order_service')
-def call_order_service(user_id):
-    response = requests.get(f'https://order-service/users/{user_id}/orders')
-    return response.json()
-```
-
-#### メトリクス収集
-
-```python
-import boto3
-
-cloudwatch = boto3.client('cloudwatch')
-
-def put_custom_metric(metric_name, value, unit='Count'):
-    cloudwatch.put_metric_data(
-        Namespace='MyApp/UserService',
-        MetricData=[
-            {
-                'MetricName': metric_name,
-                'Value': value,
-                'Unit': unit,
-                'Dimensions': [
-                    {
-                        'Name': 'Service',
-                        'Value': 'UserService'
-                    },
-                    {
-                        'Name': 'Environment',
-                        'Value': 'Production'
-                    }
-                ]
-            }
-        ]
-    )
-
-# 使用例
-put_custom_metric('UserRegistrations', 1)
-put_custom_metric('ResponseTime', 150, 'Milliseconds')
-```
+- **サービス間認証**: IAMロール、サービス証明書
+- **ネットワーク分離**: VPC、セキュリティグループ
+- **API認証**: JWT、OAuth、API Key
+- **データ暗号化**: 転送時・保存時暗号化
 
 ---
 
 ## サーバーレスアーキテクチャ
 
-### 概要
+### 基本概念と特徴
 
-サーバー管理が不要なアーキテクチャ。イベント駆動、従量課金。
+サーバーレスの定義
 
-### 基本パターン
+- サーバー管理が不要な実行環境
+- 使用量に応じた従量課金
+- 自動スケーリング、高可用性
+- イベント駆動型の実行モデル
 
-#### Web アプリケーション
+従来アーキテクチャとの比較
 
-```
-CloudFront → S3 (静的コンテンツ)
-CloudFront → API Gateway → Lambda → DynamoDB
+- **運用負荷**: インフラ管理不要
+- **コスト**: 実行時間のみ課金
+- **スケーラビリティ**: 自動的な拡張・縮小
+- **制約**: 実行時間制限、ステートレス
 
-利点:
-- 自動スケーリング
-- 高可用性
-- 低運用コスト
-- グローバル配信
-```
+### サーバーレスサービス
 
-#### データ処理パイプライン
+コンピューティング
 
-```
-S3 → Lambda → DynamoDB
-S3 → Lambda → SQS → Lambda → RDS
-Kinesis → Lambda → S3 → Athena
+- **Lambda**: 関数実行、イベント駆動
+- **Fargate**: コンテナ実行、サーバー管理不要
+- **Step Functions**: ワークフロー、状態管理
+- **EventBridge**: イベントルーティング
 
-利点:
-- リアルタイム処理
-- 並列処理
-- 障害分離
-- コスト効率
-```
+ストレージ・データベース
 
-### 実装例
+- **S3**: オブジェクトストレージ、イベント通知
+- **DynamoDB**: NoSQL、オンデマンド課金
+- **Aurora Serverless**: リレーショナルDB、自動スケーリング
+- **Athena**: クエリサービス、S3データ分析
 
-#### REST API
+統合・API
 
-```python
-import json
-import boto3
-from decimal import Decimal
-
-dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('Users')
-
-def lambda_handler(event, context):
-    http_method = event['httpMethod']
-    path = event['path']
-
-    try:
-        if http_method == 'GET' and path.startswith('/users/'):
-            user_id = path.split('/')[-1]
-            return get_user(user_id)
-        elif http_method == 'POST' and path == '/users':
-            user_data = json.loads(event['body'])
-            return create_user(user_data)
-        elif http_method == 'PUT' and path.startswith('/users/'):
-            user_id = path.split('/')[-1]
-            user_data = json.loads(event['body'])
-            return update_user(user_id, user_data)
-        elif http_method == 'DELETE' and path.startswith('/users/'):
-            user_id = path.split('/')[-1]
-            return delete_user(user_id)
-        else:
-            return {
-                'statusCode': 404,
-                'body': json.dumps({'error': 'Not Found'})
-            }
-    except Exception as e:
-        return {
-            'statusCode': 500,
-            'body': json.dumps({'error': str(e)})
-        }
-
-def get_user(user_id):
-    response = table.get_item(Key={'userId': user_id})
-    if 'Item' in response:
-        return {
-            'statusCode': 200,
-            'body': json.dumps(response['Item'], default=decimal_default)
-        }
-    else:
-        return {
-            'statusCode': 404,
-            'body': json.dumps({'error': 'User not found'})
-        }
-
-def decimal_default(obj):
-    if isinstance(obj, Decimal):
-        return float(obj)
-    raise TypeError
-```
-
-#### イベント処理
-
-```python
-import json
-import boto3
-
-sns = boto3.client('sns')
-ses = boto3.client('ses')
-
-def lambda_handler(event, context):
-    for record in event['Records']:
-        # DynamoDB Streams イベント
-        if record['eventSource'] == 'aws:dynamodb':
-            process_dynamodb_event(record)
-        # S3 イベント
-        elif record['eventSource'] == 'aws:s3':
-            process_s3_event(record)
-        # SQS イベント
-        elif record['eventSource'] == 'aws:sqs':
-            process_sqs_event(record)
-
-def process_dynamodb_event(record):
-    event_name = record['eventName']
-
-    if event_name == 'INSERT':
-        # 新規ユーザー登録時の処理
-        new_image = record['dynamodb']['NewImage']
-        user_email = new_image['email']['S']
-
-        # ウェルカムメール送信
-        send_welcome_email(user_email)
-
-        # 通知送信
-        send_notification('New user registered', user_email)
-
-def send_welcome_email(email):
-    ses.send_email(
-        Source='noreply@example.com',
-        Destination={'ToAddresses': [email]},
-        Message={
-            'Subject': {'Data': 'Welcome to our service!'},
-            'Body': {'Text': {'Data': 'Thank you for registering.'}}
-        }
-    )
-
-def send_notification(subject, message):
-    sns.publish(
-        TopicArn='arn:aws:sns:region:account:notifications',
-        Subject=subject,
-        Message=message
-    )
-```
-
-### Step Functions
-
-#### ワークフロー定義
-
-```json
-{
-  "Comment": "User registration workflow",
-  "StartAt": "ValidateInput",
-  "States": {
-    "ValidateInput": {
-      "Type": "Task",
-      "Resource": "arn:aws:lambda:region:account:function:ValidateUser",
-      "Next": "CheckDuplicateUser",
-      "Catch": [
-        {
-          "ErrorEquals": ["ValidationError"],
-          "Next": "ValidationFailed"
-        }
-      ]
-    },
-    "CheckDuplicateUser": {
-      "Type": "Task",
-      "Resource": "arn:aws:lambda:region:account:function:CheckDuplicate",
-      "Next": "CreateUser",
-      "Catch": [
-        {
-          "ErrorEquals": ["DuplicateUserError"],
-          "Next": "DuplicateUserFound"
-        }
-      ]
-    },
-    "CreateUser": {
-      "Type": "Task",
-      "Resource": "arn:aws:lambda:region:account:function:CreateUser",
-      "Next": "SendWelcomeEmail"
-    },
-    "SendWelcomeEmail": {
-      "Type": "Task",
-      "Resource": "arn:aws:lambda:region:account:function:SendEmail",
-      "Next": "RegistrationComplete"
-    },
-    "RegistrationComplete": {
-      "Type": "Succeed"
-    },
-    "ValidationFailed": {
-      "Type": "Fail",
-      "Cause": "Input validation failed"
-    },
-    "DuplicateUserFound": {
-      "Type": "Fail",
-      "Cause": "User already exists"
-    }
-  }
-}
-```
-
-### パフォーマンス最適化
-
-#### コールドスタート対策
-
-```python
-import json
-import boto3
-
-# グローバル変数（コンテナ再利用時に効果）
-dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('Users')
-
-def lambda_handler(event, context):
-    # 処理ロジック
-    pass
-
-# Provisioned Concurrency設定
-# aws lambda put-provisioned-concurrency-config \
-#     --function-name MyFunction \
-#     --qualifier $LATEST \
-#     --provisioned-concurrency-level 10
-```
-
-#### 接続プーリング
-
-```python
-import pymysql
-import os
-
-# 接続プール（グローバル変数）
-connection = None
-
-def get_connection():
-    global connection
-    if connection is None or not connection.open:
-        connection = pymysql.connect(
-            host=os.environ['DB_HOST'],
-            user=os.environ['DB_USER'],
-            password=os.environ['DB_PASSWORD'],
-            database=os.environ['DB_NAME'],
-            charset='utf8mb4'
-        )
-    return connection
-
-def lambda_handler(event, context):
-    conn = get_connection()
-    # データベース処理
-```
-
----
-
-## データレイクアーキテクチャ
-
-### 概要
-
-構造化・非構造化データを統合的に保存・分析するアーキテクチャ。
-
-### レイヤー構造
-
-#### Raw Layer (Bronze)
-
-```
-目的: 生データの保存
-形式: 元の形式のまま
-保存先: S3
-パーティション: 日付、ソース別
-
-例:
-s3://datalake-raw/
-├── web-logs/year=2023/month=12/day=01/
-├── database-exports/year=2023/month=12/day=01/
-├── iot-data/year=2023/month=12/day=01/
-└── social-media/year=2023/month=12/day=01/
-```
-
-#### Processed Layer (Silver)
-
-```
-目的: クリーニング・変換済みデータ
-形式: Parquet、ORC
-保存先: S3
-最適化: 圧縮、列指向
-
-例:
-s3://datalake-processed/
-├── web-analytics/year=2023/month=12/day=01/
-├── customer-data/year=2023/month=12/day=01/
-├── transaction-data/year=2023/month=12/day=01/
-└── sensor-data/year=2023/month=12/day=01/
-```
-
-#### Curated Layer (Gold)
-
-```
-目的: ビジネス用データマート
-形式: 高度に最適化
-保存先: S3、Redshift
-用途: BI、レポート、ML
-
-例:
-s3://datalake-curated/
-├── sales-dashboard/
-├── customer-360/
-├── financial-reports/
-└── ml-features/
-```
-
-### データ取り込み
-
-#### バッチ取り込み
-
-```python
-import boto3
-import pandas as pd
-from datetime import datetime
-
-def lambda_handler(event, context):
-    s3 = boto3.client('s3')
-    glue = boto3.client('glue')
-
-    # データソースから取得
-    data = extract_from_database()
-
-    # S3に保存
-    current_date = datetime.now()
-    s3_key = f"raw-data/year={current_date.year}/month={current_date.month:02d}/day={current_date.day:02d}/data.parquet"
-
-    # Parquet形式で保存
-    df = pd.DataFrame(data)
-    df.to_parquet(f's3://my-datalake/{s3_key}')
-
-    # Glue Crawler実行
-    glue.start_crawler(Name='raw-data-crawler')
-
-    return {'statusCode': 200}
-
-def extract_from_database():
-    # データベースからデータ抽出
-    pass
-```
-
-#### ストリーミング取り込み
-
-```yaml
-# Kinesis Data Firehose設定
-Resources:
-  DeliveryStream:
-    Type: AWS::KinesisFirehose::DeliveryStream
-    Properties:
-      DeliveryStreamName: web-logs-stream
-      DeliveryStreamType: DirectPut
-      S3DestinationConfiguration:
-        BucketARN: !Sub "${DataLakeBucket}"
-        Prefix: "web-logs/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/"
-        ErrorOutputPrefix: "errors/"
-        BufferingHints:
-          SizeInMBs: 128
-          IntervalInSeconds: 60
-        CompressionFormat: GZIP
-        DataFormatConversionConfiguration:
-          Enabled: true
-          OutputFormatConfiguration:
-            Serializer:
-              ParquetSerDe: {}
-        ProcessingConfiguration:
-          Enabled: true
-          Processors:
-            - Type: Lambda
-
-              Parameters:
-                - ParameterName: LambdaArn
-
-                  ParameterValue: !GetAtt DataTransformFunction.Arn
-```
-
-### ETL 処理
-
-#### AWS Glue
-
-```python
-import sys
-from awsglue.transforms import *
-from awsglue.utils import getResolvedOptions
-from pyspark.context import SparkContext
-from awsglue.context import GlueContext
-from awsglue.job import Job
-
-args = getResolvedOptions(sys.argv, ['JOB_NAME'])
-sc = SparkContext()
-glueContext = GlueContext(sc)
-spark = glueContext.spark_session
-job = Job(glueContext)
-job.init(args['JOB_NAME'], args)
-
-# データソース読み込み
-datasource = glueContext.create_dynamic_frame.from_catalog(
-    database="datalake_raw",
-    table_name="web_logs"
-)
-
-# データ変換
-# 不要な列を削除
-transformed = DropFields.apply(
-    frame=datasource,
-    paths=["internal_field", "debug_info"]
-)
-
-# データ型変換
-transformed = ResolveChoice.apply(
-    frame=transformed,
-    choice="make_cols",
-    transformation_ctx="resolve_choice"
-)
-
-# 重複除去
-transformed = transformed.toDF().dropDuplicates()
-transformed = DynamicFrame.fromDF(transformed, glueContext, "deduplicated")
-
-# 結果保存
-glueContext.write_dynamic_frame.from_options(
-    frame=transformed,
-    connection_type="s3",
-    connection_options={
-        "path": "s3://my-datalake/processed/web-analytics/"
-    },
-    format="parquet",
-    transformation_ctx="write_processed_data"
-)
-
-job.commit()
-```
-
-### データカタログ
-
-#### Glue Data Catalog
-
-```yaml
-Resources:
-  Database:
-    Type: AWS::Glue::Database
-    Properties:
-      CatalogId: !Ref AWS::AccountId
-      DatabaseInput:
-        Name: datalake_catalog
-        Description: Data Lake catalog database
-
-  WebLogsTable:
-    Type: AWS::Glue::Table
-    Properties:
-      CatalogId: !Ref AWS::AccountId
-      DatabaseName: !Ref Database
-      TableInput:
-        Name: web_logs
-        StorageDescriptor:
-          Columns:
-            - Name: timestamp
-
-              Type: timestamp
-            - Name: ip_address
-
-              Type: string
-            - Name: user_agent
-
-              Type: string
-            - Name: request_path
-
-              Type: string
-            - Name: status_code
-
-              Type: int
-            - Name: response_size
-
-              Type: bigint
-          Location: s3://my-datalake/raw/web-logs/
-          InputFormat: org.apache.hadoop.mapred.TextInputFormat
-          OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-          SerdeInfo:
-            SerializationLibrary: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
-        PartitionKeys:
-          - Name: year
-
-            Type: string
-          - Name: month
-
-            Type: string
-          - Name: day
-
-            Type: string
-```
-
-### クエリ・分析
-
-#### Amazon Athena
-
-```sql
--- パフォーマンス分析
-SELECT
-    DATE(timestamp) as date,
-    COUNT(*) as total_requests,
-    COUNT(CASE WHEN status_code >= 400 THEN 1 END) as error_requests,
-    AVG(response_size) as avg_response_size,
-    PERCENTILE_APPROX(response_size, 0.95) as p95_response_size
-FROM web_logs
-WHERE year = '2023' AND month = '12'
-GROUP BY DATE(timestamp)
-ORDER BY date;
--- ユーザー行動分析
-WITH user_sessions AS (
-    SELECT
-        ip_address,
-        DATE(timestamp) as date,
-        COUNT(*) as page_views,
-        COUNT(DISTINCT request_path) as unique_pages,
-        MIN(timestamp) as session_start,
-        MAX(timestamp) as session_end
-    FROM web_logs
-    WHERE year = '2023' AND month = '12'
-    GROUP BY ip_address, DATE(timestamp)
-)
-SELECT
-    date,
-    COUNT(*) as unique_users,
-    AVG(page_views) as avg_page_views,
-    AVG(EXTRACT(EPOCH FROM (session_end - session_start))/60) as avg_session_duration_minutes
-FROM user_sessions
-GROUP BY date
-ORDER BY date;
-```
-
-#### Amazon QuickSight
-
-```json
-{
-  "DataSetId": "web-analytics-dataset",
-  "Name": "Web Analytics Dashboard",
-  "PhysicalTableMap": {
-    "web-logs": {
-      "S3Source": {
-        "DataSourceArn": "arn:aws:quicksight:region:account:datasource/athena-datasource",
-        "InputColumns": [
-          { "Name": "timestamp", "Type": "DATETIME" },
-          { "Name": "ip_address", "Type": "STRING" },
-          { "Name": "request_path", "Type": "STRING" },
-          { "Name": "status_code", "Type": "INTEGER" },
-          { "Name": "response_size", "Type": "INTEGER" }
-        ]
-      }
-    }
-  },
-  "LogicalTableMap": {
-    "processed-logs": {
-      "Alias": "ProcessedLogs",
-      "Source": {
-        "PhysicalTableId": "web-logs"
-      },
-      "DataTransforms": [
-        {
-          "CreateColumnsOperation": {
-            "Columns": [
-              {
-                "ColumnName": "date",
-                "ColumnId": "date",
-                "Expression": "truncDate('DD', {timestamp})"
-              },
-              {
-                "ColumnName": "hour",
-                "ColumnId": "hour",
-                "Expression": "extract('HH', {timestamp})"
-              }
-            ]
-          }
-        }
-      ]
-    }
-  }
-}
-```
-
----
-
-## ハイブリッドクラウド
-
-### 概要
-
-オンプレミスとクラウドを統合したアーキテクチャ。段階的移行、規制要件、既存投資活用に適用。
-
-### 接続パターン
-
-#### AWS Direct Connect
-
-```text
-専用線接続:
-- 1Gbps〜100Gbps
-- 安定した帯域幅
-- 低レイテンシ
-- 予測可能なコスト
-
-用途:
-- 大容量データ転送
-- ミッションクリティカル
-- 継続的な接続
-```
-
-#### Site-to-Site VPN
-
-```text
-インターネット経由:
-- 最大1.25Gbps
-- 暗号化通信
-- 冗長化対応
-- 低コスト
-
-用途:
-- バックアップ接続
-- 小〜中規模データ
-- 一時的な接続
-```
-
-#### AWS Transit Gateway
-
-```text
-ハブ&スポーク構成:
-- 複数VPC統合
-- オンプレミス統合
-- ルーティング制御
-- スケーラブル
-
-利点:
-- 管理の簡素化
-- 接続の標準化
-- セキュリティ統制
-```
-
-### データ統合パターン
-
-#### AWS Storage Gateway
-
-```yaml
-# File Gateway設定例
-Resources:
-  FileGateway:
-    Type: AWS::StorageGateway::Gateway
-    Properties:
-      GatewayName: HybridFileGateway
-      GatewayType: FILE_S3
-      GatewayTimezone: GMT+9:00
-      
-  NFSFileShare:
-    Type: AWS::StorageGateway::NFSFileShare
-    Properties:
-      GatewayARN: !Ref FileGateway
-      LocationARN: !Sub "arn:aws:s3:::${S3Bucket}"
-      Role: !GetAtt FileGatewayRole.Arn
-      ClientList:
-        - "10.0.0.0/8"
-      DefaultStorageClass: S3_STANDARD_IA
-```
-
-#### AWS DataSync
-
-```text
-データ転送サービス:
-- オンプレミス ↔ AWS
-- 一回限り/継続的転送
-- 帯域幅制御
-- 暗号化対応
-
-転送パターン:
-- NFS → S3
-- SMB → EFS
-- HDFS → S3
-- オブジェクトストレージ → S3
-```
-
-### アプリケーション統合
-
-#### AWS Outposts
-
-```text
-オンプレミスAWSサービス:
-- EC2、EBS、S3
-- RDS、EKS
-- 同一API/ツール
-- ローカル処理
-
-用途:
-- 低レイテンシ要件
-- データ主権
-- 段階的移行
-```
-
-#### AWS Local Zones
-
-```text
-エッジコンピューティング:
-- 主要都市に配置
-- 1桁ミリ秒レイテンシ
-- EC2、EBS対応
-
-用途:
-- リアルタイム処理
-- メディア配信
-- ゲーミング
-```
-
-### セキュリティ統合
-
-#### AWS IAM Identity Center
-
-```text
-統合認証:
-- Active Directory統合
-- SAML 2.0対応
-- 多要素認証
-- 一元管理
-
-利点:
-- シングルサインオン
-- 権限の統一管理
-- 監査証跡
-```
-
-#### AWS Systems Manager
-
-```python
-# ハイブリッド環境の管理
-import boto3
-
-ssm = boto3.client('ssm')
-
-# オンプレミスサーバーの管理
-def manage_hybrid_instances():
-    # パッチ管理
-    response = ssm.send_command(
-        InstanceIds=['mi-1234567890abcdef0'],  # Managed Instance
-        DocumentName='AWS-RunPatchBaseline',
-        Parameters={
-            'Operation': ['Install']
-        }
-    )
-    
-    # 設定管理
-    ssm.put_parameter(
-        Name='/hybrid/database/connection',
-        Value='server=onprem-db;database=prod',
-        Type='SecureString',
-        Description='Hybrid database connection'
-    )
-    
-    return response
-```
-
-### 監視・運用統合
-
-#### Amazon CloudWatch
-
-```text
-統合監視:
-- オンプレミスメトリクス
-- カスタムメトリクス
-- 統一ダッシュボード
-- アラート統合
-
-実装:
-- CloudWatch Agent
-- カスタムメトリクス
-- ログ統合
-```
-
-#### AWS Config
-
-```text
-設定管理:
-- ハイブリッド環境の設定追跡
-- コンプライアンス監視
-- 変更管理
-- 統一ポリシー
-```
-
----
-
-## マルチリージョン設計
-
-### 概要
-
-複数のAWSリージョンを活用した高可用性・災害復旧・グローバル展開アーキテクチャ。
+- **API Gateway**: RESTful API、WebSocket
+- **AppSync**: GraphQL、リアルタイム同期
+- **SQS**: メッセージキュー、非同期処理
+- **SNS**: 通知サービス、ファンアウト
 
 ### 設計パターン
 
-#### アクティブ-パッシブ
+イベント駆動パターン
 
-```text
-構成:
-- プライマリリージョン: 全トラフィック処理
-- セカンダリリージョン: 災害復旧用
+- **Producer-Consumer**: イベント生成・消費
+- **Pub/Sub**: 発行・購読モデル
+- **Event Sourcing**: イベントベースの状態管理
+- **CQRS**: コマンド・クエリ責任分離
 
-特徴:
-- シンプルな構成
-- 低コスト
-- 手動フェイルオーバー
+データ処理パターン
 
-RTO: 分〜時間
-RPO: 分〜時間
-```
+- **ETL Pipeline**: データ変換・ロード
+- **Stream Processing**: リアルタイム処理
+- **Batch Processing**: 大容量データ処理
+- **Data Lake**: 多様なデータの統合
 
-#### アクティブ-アクティブ
+API パターン
 
-```text
-構成:
-- 複数リージョンで同時稼働
-- 負荷分散
-- 自動フェイルオーバー
+- **Backend for Frontend**: フロントエンド特化API
+- **API Composition**: 複数サービスの統合
+- **GraphQL Federation**: 分散GraphQLスキーマ
+- **Webhook**: イベント通知、外部連携
 
-特徴:
-- 高可用性
-- 高コスト
-- 複雑な構成
+### 運用上の考慮事項
 
-RTO: 秒〜分
-RPO: 秒〜分
-```
+パフォーマンス最適化
 
-#### 地理的分散
+- **コールドスタート**: 初回実行遅延の対策
+- **メモリ設定**: パフォーマンスとコストのバランス
+- **同時実行制御**: スロットリング、リザーブド容量
+- **接続プーリング**: データベース接続の最適化
 
-```text
-構成:
-- 地域別リージョン配置
-- ユーザー近接性重視
-- 地域別データ保存
+監視・デバッグ
 
-特徴:
-- 低レイテンシ
-- データ主権対応
-- 規制要件対応
-```
+- **分散トレーシング**: 複数サービス間の追跡
+- **ログ分析**: 構造化ログ、検索・分析
+- **エラー追跡**: 例外監視、アラート
+- **パフォーマンス監視**: レスポンス時間、スループット
 
-### データレプリケーション
+セキュリティ
 
-#### Amazon Aurora Global Database
-
-```yaml
-Resources:
-  GlobalCluster:
-    Type: AWS::RDS::GlobalCluster
-    Properties:
-      GlobalClusterIdentifier: global-aurora-cluster
-      SourceDBClusterIdentifier: !Ref PrimaryCluster
-      
-  PrimaryCluster:
-    Type: AWS::RDS::DBCluster
-    Properties:
-      DBClusterIdentifier: primary-cluster
-      Engine: aurora-mysql
-      EngineVersion: 8.0.mysql_aurora.3.02.0
-      MasterUsername: admin
-      MasterUserPassword: !Ref DBPassword
-      
-  SecondaryCluster:
-    Type: AWS::RDS::DBCluster
-    Properties:
-      DBClusterIdentifier: secondary-cluster
-      Engine: aurora-mysql
-      EngineVersion: 8.0.mysql_aurora.3.02.0
-      GlobalClusterIdentifier: !Ref GlobalCluster
-      SourceRegion: us-east-1
-```
-
-#### DynamoDB Global Tables
-
-```python
-import boto3
-
-def setup_global_tables():
-    dynamodb = boto3.client('dynamodb')
-    
-    # Global Tablesの作成
-    response = dynamodb.create_global_table(
-        GlobalTableName='UserProfiles',
-        ReplicationGroup=[
-            {'RegionName': 'us-east-1'},
-            {'RegionName': 'eu-west-1'},
-            {'RegionName': 'ap-northeast-1'}
-        ]
-    )
-    
-    return response
-
-def configure_table_settings():
-    # 各リージョンでの設定
-    regions = ['us-east-1', 'eu-west-1', 'ap-northeast-1']
-    
-    for region in regions:
-        dynamodb = boto3.client('dynamodb', region_name=region)
-        
-        # Auto Scaling設定
-        dynamodb.put_scaling_policy(
-            PolicyName=f'UserProfiles-ReadCapacity-{region}',
-            ServiceNamespace='dynamodb',
-            ResourceId='table/UserProfiles',
-            ScalableDimension='dynamodb:table:ReadCapacityUnits',
-            PolicyType='TargetTrackingScaling',
-            TargetTrackingScalingPolicyConfiguration={
-                'TargetValue': 70.0,
-                'PredefinedMetricSpecification': {
-                    'PredefinedMetricType': 'DynamoDBReadCapacityUtilization'
-                }
-            }
-        )
-```
-
-#### S3 Cross-Region Replication
-
-```json
-{
-  "Role": "arn:aws:iam::account:role/replication-role",
-  "Rules": [
-    {
-      "ID": "GlobalReplication",
-      "Status": "Enabled",
-      "Priority": 1,
-      "Filter": {
-        "Prefix": "global-data/"
-      },
-      "Destination": {
-        "Bucket": "arn:aws:s3:::backup-bucket-eu",
-        "StorageClass": "STANDARD_IA",
-        "ReplicationTime": {
-          "Status": "Enabled",
-          "Time": {
-            "Minutes": 15
-          }
-        }
-      }
-    }
-  ]
-}
-```
-
-### DNS・トラフィック管理
-
-#### Route 53 Health Checks
-
-```json
-{
-  "Type": "HTTPS",
-  "ResourcePath": "/health",
-  "FullyQualifiedDomainName": "api-us-east-1.example.com",
-  "Port": 443,
-  "RequestInterval": 30,
-  "FailureThreshold": 3,
-  "Regions": [
-    "us-east-1",
-    "us-west-2",
-    "eu-west-1"
-  ],
-  "AlarmIdentifier": {
-    "Region": "us-east-1",
-    "Name": "api-health-alarm"
-  }
-}
-```
-
-#### Geolocation Routing
-
-```json
-{
-  "Name": "api.example.com",
-  "Type": "A",
-  "SetIdentifier": "US-Users",
-  "GeoLocation": {
-    "CountryCode": "US"
-  },
-  "AliasTarget": {
-    "DNSName": "api-us-east-1.example.com",
-    "EvaluateTargetHealth": true
-  }
-},
-{
-  "Name": "api.example.com",
-  "Type": "A",
-  "SetIdentifier": "EU-Users",
-  "GeoLocation": {
-    "CountryCode": "DE"
-  },
-  "AliasTarget": {
-    "DNSName": "api-eu-west-1.example.com",
-    "EvaluateTargetHealth": true
-  }
-}
-```
-
-### アプリケーション設計
-
-#### 地域別デプロイメント
-
-```yaml
-# CodePipeline for Multi-Region Deployment
-Resources:
-  Pipeline:
-    Type: AWS::CodePipeline::Pipeline
-    Properties:
-      RoleArn: !GetAtt CodePipelineRole.Arn
-      Stages:
-        - Name: Source
-          Actions:
-            - Name: SourceAction
-              ActionTypeId:
-                Category: Source
-                Owner: AWS
-                Provider: S3
-                Version: 1
-              Configuration:
-                S3Bucket: !Ref SourceBucket
-                S3ObjectKey: source.zip
-                
-        - Name: DeployToPrimary
-          Actions:
-            - Name: DeployUSEast1
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Provider: CloudFormation
-                Version: 1
-              Configuration:
-                ActionMode: CREATE_UPDATE
-                StackName: app-stack-us-east-1
-                TemplatePath: SourceOutput::template.yaml
-                Capabilities: CAPABILITY_IAM
-              Region: us-east-1
-              
-        - Name: DeployToSecondary
-          Actions:
-            - Name: DeployEUWest1
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Provider: CloudFormation
-                Version: 1
-              Configuration:
-                ActionMode: CREATE_UPDATE
-                StackName: app-stack-eu-west-1
-                TemplatePath: SourceOutput::template.yaml
-                Capabilities: CAPABILITY_IAM
-              Region: eu-west-1
-```
-
-#### 設定管理
-
-```python
-import boto3
-import json
-
-class MultiRegionConfig:
-    def __init__(self):
-        self.regions = ['us-east-1', 'eu-west-1', 'ap-northeast-1']
-        
-    def deploy_config(self, config_data):
-        """全リージョンに設定をデプロイ"""
-        for region in self.regions:
-            ssm = boto3.client('ssm', region_name=region)
-            
-            # リージョン固有の設定
-            region_config = self.customize_config(config_data, region)
-            
-            # Parameter Storeに保存
-            ssm.put_parameter(
-                Name='/app/config/database',
-                Value=json.dumps(region_config['database']),
-                Type='SecureString',
-                Overwrite=True
-            )
-            
-    def customize_config(self, base_config, region):
-        """リージョン固有の設定をカスタマイズ"""
-        config = base_config.copy()
-        
-        # リージョン固有のエンドポイント
-        config['database']['endpoint'] = f"db-{region}.example.com"
-        config['cache']['endpoint'] = f"cache-{region}.example.com"
-        
-        return config
-```
-
-### 監視・運用
-
-#### CloudWatch Cross-Region Dashboard
-
-```json
-{
-  "widgets": [
-    {
-      "type": "metric",
-      "properties": {
-        "metrics": [
-          ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", "app-alb-us-east-1", {"region": "us-east-1"}],
-          ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", "app-alb-eu-west-1", {"region": "eu-west-1"}],
-          ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", "app-alb-ap-northeast-1", {"region": "ap-northeast-1"}]
-        ],
-        "period": 300,
-        "stat": "Sum",
-        "region": "us-east-1",
-        "title": "Global Request Count"
-      }
-    },
-    {
-      "type": "metric",
-      "properties": {
-        "metrics": [
-          ["AWS/Route53", "HealthCheckStatus", "HealthCheckId", "health-check-us", {"region": "us-east-1"}],
-          ["AWS/Route53", "HealthCheckStatus", "HealthCheckId", "health-check-eu", {"region": "us-east-1"}],
-          ["AWS/Route53", "HealthCheckStatus", "HealthCheckId", "health-check-ap", {"region": "us-east-1"}]
-        ],
-        "period": 60,
-        "stat": "Average",
-        "region": "us-east-1",
-        "title": "Global Health Status"
-      }
-    }
-  ]
-}
-```
-
-#### 統合ログ管理
-
-```python
-import boto3
-
-def setup_centralized_logging():
-    """中央集権的ログ管理の設定"""
-    
-    # 各リージョンのログをS3に集約
-    regions = ['us-east-1', 'eu-west-1', 'ap-northeast-1']
-    
-    for region in regions:
-        logs_client = boto3.client('logs', region_name=region)
-        
-        # Kinesis Data Firehoseにログをストリーミング
-        logs_client.put_destination(
-            destinationName=f'CentralLogDestination-{region}',
-            targetArn=f'arn:aws:firehose:{region}:account:deliverystream/central-logs',
-            roleArn='arn:aws:iam::account:role/LogsRole'
-        )
-        
-        # ログストリームの設定
-        logs_client.put_subscription_filter(
-            logGroupName='/aws/lambda/app-function',
-            filterName='CentralLogsFilter',
-            filterPattern='',
-            destinationArn=f'arn:aws:logs:{region}:account:destination:CentralLogDestination-{region}'
-        )
-```
-
-### コスト最適化
-
-#### リージョン別コスト分析
-
-```python
-import boto3
-from datetime import datetime, timedelta
-
-def analyze_multi_region_costs():
-    """マルチリージョンのコスト分析"""
-    ce = boto3.client('ce', region_name='us-east-1')  # Cost Explorerは us-east-1 のみ
-    
-    end_date = datetime.now().strftime('%Y-%m-%d')
-    start_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
-    
-    # リージョン別コスト取得
-    response = ce.get_cost_and_usage(
-        TimePeriod={
-            'Start': start_date,
-            'End': end_date
-        },
-        Granularity='MONTHLY',
-        Metrics=['BlendedCost'],
-        GroupBy=[
-            {
-                'Type': 'DIMENSION',
-                'Key': 'REGION'
-            }
-        ]
-    )
-    
-    # コスト分析
-    region_costs = {}
-    for result in response['ResultsByTime']:
-        for group in result['Groups']:
-            region = group['Keys'][0]
-            cost = float(group['Metrics']['BlendedCost']['Amount'])
-            region_costs[region] = region_costs.get(region, 0) + cost
-    
-    return region_costs
-
-def optimize_region_usage(cost_data):
-    """リージョン使用量の最適化提案"""
-    recommendations = []
-    
-    # 使用量の少ないリージョンを特定
-    sorted_regions = sorted(cost_data.items(), key=lambda x: x[1])
-    
-    for region, cost in sorted_regions:
-        if cost < 100:  # 月額$100未満
-            recommendations.append({
-                'region': region,
-                'action': 'Consider consolidating resources',
-                'potential_savings': cost * 0.3  # 30%の節約見込み
-            })
-    
-    return recommendations
-```
-
-### セキュリティ考慮事項
-
-#### データ主権・コンプライアンス
-
-```text
-GDPR対応:
-- EU内データの EU リージョン保存
-- データ処理の透明性
-- 削除権への対応
-
-HIPAA対応:
-- BAA対応リージョン選択
-- 暗号化の徹底
-- アクセスログの保持
-
-金融規制:
-- 地域別規制要件
-- データ保存期間
-- 監査証跡
-```
-
-#### 暗号化・キー管理
-
-```yaml
-Resources:
-  # リージョン別KMSキー
-  PrimaryKMSKey:
-    Type: AWS::KMS::Key
-    Properties:
-      Description: Primary region encryption key
-      KeyPolicy:
-        Statement:
-          - Effect: Allow
-            Principal:
-              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
-            Action: "kms:*"
-            Resource: "*"
-            
-  SecondaryKMSKey:
-    Type: AWS::KMS::Key
-    Properties:
-      Description: Secondary region encryption key
-      KeyPolicy:
-        Statement:
-          - Effect: Allow
-            Principal:
-              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
-            Action: "kms:*"
-            Resource: "*"
-```
+- **最小権限**: IAMロールの適切な設定
+- **環境変数**: 機密情報の安全な管理
+- **VPC統合**: プライベートリソースへのアクセス
+- **API認証**: 認証・認可の実装
 
 ---
 
-_次のセクション: [08. コスト最適化](./08-cost-optimization.md)_
+## データアーキテクチャパターン
+
+### データレイクアーキテクチャ
+
+基本概念
+
+- 構造化・非構造化データの統合保存
+- スキーマオンリード、柔軟なデータ活用
+- 大容量・多様なデータソースに対応
+- 分析・機械学習での活用
+
+レイヤー構造
+
+- **Raw Layer**: 生データの保存、変更不可
+- **Processed Layer**: 清浄化・変換されたデータ
+- **Curated Layer**: ビジネス用途に最適化されたデータ
+- **Sandbox**: 実験・探索用の領域
+
+AWS実装
+
+- **S3**: 中央データストア、ライフサイクル管理
+- **Glue**: ETL処理、データカタログ
+- **Athena**: アドホッククエリ、S3データ分析
+- **QuickSight**: ビジネスインテリジェンス、可視化
+
+### データウェアハウスパターン
+
+基本概念
+
+- 構造化データの統合・分析基盤
+- OLAP処理、複雑な分析クエリに最適化
+- スキーマオンライト、事前定義された構造
+- ビジネスレポート、ダッシュボード用途
+
+設計アプローチ
+
+- **スタースキーマ**: 中央ファクトテーブル、周辺ディメンション
+- **スノーフレークスキーマ**: 正規化されたディメンション
+- **データマート**: 部門特化のデータウェアハウス
+- **ODS**: 運用データストア、リアルタイム更新
+
+AWS実装
+
+- **Redshift**: データウェアハウス、列指向ストレージ
+- **Redshift Spectrum**: S3データの直接クエリ
+- **EMR**: Hadoop、Spark クラスター
+- **Kinesis**: リアルタイムデータストリーミング
+
+### ハイブリッドアプローチ
+
+データレイクハウス
+
+- データレイクとデータウェアハウスの統合
+- 構造化・非構造化データの統一管理
+- ACID特性、スキーマ進化のサポート
+- 分析・機械学習の統合プラットフォーム
+
+実装パターン
+
+- **Delta Lake**: ACID、タイムトラベル、スキーマ進化
+- **Apache Iceberg**: テーブル形式、メタデータ管理
+- **Apache Hudi**: 増分処理、リアルタイム更新
+- **AWS Lake Formation**: データレイク構築・管理
+
+---
+
+## ハイブリッド・マルチクラウド
+
+### ハイブリッドクラウドアーキテクチャ
+
+基本概念
+
+- オンプレミスとクラウドの統合
+- 段階的なクラウド移行
+- データ主権、コンプライアンス要件への対応
+- 既存投資の活用
+
+接続オプション
+
+- **VPN**: 暗号化されたインターネット接続
+- **Direct Connect**: 専用線接続、安定した帯域
+- **Transit Gateway**: 複数VPCとオンプレミスの統合
+- **PrivateLink**: プライベート接続、AWS サービスアクセス
+
+データ統合
+
+- **Storage Gateway**: ハイブリッドストレージ
+- **DataSync**: データ同期、移行
+- **Database Migration Service**: データベース移行
+- **Snow Family**: 大容量データ移行
+
+### マルチクラウド戦略
+
+マルチクラウドの動機
+
+- **ベンダーロックイン回避**: 特定クラウドへの依存軽減
+- **最適なサービス選択**: クラウド毎の強みを活用
+- **リスク分散**: 単一クラウドの障害リスク軽減
+- **地理的要件**: 各地域の規制・要件への対応
+
+設計上の考慮事項
+
+- **抽象化レイヤー**: クラウド固有機能の抽象化
+- **データ同期**: クラウド間のデータ整合性
+- **ネットワーク**: クラウド間接続、レイテンシ
+- **運用統合**: 統一された監視・管理
+
+実装アプローチ
+
+- **コンテナ化**: Kubernetes、ポータブルなワークロード
+- **API統合**: RESTful API、標準プロトコル
+- **Infrastructure as Code**: Terraform、クラウド非依存
+- **CI/CD**: マルチクラウド対応パイプライン
+
+---
+
+## 高可用性・災害復旧パターン
+
+### 高可用性設計
+
+可用性レベル
+
+- **99.9% (8.76時間/年)**: 標準的なWebアプリケーション
+- **99.95% (4.38時間/年)**: ビジネスクリティカル
+- **99.99% (52.56分/年)**: ミッションクリティカル
+- **99.999% (5.26分/年)**: 超高可用性システム
+
+設計原則
+
+- **単一障害点の排除**: 冗長化、分散配置
+- **障害の分離**: 障害影響の局所化
+- **自動復旧**: 障害検知、自動フェイルオーバー
+- **グレースフルデグラデーション**: 段階的な機能縮退
+
+実装パターン
+
+- **マルチAZ配置**: 可用性ゾーン間での冗長化
+- **ロードバランシング**: トラフィック分散、ヘルスチェック
+- **Auto Scaling**: 障害インスタンスの自動置換
+- **データベースクラスタリング**: マスター・スレーブ、マルチマスター
+
+### 災害復旧戦略
+
+RTO/RPO要件
+
+- **RTO (Recovery Time Objective)**: 復旧時間目標
+- **RPO (Recovery Point Objective)**: データ損失許容時間
+- **ビジネス影響分析**: システム停止の影響度評価
+- **復旧優先度**: システムの重要度に応じた復旧順序
+
+災害復旧パターン
+
+- **Backup and Restore**: 最も安価、長い復旧時間
+- **Pilot Light**: 最小限の環境を常時稼働
+- **Warm Standby**: 縮小版の環境を常時稼働
+- **Multi-Site Active/Active**: 複数サイトでの同時稼働
+
+クロスリージョン設計
+
+- **データレプリケーション**: 非同期・同期レプリケーション
+- **DNS フェイルオーバー**: Route 53 ヘルスチェック
+- **アプリケーション配置**: 複数リージョンでの冗長配置
+- **ネットワーク**: リージョン間接続、トラフィック制御
+
+### 復旧テストと改善
+
+定期的なテスト
+
+- **復旧手順の検証**: 手順書の妥当性確認
+- **RTO/RPO の測定**: 実際の復旧時間・データ損失量
+- **チーム訓練**: 復旧作業の習熟度向上
+- **改善点の特定**: テスト結果に基づく改善
+
+カオスエンジニアリング
+
+- **障害注入**: 意図的な障害発生、システム耐性確認
+- **Chaos Monkey**: ランダムなインスタンス停止
+- **ネットワーク分断**: 通信障害のシミュレーション
+- **リソース枯渇**: CPU、メモリ、ディスク不足の再現
+
+---
+
+## まとめ
+
+### 試験でのポイント
+
+アーキテクチャ選択の判断基準
+
+1. **ビジネス要件**: 可用性、性能、コスト、セキュリティ
+2. **技術的制約**: 既存システム、スキル、複雑性
+3. **運用要件**: 管理負荷、自動化レベル、監視
+4. **将来性**: 拡張性、保守性、技術進化への対応
+
+Well-Architected Framework の活用
+
+- 6つの柱の理解と適用
+- トレードオフの認識と判断
+- 継続的な改善の実践
+- ビジネス価値との整合
+
+パターンの使い分け
+
+- **モノリス vs マイクロサービス**: チーム規模、システム複雑性
+- **サーバー vs サーバーレス**: 運用負荷、コスト、制約
+- **データレイク vs データウェアハウス**: データ種類、分析要件
+- **シングル vs マルチクラウド**: リスク、コスト、要件
+
+設計の考慮事項
+
+- **可用性**: SLA要件、障害許容度
+- **スケーラビリティ**: 成長予測、負荷変動
+- **セキュリティ**: 脅威モデル、コンプライアンス
+- **コスト**: 初期投資、運用コスト、ROI
+
+---
+
+## ライセンス
+
+このコンテンツは MIT License の下で公開されています。詳細は [LICENSE](./LICENSE) ファイルをご確認ください。

@@ -1,185 +1,100 @@
 # ネットワーキング
 
+<!-- 
+Copyright (c) 2025 AWS SAP Study Guide
+Licensed under the MIT License. See LICENSE file for details.
+-->
+
 ## 目次
 
 1. [VPC (Virtual Private Cloud)](#vpc-virtual-private-cloud)
-2. [ロードバランサー](#ロードバランサー)
-3. [CloudFront](#cloudfront)
-4. [Route 53](#route-53)
-5. [Direct Connect](#direct-connect)
-6. [VPN](#vpn)
-7. [Transit Gateway](#transit-gateway)
-8. [API Gateway](#api-gateway)
+2. [接続オプション](#接続オプション)
+3. [ロードバランシング](#ロードバランシング)
+4. [コンテンツ配信・DNS](#コンテンツ配信dns)
+5. [ネットワークセキュリティ](#ネットワークセキュリティ)
+6. [ネットワーク設計パターン](#ネットワーク設計パターン)
 
 ---
 
 ## VPC (Virtual Private Cloud)
 
-### 概要
+### 基本概念と特徴
 
-AWS 内の仮想ネットワーク。完全に分離された環境を提供。
+VPCの位置づけ
 
-### 基本コンポーネント
+- AWS クラウド内の論理的に分離されたネットワーク
+- オンプレミスのデータセンターと同様の制御
+- セキュリティとネットワーク設定の完全な制御
+- 複数のアベイラビリティゾーンにまたがる配置
 
-#### CIDR 設計
+主要コンポーネント
 
-```
-推奨CIDR範囲:
-- 10.0.0.0/8 (10.0.0.0 - 10.255.255.255)
-- 172.16.0.0/12 (172.16.0.0 - 172.31.255.255)
-- 192.168.0.0/16 (192.168.0.0 - 192.168.255.255)
+- **サブネット**: VPC内のIPアドレス範囲の区分
+- **ルートテーブル**: トラフィックの経路制御
+- **インターネットゲートウェイ**: インターネット接続
+- **NAT Gateway/Instance**: プライベートサブネットからの外部接続
 
-例:
-VPC: 10.0.0.0/16 (65,536 IP)
-├─ Public Subnet: 10.0.1.0/24 (256 IP)
-├─ Private Subnet: 10.0.2.0/24 (256 IP)
-└─ Database Subnet: 10.0.3.0/24 (256 IP)
-```
+### サブネット設計
 
-#### サブネット設計
+パブリックサブネット
 
-```json
-{
-  "VpcId": "vpc-12345678",
-  "Subnets": [
-    {
-      "SubnetId": "subnet-12345678",
-      "CidrBlock": "10.0.1.0/24",
-      "AvailabilityZone": "us-east-1a",
-      "MapPublicIpOnLaunch": true
-    },
-    {
-      "SubnetId": "subnet-87654321",
-      "CidrBlock": "10.0.2.0/24",
-      "AvailabilityZone": "us-east-1b",
-      "MapPublicIpOnLaunch": false
-    }
-  ]
-}
-```
+- **特徴**: インターネットゲートウェイへの経路を持つ
+- **用途**: ロードバランサー、Webサーバー、踏み台サーバー
+- **セキュリティ**: 最小限のリソース配置、適切なセキュリティグループ
+- **設計考慮**: DMZ的な役割、外部からのアクセスポイント
 
-### ルーティング
+プライベートサブネット
 
-#### ルートテーブル
+- **特徴**: インターネットゲートウェイへの直接経路なし
+- **用途**: アプリケーションサーバー、データベース
+- **外部接続**: NAT Gateway経由でのアウトバウンド通信
+- **セキュリティ**: 内部リソースの保護、多層防御
 
-```
-パブリックルートテーブル:
-- 0.0.0.0/0 → Internet Gateway
-- 10.0.0.0/16 → Local
+データベースサブネット
 
-プライベートルートテーブル:
-- 0.0.0.0/0 → NAT Gateway
-- 10.0.0.0/16 → Local
-```
+- **特徴**: 最も制限された環境
+- **用途**: RDS、ElastiCache等のデータストア
+- **アクセス制御**: アプリケーション層からのみアクセス
+- **冗長性**: 複数AZでの配置
 
-#### NAT Gateway vs NAT Instance
+### ルーティングとゲートウェイ
 
-| 項目             | NAT Gateway    | NAT Instance     |
-| ---------------- | -------------- | ---------------- |
-| **可用性**       | 高 (AZ 内冗長) | 低 (単一障害点)  |
-| **帯域幅**       | 最大 45Gbps    | インスタンス依存 |
-| **管理**         | マネージド     | 自己管理         |
-| **コスト**       | 高             | 低               |
-| **セキュリティ** | 自動更新       | 手動更新         |
+インターネットゲートウェイ (IGW)
 
-### セキュリティ
+- **目的**: VPCとインターネット間の通信
+- **特徴**: 高可用性、自動スケーリング
+- **制限**: VPCあたり1つのみアタッチ可能
+- **用途**: パブリックサブネットのインターネット接続
 
-#### セキュリティグループ
+NAT Gateway vs NAT Instance
 
-```json
-{
-  "GroupName": "web-server-sg",
-  "Description": "Security group for web servers",
-  "VpcId": "vpc-12345678",
-  "SecurityGroupRules": [
-    {
-      "IpPermissions": [
-        {
-          "IpProtocol": "tcp",
-          "FromPort": 80,
-          "ToPort": 80,
-          "IpRanges": [{ "CidrIp": "0.0.0.0/0" }]
-        },
-        {
-          "IpProtocol": "tcp",
-          "FromPort": 443,
-          "ToPort": 443,
-          "IpRanges": [{ "CidrIp": "0.0.0.0/0" }]
-        }
-      ]
-    }
-  ]
-}
-```
+- **NAT Gateway**: マネージド、高可用性、高性能、コスト高
+- **NAT Instance**: 自己管理、カスタマイズ可能、コスト低、運用負荷
+- **選択基準**: 運用負荷、コスト、カスタマイズ要件
+- **可用性**: NAT Gatewayは単一AZ、冗長化には複数配置必要
 
-#### Network ACL
+VPC Endpoints
 
-```json
-{
-  "NetworkAclId": "acl-12345678",
-  "Entries": [
-    {
-      "RuleNumber": 100,
-      "Protocol": "6",
-      "RuleAction": "allow",
-      "PortRange": { "From": 80, "To": 80 },
-      "CidrBlock": "0.0.0.0/0"
-    },
-    {
-      "RuleNumber": 200,
-      "Protocol": "6",
-      "RuleAction": "allow",
-      "PortRange": { "From": 443, "To": 443 },
-      "CidrBlock": "0.0.0.0/0"
-    }
-  ]
-}
-```
+- **Gateway Endpoint**: S3、DynamoDB専用、無料
+- **Interface Endpoint**: 多数のAWSサービス対応、時間課金
+- **目的**: AWS内部通信、データ転送コスト削減
+- **セキュリティ**: インターネット経由を避けた安全な通信
 
-### VPC 接続
+### VPC設計のベストプラクティス
 
-#### VPC Peering
+IPアドレス設計
 
-```
-特徴:
-- 1対1接続
-- 同一リージョン/クロスリージョン
-- 推移的ルーティング不可
-- 帯域幅制限なし
+- **CIDR選択**: 将来の拡張を考慮した十分なアドレス空間
+- **重複回避**: オンプレミス、他VPCとの重複回避
+- **サブネット分割**: 用途別、AZ別の適切な分割
+- **予約アドレス**: AWS予約分（各サブネット5個）の考慮
 
-制限:
-- CIDR重複不可
-- セキュリティグループ参照制限
-- DNS解決設定必要
-```
+マルチAZ設計
 
-#### VPC Endpoints
-
-##### Gateway Endpoint
-
-```
-対象サービス:
-- S3
-- DynamoDB
-
-特徴:
-- 無料
-- ルートテーブル設定
-- 同一リージョンのみ
-```
-
-##### Interface Endpoint
-
-```
-対象サービス:
-- EC2、ECS、Lambda等
-- 多数のAWSサービス
-
-特徴:
-- ENI作成
-- 時間課金
-- DNS名提供
-```
+- **可用性**: 複数AZでの冗長配置
+- **負荷分散**: AZ間でのトラフィック分散
+- **災害復旧**: AZ障害時の継続性確保
+- **コスト**: AZ間データ転送コストの考慮
 
 ### 公式リソース
 
@@ -188,128 +103,156 @@ VPC: 10.0.0.0/16 (65,536 IP)
 
 ---
 
-## ロードバランサー
+## 接続オプション
 
-### Application Load Balancer (ALB)
+### VPC間接続
 
-#### 特徴
+VPC Peering
 
-```
-レイヤー: 7 (HTTP/HTTPS)
-ターゲット: EC2、IP、Lambda、ECS
-機能: パスベース、ホストベースルーティング
-SSL終端: 対応
-WebSocket: 対応
-```
+- **概念**: 2つのVPC間のプライベート接続
+- **特徴**: 1対1接続、推移的ルーティングなし
+- **制限**: CIDR重複不可、同一リージョン/クロスリージョン対応
+- **用途**: 少数VPC間の直接接続、シンプルな構成
 
-#### ルーティング設定
+Transit Gateway
 
-```json
-{
-  "Rules": [
-    {
-      "Priority": 1,
-      "Conditions": [
-        {
-          "Field": "path-pattern",
-          "Values": ["/api/*"]
-        }
-      ],
-      "Actions": [
-        {
-          "Type": "forward",
-          "TargetGroupArn": "arn:aws:elasticloadbalancing:region:account:targetgroup/api-targets"
-        }
-      ]
-    },
-    {
-      "Priority": 2,
-      "Conditions": [
-        {
-          "Field": "host-header",
-          "Values": ["admin.example.com"]
-        }
-      ],
-      "Actions": [
-        {
-          "Type": "forward",
-          "TargetGroupArn": "arn:aws:elasticloadbalancing:region:account:targetgroup/admin-targets"
-        }
-      ]
-    }
-  ]
-}
-```
+- **概念**: 複数VPC、オンプレミスのハブ接続
+- **特徴**: スター型トポロジー、集中管理
+- **利点**: スケーラビリティ、管理簡素化、推移的ルーティング
+- **用途**: 大規模環境、複雑な接続要件
 
-### Network Load Balancer (NLB)
+選択基準
 
-#### 特徴
+- **VPC数**: 少数ならPeering、多数ならTransit Gateway
+- **管理複雑性**: Peeringは個別管理、Transit Gatewayは集中管理
+- **コスト**: Peeringは無料、Transit Gatewayは時間・データ課金
+- **将来性**: 拡張予定があればTransit Gateway
 
-```
-レイヤー: 4 (TCP/UDP/TLS)
-性能: 数百万リクエスト/秒
-レイテンシ: 超低レイテンシ
-IP: 静的IP対応
-SSL: パススルー/終端両対応
-```
+### オンプレミス接続
 
-#### 用途
+AWS Site-to-Site VPN
 
-```
-高性能要件:
-- ゲームサーバー
-- IoTアプリケーション
-- リアルタイム通信
+- **概念**: インターネット経由の暗号化接続
+- **特徴**: 迅速な導入、低初期コスト、帯域幅制限
+- **冗長性**: 2つのVPNトンネル、複数のカスタマーゲートウェイ
+- **用途**: 初期接続、バックアップ回線、小規模トラフィック
 
-静的IP要件:
-- ホワイトリスト
-- DNS設定
-- ファイアウォール設定
-```
+AWS Direct Connect
 
-### Gateway Load Balancer (GWLB)
+- **概念**: 専用線による物理接続
+- **特徴**: 安定した帯域、低レイテンシ、高コスト
+- **導入期間**: 数週間から数ヶ月
+- **用途**: 大容量データ転送、安定した接続、本格運用
 
-#### 特徴
+Client VPN
 
-```
-レイヤー: 3 (IP)
-プロトコル: GENEVE
-用途: サードパーティアプライアンス
-機能: トラフィック分散・検査
-```
+- **概念**: リモートユーザー向けVPN
+- **特徴**: SSL/TLS、多要素認証、細かいアクセス制御
+- **用途**: リモートワーク、管理者アクセス
+- **認証**: Active Directory、SAML、証明書ベース
 
-#### アーキテクチャ
+接続選択の指針
 
-```
-インターネット
-    ↓
-GWLB Endpoint
-    ↓
-Gateway Load Balancer
-    ↓
-セキュリティアプライアンス
-(Firewall, IDS/IPS, DLP)
-    ↓
-アプリケーション
-```
+- **帯域幅要件**: 大容量ならDirect Connect、小容量ならVPN
+- **レイテンシ要件**: 低レイテンシならDirect Connect
+- **コスト**: 初期コスト重視ならVPN、運用コスト重視ならDirect Connect
+- **導入期間**: 迅速導入ならVPN、計画的導入ならDirect Connect
 
-### ターゲットグループ
+### ハイブリッド接続パターン
 
-#### ヘルスチェック設定
+冗長構成
 
-```json
-{
-  "HealthCheckProtocol": "HTTP",
-  "HealthCheckPath": "/health",
-  "HealthCheckIntervalSeconds": 30,
-  "HealthCheckTimeoutSeconds": 5,
-  "HealthyThresholdCount": 2,
-  "UnhealthyThresholdCount": 3,
-  "Matcher": {
-    "HttpCode": "200,202"
-  }
-}
-```
+- **Direct Connect + VPN**: 主回線と冗長回線
+- **複数Direct Connect**: 異なるロケーションからの接続
+- **複数VPN**: 異なるISP経由の接続
+- **Transit Gateway**: 統一的な冗長管理
+
+段階的移行
+
+- **Phase 1**: VPNでの初期接続
+- **Phase 2**: Direct Connect導入
+- **Phase 3**: VPNをバックアップ回線化
+- **Phase 4**: 完全なハイブリッド環境
+
+### 公式リソース
+
+- [Transit Gateway サービス紹介](https://aws.amazon.com/jp/transit-gateway/)
+- [Transit Gateway Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20191113_AWS-BlackBelt_Transit_Gateway.pdf)
+- [Direct Connect サービス紹介](https://aws.amazon.com/jp/directconnect/)
+- [Direct Connect Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20210209-AWS-Blackbelt-DirectConnect.pdf)
+- [VPN サービス紹介](https://aws.amazon.com/jp/vpn/)
+- [VPN Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/202110_AWS_Black_Belt_Site-to-Site_VPN.pdf)
+
+---
+
+## ロードバランシング
+
+### Elastic Load Balancer (ELB)
+
+Application Load Balancer (ALB)
+
+- **レイヤー**: Layer 7 (HTTP/HTTPS)
+- **特徴**: パス・ホストベースルーティング、WebSocket対応
+- **ターゲット**: EC2、IP、Lambda、ECS
+- **用途**: Webアプリケーション、マイクロサービス、コンテナ
+
+Network Load Balancer (NLB)
+
+- **レイヤー**: Layer 4 (TCP/UDP)
+- **特徴**: 超高性能、静的IP、極低レイテンシ
+- **ターゲット**: EC2、IP、ALB
+- **用途**: 高性能要件、非HTTP、ゲーム、IoT
+
+Gateway Load Balancer (GWLB)
+
+- **レイヤー**: Layer 3 Gateway + Layer 4 Load Balancing
+- **特徴**: サードパーティアプライアンス統合
+- **用途**: ファイアウォール、IDS/IPS、DPI
+- **アーキテクチャ**: Transparent proxy、GENEVE encapsulation
+
+Classic Load Balancer (CLB)
+
+- **レイヤー**: Layer 4/7 (レガシー)
+- **特徴**: 基本的な負荷分散機能
+- **推奨**: 新規作成時は他のELBを推奨
+- **移行**: ALB/NLBへの移行を検討
+
+### ロードバランサー選択の指針
+
+プロトコル要件
+
+- **HTTP/HTTPS**: ALB
+- **TCP/UDP**: NLB
+- **混在**: ALB + NLB構成
+
+パフォーマンス要件
+
+- **超高性能**: NLB
+- **標準性能**: ALB
+- **レイテンシ重視**: NLB
+
+機能要件
+
+- **高度なルーティング**: ALB
+- **SSL終端**: ALB、NLB両対応
+- **静的IP**: NLB
+- **WebSocket**: ALB
+
+### ヘルスチェックと可用性
+
+ヘルスチェック設計
+
+- **チェック間隔**: パフォーマンスと検知速度のバランス
+- **閾値設定**: 健全・異常判定の適切な設定
+- **チェック内容**: アプリケーションレベルの健全性確認
+- **タイムアウト**: ネットワーク状況を考慮した設定
+
+可用性設計
+
+- **マルチAZ**: 複数AZでのターゲット配置
+- **Auto Scaling**: 障害時の自動復旧
+- **Connection Draining**: 安全なインスタンス切り離し
+- **Sticky Session**: セッション維持とスケーラビリティのバランス
 
 ### 公式リソース
 
@@ -318,671 +261,289 @@ Gateway Load Balancer
 
 ---
 
-## CloudFront
+## コンテンツ配信・DNS
 
-### 概要
+### Amazon CloudFront
 
-グローバル CDN (Content Delivery Network)。低レイテンシでコンテンツ配信。
+基本概念
 
-### ディストリビューション設定
+- **CDN**: グローバルなコンテンツ配信ネットワーク
+- **エッジロケーション**: 世界中の配信拠点
+- **オリジン**: S3、ALB、EC2、カスタムオリジン
+- **キャッシュ**: エッジでのコンテンツキャッシュ
 
-#### オリジン設定
+主要機能
 
-```json
-{
-  "Origins": [
-    {
-      "Id": "S3-Origin",
-      "DomainName": "my-bucket.s3.amazonaws.com",
-      "S3OriginConfig": {
-        "OriginAccessIdentity": "origin-access-identity/cloudfront/ABCDEFG1234567"
-      }
-    },
-    {
-      "Id": "ALB-Origin",
-      "DomainName": "my-alb-1234567890.us-east-1.elb.amazonaws.com",
-      "CustomOriginConfig": {
-        "HTTPPort": 80,
-        "HTTPSPort": 443,
-        "OriginProtocolPolicy": "https-only"
-      }
-    }
-  ]
-}
-```
+- **動的・静的コンテンツ**: 両方の配信に対応
+- **SSL/TLS**: 証明書管理、HTTP/2対応
+- **セキュリティ**: WAF統合、DDoS保護
+- **カスタマイズ**: Lambda@Edge、CloudFront Functions
 
-#### キャッシュビヘイビア
+キャッシュ戦略
 
-```json
-{
-  "CacheBehaviors": [
-    {
-      "PathPattern": "/api/*",
-      "TargetOriginId": "ALB-Origin",
-      "ViewerProtocolPolicy": "redirect-to-https",
-      "CachePolicyId": "4135ea2d-6df8-44a3-9df3-4b5a84be39ad",
-      "TTL": {
-        "DefaultTTL": 0,
-        "MaxTTL": 0
-      }
-    },
-    {
-      "PathPattern": "/static/*",
-      "TargetOriginId": "S3-Origin",
-      "ViewerProtocolPolicy": "redirect-to-https",
-      "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
-      "TTL": {
-        "DefaultTTL": 86400,
-        "MaxTTL": 31536000
-      }
-    }
-  ]
-}
-```
+- **TTL設定**: コンテンツ特性に応じた適切な設定
+- **キャッシュキー**: クエリパラメータ、ヘッダーの考慮
+- **無効化**: 緊急時のキャッシュクリア
+- **圧縮**: 自動圧縮によるパフォーマンス向上
 
-### セキュリティ
+使用場面
 
-#### Origin Access Control (OAC)
+- **Webサイト高速化**: 静的コンテンツの配信
+- **API高速化**: 動的コンテンツのキャッシュ
+- **グローバル展開**: 世界中のユーザーへの配信
+- **コスト削減**: オリジンへの負荷軽減
 
-```json
-{
-  "OriginAccessControlConfig": {
-    "Name": "S3-OAC",
-    "Description": "OAC for S3 bucket",
-    "OriginAccessControlOriginType": "s3",
-    "SigningBehavior": "always",
-    "SigningProtocol": "sigv4"
-  }
-}
-```
-
-#### WAF 統合
-
-```json
-{
-  "WebACLId": "arn:aws:wafv2:us-east-1:account:global/webacl/MyWebACL/12345678-1234-1234-1234-123456789012"
-}
-```
-
-### Lambda@Edge
-
-#### 実行タイミング
-
-```
-Viewer Request: CloudFront → オリジン (リクエスト変更)
-Origin Request: CloudFront → オリジン (オリジンリクエスト変更)
-Origin Response: オリジン → CloudFront (レスポンス変更)
-Viewer Response: CloudFront → ビューワー (最終レスポンス変更)
-```
-
-#### 使用例
-
-```javascript
-exports.handler = (event, context, callback) => {
-  const request = event.Records[0].cf.request;
-  const headers = request.headers;
-
-  // A/Bテスト
-  const random = Math.random();
-  if (random < 0.5) {
-    request.uri = "/version-a" + request.uri;
-  } else {
-    request.uri = "/version-b" + request.uri;
-  }
-
-  callback(null, request);
-};
-```
-
-### 公式リソース
+#### 公式リソース
 
 - [CloudFront サービス紹介](https://aws.amazon.com/jp/cloudfront/)
 - [CloudFront Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20190730_AWS-BlackBelt_Amazon_CloudFront.pdf)
 
----
+### Amazon Route 53
 
-## Route 53
+基本概念
 
-### 概要
+- **DNS**: ドメイン名解決サービス
+- **高可用性**: 100% SLA、グローバル分散
+- **統合**: AWSサービスとの深い統合
+- **機能**: ドメイン登録、DNS解決、ヘルスチェック
 
-スケーラブルな DNS サービス。ドメイン登録、ヘルスチェック、トラフィックルーティング。
+ルーティングポリシー
 
-### レコードタイプ
+- **Simple**: 単一リソースへの解決
+- **Weighted**: 重み付けによる負荷分散
+- **Latency**: レイテンシベースの最適化
+- **Failover**: プライマリ・セカンダリ構成
+- **Geolocation**: 地理的位置による振り分け
+- **Geoproximity**: 地理的近接性とバイアス
+- **Multivalue**: 複数IPの返却
 
-| タイプ    | 用途           | 例                                                   |
-| --------- | -------------- | ---------------------------------------------------- |
-| **A**     | IPv4 アドレス  | example.com → 192.0.2.1                              |
-| **AAAA**  | IPv6 アドレス  | example.com → 2001:db8::1                            |
-| **CNAME** | 別名           | `www.example.com` → example.com                      |
-| **MX**    | メールサーバー | example.com → mail.example.com                       |
-| **TXT**   | テキスト       | example.com → "v=spf1 include:\_spf.google.com ~all" |
-| **ALIAS** | AWS リソース   | example.com → ALB                                    |
+ヘルスチェック
 
-### ルーティングポリシー
+- **エンドポイント監視**: HTTP、HTTPS、TCP
+- **CloudWatch統合**: メトリクス、アラーム
+- **計算ヘルスチェック**: 複数チェックの組み合わせ
+- **プライベートリソース**: CloudWatch Alarmベース
 
-#### Simple Routing
+使用場面
 
-```json
-{
-  "Name": "example.com",
-  "Type": "A",
-  "ResourceRecords": [{ "Value": "192.0.2.1" }, { "Value": "192.0.2.2" }]
-}
-```
+- **災害復旧**: 自動フェイルオーバー
+- **負荷分散**: DNS レベルでの分散
+- **グローバル展開**: 地域最適化
+- **Blue/Green デプロイ**: 段階的な切り替え
 
-#### Weighted Routing
-
-```json
-{
-  "Name": "example.com",
-  "Type": "A",
-  "SetIdentifier": "Primary",
-  "Weight": 70,
-  "ResourceRecords": [{"Value": "192.0.2.1"}]
-},
-{
-  "Name": "example.com",
-  "Type": "A",
-  "SetIdentifier": "Secondary",
-  "Weight": 30,
-  "ResourceRecords": [{"Value": "192.0.2.2"}]
-}
-```
-
-#### Latency-based Routing
-
-```json
-{
-  "Name": "example.com",
-  "Type": "A",
-  "SetIdentifier": "US-East",
-  "Region": "us-east-1",
-  "ResourceRecords": [{"Value": "192.0.2.1"}]
-},
-{
-  "Name": "example.com",
-  "Type": "A",
-  "SetIdentifier": "EU-West",
-  "Region": "eu-west-1",
-  "ResourceRecords": [{"Value": "192.0.2.2"}]
-}
-```
-
-#### Failover Routing
-
-```json
-{
-  "Name": "example.com",
-  "Type": "A",
-  "SetIdentifier": "Primary",
-  "Failover": "PRIMARY",
-  "HealthCheckId": "12345678-1234-1234-1234-123456789012",
-  "ResourceRecords": [{"Value": "192.0.2.1"}]
-},
-{
-  "Name": "example.com",
-  "Type": "A",
-  "SetIdentifier": "Secondary",
-  "Failover": "SECONDARY",
-  "ResourceRecords": [{"Value": "192.0.2.2"}]
-}
-```
-
-### ヘルスチェック
-
-#### HTTP/HTTPS チェック
-
-```json
-{
-  "Type": "HTTP",
-  "ResourcePath": "/health",
-  "FullyQualifiedDomainName": "example.com",
-  "Port": 80,
-  "RequestInterval": 30,
-  "FailureThreshold": 3,
-  "Regions": ["us-east-1", "us-west-2", "eu-west-1"]
-}
-```
-
-#### 計算ヘルスチェック
-
-```json
-{
-  "Type": "CALCULATED",
-  "ChildHealthChecks": [
-    "12345678-1234-1234-1234-123456789012",
-    "87654321-4321-4321-4321-210987654321"
-  ],
-  "HealthThreshold": 1,
-  "InsufficientDataHealthStatus": "Failure"
-}
-```
-
-### 公式リソース
+#### 公式リソース
 
 - [Route 53 サービス紹介](https://aws.amazon.com/jp/route53/)
 - [Route 53 Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AmazonRoute53-hostedZone_0531_V1.pdf)
 
 ---
 
-## Direct Connect
-
-### 概要
-
-オンプレミスと AWS を専用線で接続するサービス。
-
-### 接続タイプ
-
-#### Dedicated Connection
-
-```
-帯域幅: 1Gbps、10Gbps、100Gbps
-提供: AWS Direct Connect パートナー
-用途: 大容量、安定した接続
-コスト: 高
-```
+## ネットワークセキュリティ
 
-#### Hosted Connection
-
-```
-帯域幅: 50Mbps - 10Gbps
-提供: AWS Direct Connect パートナー
-用途: 中小規模、柔軟性
-コスト: 中
-```
-
-### Virtual Interface (VIF)
-
-#### Private VIF
-
-```json
-{
-  "vifName": "private-vif",
-  "vlan": 100,
-  "bgpAsn": 65000,
-  "customerAddress": "192.168.1.1/30",
-  "amazonAddress": "192.168.1.2/30",
-  "directConnectGatewayId": "dxgw-12345678"
-}
-```
-
-#### Public VIF
-
-```json
-{
-  "vifName": "public-vif",
-  "vlan": 200,
-  "bgpAsn": 65000,
-  "customerAddress": "203.0.113.1/30",
-  "amazonAddress": "203.0.113.2/30",
-  "routeFilterPrefixes": [{ "cidr": "203.0.113.0/24" }]
-}
-```
-
-#### Transit VIF
-
-```json
-{
-  "vifName": "transit-vif",
-  "vlan": 300,
-  "bgpAsn": 65000,
-  "customerAddress": "192.168.2.1/30",
-  "amazonAddress": "192.168.2.2/30",
-  "directConnectGatewayId": "dxgw-12345678"
-}
-```
-
-### Direct Connect Gateway
-
-#### 設定
-
-```
-機能:
-- 複数VPCとの接続
-- クロスリージョン接続
-- Transit Gateway統合
-
-制限:
-- 最大10個のVPC
-- 同一アカウント内
-- BGPルーティング
-```
-
-### 冗長化
-
-#### 冗長構成
-
-```
-推奨構成:
-- 複数のDirect Connect ロケーション
-- 複数の接続
-- VPN バックアップ
-
-例:
-Primary: Direct Connect (東京)
-Secondary: Direct Connect (大阪)
-Backup: VPN over Internet
-```
-
-### 公式リソース
-
-- [Direct Connect サービス紹介](https://aws.amazon.com/jp/directconnect/)
-- [Direct Connect Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20210209-AWS-Blackbelt-DirectConnect.pdf)
-
----
-
-## VPN
-
-### Site-to-Site VPN
-
-#### 設定
-
-```json
-{
-  "CustomerGatewayId": "cgw-12345678",
-  "Type": "ipsec.1",
-  "VpnGatewayId": "vgw-12345678",
-  "Options": {
-    "StaticRoutesOnly": false,
-    "TunnelOptions": [
-      {
-        "TunnelInsideCidr": "169.254.10.0/30",
-        "PreSharedKey": "myPreSharedKey123"
-      }
-    ]
-  }
-}
-```
-
-#### BGP 設定
-
-```
-Customer Gateway:
-- BGP ASN: 65000
-- IP Address: 203.0.113.12
-
-VPN Gateway:
-- BGP ASN: 64512 (Amazon側)
-- Tunnel 1: 169.254.10.1/30
-- Tunnel 2: 169.254.10.5/30
-```
-
-### Client VPN
-
-#### 設定
-
-```json
-{
-  "ClientCidrBlock": "10.0.0.0/16",
-  "ServerCertificateArn": "arn:aws:acm:region:account:certificate/12345678-1234-1234-1234-123456789012",
-  "AuthenticationOptions": [
-    {
-      "Type": "certificate-authentication",
-      "MutualAuthentication": {
-        "ClientRootCertificateChainArn": "arn:aws:acm:region:account:certificate/87654321-4321-4321-4321-210987654321"
-      }
-    }
-  ],
-  "ConnectionLogOptions": {
-    "Enabled": true,
-    "CloudwatchLogGroup": "ClientVPN-Logs"
-  }
-}
-```
-
-### 公式リソース
-
-- [VPN サービス紹介](https://aws.amazon.com/jp/vpn/)
-- [VPN Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/202110_AWS_Black_Belt_Site-to-Site_VPN.pdf)
-
----
-
-## Transit Gateway
-
-### 概要
-
-複数の VPC、オンプレミスネットワークを接続するハブ。
-
-### 基本設定
-
-```json
-{
-  "Description": "Main Transit Gateway",
-  "DefaultRouteTableAssociation": "enable",
-  "DefaultRouteTablePropagation": "enable",
-  "DnsSupport": "enable",
-  "VpnEcmpSupport": "enable",
-  "AutoAcceptSharedAttachments": "disable",
-  "DefaultRouteTableAssociation": "enable"
-}
-```
-
-### アタッチメント
-
-#### VPC Attachment
-
-```json
-{
-  "TransitGatewayId": "tgw-12345678",
-  "VpcId": "vpc-12345678",
-  "SubnetIds": ["subnet-12345678", "subnet-87654321"],
-  "Options": {
-    "DnsSupport": "enable",
-    "Ipv6Support": "disable"
-  }
-}
-```
-
-#### VPN Attachment
-
-```json
-{
-  "TransitGatewayId": "tgw-12345678",
-  "VpnConnectionId": "vpn-12345678",
-  "Options": {
-    "StaticRoutesOnly": false
-  }
-}
-```
-
-### ルートテーブル
-
-#### カスタムルートテーブル
-
-```json
-{
-  "TransitGatewayId": "tgw-12345678",
-  "TagSpecifications": [
-    {
-      "ResourceType": "transit-gateway-route-table",
-      "Tags": [{ "Key": "Name", "Value": "Production-Routes" }]
-    }
-  ]
-}
-```
-
-#### ルート設定
-
-```bash
-# 静的ルート追加
-aws ec2 create-route \
-    --route-table-id tgw-rtb-12345678 \
-    --destination-cidr-block 10.1.0.0/16 \
-    --transit-gateway-attachment-id tgw-attach-12345678
-```
-
-### 公式リソース
-
-- [Transit Gateway サービス紹介](https://aws.amazon.com/jp/transit-gateway/)
-- [Transit Gateway Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20191113_AWS-BlackBelt_Transit_Gateway.pdf)
-
----
-
-## API Gateway
-
-### 概要
-
-RESTful API、WebSocket API のマネージドサービス。
-
-### API タイプ
-
-#### REST API
-
-```
-特徴:
-- フル機能
-- リクエスト/レスポンス変換
-- 認証・認可
-- キャッシュ
-- SDK生成
-```
-
-#### HTTP API
-
-```
-特徴:
-- 高性能、低コスト
-- JWT認証
-- CORS対応
-- 基本機能のみ
-```
-
-#### WebSocket API
-
-```
-特徴:
-- 双方向通信
-- リアルタイム
-- 接続管理
-- ルーティング
-```
-
-### 統合タイプ
-
-#### Lambda 統合
-
-```json
-{
-  "type": "AWS_PROXY",
-  "httpMethod": "POST",
-  "uri": "arn:aws:apigateway:region:lambda:path/2015-03-31/functions/arn:aws:lambda:region:account:function:myFunction/invocations",
-  "passthroughBehavior": "when_no_match",
-  "timeoutInMillis": 29000
-}
-```
-
-#### HTTP 統合
-
-```json
-{
-  "type": "HTTP_PROXY",
-  "httpMethod": "GET",
-  "uri": "https://api.example.com/{proxy}",
-  "connectionType": "INTERNET",
-  "timeoutInMillis": 29000
-}
-```
-
-### 認証・認可
-
-#### Cognito User Pool
-
-```json
-{
-  "type": "COGNITO_USER_POOLS",
-  "providerARNs": [
-    "arn:aws:cognito-idp:region:account:userpool/us-east-1_123456789"
-  ],
-  "authType": "cognito_user_pools"
-}
-```
-
-#### Lambda Authorizer
-
-```python
-def lambda_handler(event, context):
-    token = event['authorizationToken']
-
-    # トークン検証ロジック
-    if validate_token(token):
-        return generate_policy('user', 'Allow', event['methodArn'])
-    else:
-        return generate_policy('user', 'Deny', event['methodArn'])
-
-def generate_policy(principal_id, effect, resource):
-    return {
-        'principalId': principal_id,
-        'policyDocument': {
-            'Version': '2012-10-17',
-            'Statement': [
-                {
-                    'Action': 'execute-api:Invoke',
-                    'Effect': effect,
-                    'Resource': resource
-                }
-            ]
-        }
-    }
-```
-
-### 公式リソース
-
-- [API Gateway サービス紹介](https://aws.amazon.com/jp/api-gateway/)
-- [API Gateway Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20190514_AWS-Blackbelt_APIGateway.pdf)
+### セキュリティグループ vs NACL
+
+セキュリティグループ
+
+- **レベル**: インスタンスレベル
+- **ステート**: ステートフル（戻りトラフィック自動許可）
+- **ルール**: 許可ルールのみ
+- **評価**: すべてのルールを評価
+- **用途**: きめ細かいアクセス制御
+
+Network ACL (NACL)
+
+- **レベル**: サブネットレベル
+- **ステート**: ステートレス（明示的な許可が必要）
+- **ルール**: 許可・拒否ルール
+- **評価**: ルール番号順に評価
+- **用途**: サブネット間の制御、追加の防御層
+
+設計指針
+
+- **多層防御**: 両方を組み合わせた設計
+- **最小権限**: 必要最小限のアクセス許可
+- **管理性**: セキュリティグループでの詳細制御
+- **緊急対応**: NACLでの迅速な遮断
+
+### AWS WAF
+
+基本概念
+
+- **Web Application Firewall**: アプリケーション層の保護
+- **統合**: CloudFront、ALB、API Gateway
+- **ルールベース**: カスタムルール、マネージドルール
+- **リアルタイム**: 即座の脅威対応
+
+主要機能
+
+- **SQLインジェクション**: データベース攻撃の防御
+- **XSS**: クロスサイトスクリプティング対策
+- **DDoS**: アプリケーション層DDoS攻撃の軽減
+- **Bot対策**: 悪意のあるボットの検知・ブロック
+
+ルール設計
+
+- **マネージドルール**: AWS、サードパーティ提供
+- **カスタムルール**: 独自の脅威パターン
+- **レート制限**: 過度なリクエストの制限
+- **地理的制限**: 特定地域からのアクセス制御
+
+### AWS Shield
+
+Shield Standard
+
+- **対象**: すべてのAWSリソース
+- **保護**: Layer 3/4 DDoS攻撃
+- **コスト**: 無料
+- **機能**: 自動的な攻撃検知・軽減
+
+Shield Advanced
+
+- **対象**: CloudFront、Route 53、ELB、EC2 EIP
+- **保護**: 高度なDDoS攻撃、アプリケーション層攻撃
+- **コスト**: 月額3,000ドル
+- **機能**: 24/7サポート、攻撃分析、コスト保護
+
+選択基準
+
+- **攻撃リスク**: 高リスクならAdvanced
+- **ビジネス影響**: ミッションクリティカルならAdvanced
+- **コスト**: ROIを考慮した選択
+- **サポート**: 専門サポートの必要性
 
 ---
 
 ## ネットワーク設計パターン
 
-### 3 層アーキテクチャ
+### 3層アーキテクチャ
 
-```
-Internet Gateway
-    ↓
-Public Subnet (Web Tier)
-- ALB
-- NAT Gateway
+Web層 (プレゼンテーション層)
 
-    ↓
-Private Subnet (App Tier)
-- EC2 Instances
-- Auto Scaling
+- **配置**: パブリックサブネット
+- **コンポーネント**: ALB、CloudFront、Web サーバー
+- **セキュリティ**: WAF、セキュリティグループ
+- **スケーリング**: Auto Scaling、複数AZ
 
-    ↓
-Private Subnet (DB Tier)
-- RDS Multi-AZ
-- ElastiCache
-```
+アプリケーション層
 
-### ハイブリッドクラウド
+- **配置**: プライベートサブネット
+- **コンポーネント**: アプリケーションサーバー、API
+- **セキュリティ**: セキュリティグループ、IAMロール
+- **スケーリング**: Auto Scaling、ロードバランシング
 
-```
-オンプレミス
-    ↓
-Direct Connect / VPN
-    ↓
-Transit Gateway
-    ↓
-Multiple VPCs
-- Production VPC
-- Development VPC
-- Shared Services VPC
-```
+データ層
 
-### マルチリージョン
+- **配置**: データベースサブネット
+- **コンポーネント**: RDS、DynamoDB、ElastiCache
+- **セキュリティ**: 暗号化、アクセス制御
+- **可用性**: Multi-AZ、リードレプリカ
 
-```
-Primary Region (us-east-1)
-├─ Production VPC
-├─ CloudFront Distribution
-└─ Route 53 (Primary)
+### ハブ・スポークモデル
 
-Secondary Region (us-west-2)
-├─ DR VPC
-├─ RDS Read Replica
-└─ Route 53 (Secondary)
-```
+ハブVPC
+
+- **役割**: 共有サービス、セキュリティ統制
+- **コンポーネント**: Transit Gateway、共有リソース
+- **接続**: オンプレミス、インターネット
+- **管理**: 集中的なネットワーク管理
+
+スポークVPC
+
+- **役割**: 個別のワークロード、アプリケーション
+- **分離**: ワークロード間の分離
+- **接続**: ハブ経由での通信
+- **スケーリング**: 独立したスケーリング
+
+利点
+
+- **管理簡素化**: 集中的なネットワーク管理
+- **セキュリティ**: 統一されたセキュリティポリシー
+- **コスト効率**: 共有リソースの活用
+- **スケーラビリティ**: 容易なスポーク追加
+
+### マルチリージョン設計
+
+アクティブ・パッシブ
+
+- **プライマリリージョン**: 通常時のトラフィック処理
+- **セカンダリリージョン**: 災害時のフェイルオーバー先
+- **データ同期**: 非同期レプリケーション
+- **切り替え**: Route 53 ヘルスチェック
+
+アクティブ・アクティブ
+
+- **両リージョン**: 同時にトラフィック処理
+- **負荷分散**: 地理的な負荷分散
+- **データ同期**: 双方向レプリケーション
+- **複雑性**: 高い設計・運用複雑性
+
+設計考慮事項
+
+- **レイテンシ**: ユーザーとの地理的距離
+- **データ主権**: 法的・規制要件
+- **災害復旧**: RTO/RPO要件
+- **コスト**: 複数リージョンの運用コスト
+
+### セキュリティ重視設計
+
+ゼロトラストネットワーク
+
+- **原則**: 信頼の検証、最小権限
+- **実装**: マイクロセグメンテーション
+- **認証**: 継続的な認証・認可
+- **監視**: 全トラフィックの可視化
+
+DMZ設計
+
+- **パブリックDMZ**: インターネット向けサービス
+- **プライベートDMZ**: 内部サービス間の通信
+- **管理DMZ**: 管理・監視サービス
+- **分離**: 各層の適切な分離
+
+監査・コンプライアンス
+
+- **ログ収集**: VPC Flow Logs、DNS Logs
+- **監視**: CloudWatch、GuardDuty
+- **分析**: 異常検知、脅威分析
+- **レポート**: コンプライアンス報告
 
 ---
 
-_次のセクション: [05. セキュリティ](./05-security.md)_
+## まとめ
+
+### 試験でのポイント
+
+ネットワーク設計の判断基準
+
+1. **可用性要件**: SLA、災害復旧、冗長性
+2. **性能要件**: レイテンシ、スループット、帯域幅
+3. **セキュリティ要件**: 分離、暗号化、アクセス制御
+4. **コスト要件**: 初期コスト、運用コスト、データ転送コスト
+5. **管理要件**: 運用負荷、複雑性、スケーラビリティ
+
+よくある設計パターン
+
+- **3層アーキテクチャ**: Web、App、DB層の分離
+- **ハブ・スポーク**: 集中管理と分散ワークロード
+- **マルチリージョン**: 災害復旧、グローバル展開
+- **ハイブリッド**: オンプレミスとクラウドの統合
+
+サービス選択の指針
+
+- **接続**: VPN vs Direct Connect、Peering vs Transit Gateway
+- **ロードバランサー**: ALB vs NLB vs GWLB
+- **セキュリティ**: 多層防御、適切なツール選択
+- **DNS**: Route 53 ルーティングポリシーの使い分け
+
+運用・最適化
+
+- **監視**: ネットワークパフォーマンス、セキュリティ
+- **コスト最適化**: データ転送、適切なサービス選択
+- **自動化**: 障害対応、スケーリング
+- **継続改善**: 定期的な見直し、最適化
+
+---
+
+## ライセンス
+
+このコンテンツは MIT License の下で公開されています。詳細は [LICENSE](./LICENSE) ファイルをご確認ください。

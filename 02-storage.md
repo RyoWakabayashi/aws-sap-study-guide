@@ -1,5 +1,10 @@
 # ストレージサービス
 
+<!-- 
+Copyright (c) 2025 AWS SAP Study Guide
+Licensed under the MIT License. See LICENSE file for details.
+-->
+
 ## 目次
 
 1. [S3 (Simple Storage Service)](#s3-simple-storage-service)
@@ -7,198 +12,119 @@
 3. [EFS (Elastic File System)](#efs-elastic-file-system)
 4. [FSx](#fsx)
 5. [Storage Gateway](#storage-gateway)
-6. [DataSync](#datasync)
-7. [サービス比較](#サービス比較)
+6. [ストレージ選択の指針](#ストレージ選択の指針)
 
 ---
 
 ## S3 (Simple Storage Service)
 
-### 概要
+### 基本概念と特徴
 
-オブジェクトストレージサービス。無制限の容量、高い耐久性を提供。
+S3の位置づけ
 
-### ストレージクラス詳細比較
+- AWSの基盤となるオブジェクトストレージサービス
+- 事実上無制限の容量、99.999999999%（11 9's）の耐久性
+- インターネット経由でのアクセス、RESTful API
 
-| クラス                   | 可用性        | 最小保存期間 | 取得料金 | 用途                 | コスト/GB |
-| ------------------------ | ------------- | ------------ | -------- | -------------------- | --------- |
-| **Standard**             | 99.999999999% | なし         | なし     | 頻繁アクセス         | 高        |
-| **Standard-IA**          | 99.9%         | 30 日        | あり     | 低頻度アクセス       | 中        |
-| **One Zone-IA**          | 99.5%         | 30 日        | あり     | 低頻度、単一 AZ      | 低        |
-| **Glacier Instant**      | 99.999999999% | 90 日        | あり     | アーカイブ、即座取得 | 低        |
-| **Glacier Flexible**     | 99.999999999% | 90 日        | あり     | アーカイブ           | 最低      |
-| **Glacier Deep Archive** | 99.999999999% | 180 日       | あり     | 長期アーカイブ       | 最低      |
-| **Intelligent-Tiering**  | 99.999999999% | なし         | 監視料金 | 自動最適化           | 変動      |
+主要な特徴
 
-### ライフサイクル管理
+- **高い耐久性**: 複数のAZに自動的にデータを複製
+- **スケーラビリティ**: 容量制限なし、自動スケーリング
+- **豊富な機能**: バージョニング、暗号化、アクセス制御
+- **コスト効率**: 使用量に応じた従量課金
 
-#### 基本設定例
+### ストレージクラスの選択指針
 
-```json
-{
-  "Rules": [
-    {
-      "ID": "LogsLifecycle",
-      "Status": "Enabled",
-      "Filter": {
-        "Prefix": "logs/"
-      },
-      "Transitions": [
-        {
-          "Days": 30,
-          "StorageClass": "STANDARD_IA"
-        },
-        {
-          "Days": 90,
-          "StorageClass": "GLACIER"
-        },
-        {
-          "Days": 365,
-          "StorageClass": "DEEP_ARCHIVE"
-        }
-      ],
-      "Expiration": {
-        "Days": 2555
-      }
-    }
-  ]
-}
-```
+Standard（標準）
 
-#### Intelligent-Tiering 設定
+- **使用場面**: 頻繁にアクセスされるデータ
+- **特徴**: 最高のパフォーマンス、即座のアクセス
+- **コスト**: 最も高い保存料金、取得料金なし
+- **適用例**: Webサイトコンテンツ、アプリケーションデータ
 
-```json
-{
-  "Rules": [
-    {
-      "ID": "IntelligentTiering",
-      "Status": "Enabled",
-      "Transitions": [
-        {
-          "Days": 0,
-          "StorageClass": "INTELLIGENT_TIERING"
-        }
-      ]
-    }
-  ]
-}
-```
+Standard-IA（低頻度アクセス）
 
-### レプリケーション
+- **使用場面**: 月に1回程度アクセスされるデータ
+- **特徴**: 保存料金が安い、取得時に料金発生
+- **最小保存期間**: 30日
+- **適用例**: バックアップ、災害復旧データ
 
-#### Cross-Region Replication (CRR)
+One Zone-IA
 
-```json
-{
-  "Role": "arn:aws:iam::account:role/replication-role",
-  "Rules": [
-    {
-      "ID": "ReplicateToWest",
-      "Status": "Enabled",
-      "Priority": 1,
-      "Filter": {
-        "Prefix": "important/"
-      },
-      "Destination": {
-        "Bucket": "arn:aws:s3:::backup-bucket-west",
-        "StorageClass": "STANDARD_IA",
-        "ReplicationTime": {
-          "Status": "Enabled",
-          "Time": {
-            "Minutes": 15
-          }
-        },
-        "Metrics": {
-          "Status": "Enabled",
-          "EventThreshold": {
-            "Minutes": 15
-          }
-        }
-      }
-    }
-  ]
-}
-```
+- **使用場面**: 重要度の低い低頻度アクセスデータ
+- **特徴**: 単一AZ保存、Standard-IAより20%安い
+- **リスク**: AZ障害時にデータ損失の可能性
+- **適用例**: 再作成可能なデータ、セカンダリバックアップ
 
-### セキュリティ
+Glacier Instant Retrieval
 
-#### バケットポリシー例
+- **使用場面**: 四半期に1回程度アクセス、即座の取得が必要
+- **特徴**: アーカイブ料金、ミリ秒での取得
+- **最小保存期間**: 90日
+- **適用例**: 医療画像、メディアアセット
 
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "DenyInsecureConnections",
-      "Effect": "Deny",
-      "Principal": "*",
-      "Action": "s3:*",
-      "Resource": ["arn:aws:s3:::my-bucket", "arn:aws:s3:::my-bucket/*"],
-      "Condition": {
-        "Bool": {
-          "aws:SecureTransport": "false"
-        }
-      }
-    }
-  ]
-}
-```
+Glacier Flexible Retrieval
 
-#### 暗号化設定
+- **使用場面**: 年に1〜2回のアクセス、取得時間許容可能
+- **特徴**: 非常に安い保存料金、取得に数分〜数時間
+- **取得オプション**: 迅速（1-5分）、標準（3-5時間）、大容量（5-12時間）
+- **適用例**: 長期バックアップ、コンプライアンス保管
 
-```json
-{
-  "Rules": [
-    {
-      "ApplyServerSideEncryptionByDefault": {
-        "SSEAlgorithm": "aws:kms",
-        "KMSMasterKeyID": "arn:aws:kms:region:account:key/key-id"
-      },
-      "BucketKeyEnabled": true
-    }
-  ]
-}
-```
+Glacier Deep Archive
 
-### パフォーマンス最適化
+- **使用場面**: 7年以上の長期保管、稀なアクセス
+- **特徴**: 最も安い保存料金、取得に12時間以上
+- **最小保存期間**: 180日
+- **適用例**: 法的要件による長期保管、デジタル保存
 
-#### マルチパートアップロード
+Intelligent-Tiering
 
-```python
-import boto3
-from boto3.s3.transfer import TransferConfig
+- **使用場面**: アクセスパターンが不明または変動
+- **特徴**: アクセス頻度に応じて自動的にクラス移動
+- **監視料金**: オブジェクトあたりの月額料金
+- **適用例**: データレイク、分析データ
 
-# 設定
-config = TransferConfig(
-    multipart_threshold=1024 * 25,  # 25MB
-    max_concurrency=10,
-    multipart_chunksize=1024 * 25,
-    use_threads=True
-)
+### S3の高度な機能
 
-s3_client = boto3.client('s3')
-s3_client.upload_file(
-    'large-file.zip',
-    'my-bucket',
-    'large-file.zip',
-    Config=config
-)
-```
+バージョニング
 
-#### Transfer Acceleration
+- **目的**: データの誤削除・上書き保護
+- **動作**: 同一キーで複数バージョンを保持
+- **考慮事項**: ストレージ使用量の増加、ライフサイクル管理の必要性
 
-```
-通常のエンドポイント:
-https://my-bucket.s3.amazonaws.com
+Cross-Region Replication (CRR)
 
-Transfer Acceleration:
-https://my-bucket.s3-accelerate.amazonaws.com
+- **目的**: 災害復旧、コンプライアンス、レイテンシ削減
+- **要件**: バージョニング有効、適切なIAMロール
+- **選択的レプリケーション**: プレフィックス、タグベース
 
-利点:
-- CloudFrontエッジロケーション活用
-- 長距離転送の高速化
-- 追加料金が発生
-```
+Transfer Acceleration
+
+- **目的**: 世界中からの高速アップロード
+- **仕組み**: CloudFrontエッジロケーション経由
+- **適用場面**: 大容量ファイル、遠隔地からのアップロード
+
+イベント通知
+
+- **連携先**: Lambda、SQS、SNS
+- **トリガー**: オブジェクト作成、削除、復元
+- **用途**: 自動処理、ワークフロー開始
+
+### セキュリティとアクセス制御
+
+アクセス制御の階層
+
+1. **IAMポリシー**: ユーザー・ロールベース
+2. **バケットポリシー**: リソースベース
+3. **ACL**: オブジェクトレベル（レガシー）
+4. **Access Points**: 大規模データセット向け
+
+暗号化オプション
+
+- **SSE-S3**: S3管理キー（デフォルト）
+- **SSE-KMS**: KMS管理キー、アクセスログ
+- **SSE-C**: 顧客管理キー
+- **クライアント側暗号化**: アプリケーションレベル
 
 ### 公式リソース
 
@@ -210,155 +136,83 @@ https://my-bucket.s3-accelerate.amazonaws.com
 
 ## EBS (Elastic Block Store)
 
-### 概要
+### 基本概念と特徴
 
-EC2 インスタンス用のブロックストレージ。高性能、高可用性を提供。
+EBSの位置づけ
 
-### ボリュームタイプ詳細
+- EC2インスタンス用の永続ブロックストレージ
+- 高い可用性と耐久性（単一AZ内で複製）
+- スナップショット機能による柔軟なバックアップ
 
-#### 汎用 SSD (gp3/gp2)
+主要な特徴
 
-```
-gp3 (推奨):
-- 基準性能: 3,000 IOPS、125 MB/s
-- 最大性能: 16,000 IOPS、1,000 MB/s
-- IOPS/スループット独立調整
-- コスト効率が良い
+- **永続性**: インスタンス停止後もデータ保持
+- **高性能**: 一貫したIOPS性能
+- **スケーラビリティ**: 動的なサイズ・性能変更
+- **スナップショット**: S3への増分バックアップ
 
-gp2 (従来):
-- 性能: 3 IOPS/GB (最小100 IOPS)
-- バーストクレジット制
-- 小容量で性能不足の可能性
-```
+### ボリュームタイプの選択指針
 
-#### プロビジョンド IOPS SSD (io2/io1)
+gp3（汎用SSD - 最新世代）
 
-```
-io2 (推奨):
-- 最大: 64,000 IOPS、1,000 MB/s
-- 耐久性: 99.999%
-- Multi-Attach対応
-- より高いIOPS/GB比
+- **使用場面**: 大部分のワークロード
+- **特徴**: ベースライン性能、独立したIOPS・スループット設定
+- **性能**: 3,000 IOPS、125 MB/s（ベースライン）
+- **コスト効率**: gp2より20%安い
+- **適用例**: 一般的なアプリケーション、開発環境
 
-io1 (従来):
-- 最大: 64,000 IOPS、1,000 MB/s
-- 耐久性: 99.999%
-- Multi-Attach対応
-```
+gp2（汎用SSD - 前世代）
 
-#### スループット最適化 HDD (st1)
+- **使用場面**: 既存システム、シンプルな要件
+- **特徴**: サイズに比例したIOPS（3 IOPS/GB）
+- **バーストクレジット**: 小容量ボリュームの一時的高性能
+- **移行推奨**: 新規作成時はgp3を推奨
 
-```
-特徴:
-- 最大: 500 IOPS、500 MB/s
-- 大容量データ処理向け
-- 順次アクセス最適化
+io2/io2 Block Express（プロビジョンドIOPS SSD）
 
-用途:
-- ビッグデータ
-- データウェアハウス
-- ログ処理
-```
+- **使用場面**: 高IOPS要件、ミッションクリティカル
+- **特徴**: 指定したIOPS性能を保証
+- **耐久性**: 99.999%（年間10分未満のダウンタイム）
+- **適用例**: 大規模データベース、高頻度トランザクション
 
-#### コールド HDD (sc1)
+io1（プロビジョンドIOPS SSD - 前世代）
 
-```
-特徴:
-- 最大: 250 IOPS、250 MB/s
-- 最低コスト
-- アクセス頻度が低いデータ
+- **使用場面**: レガシーシステム
+- **移行推奨**: 新規作成時はio2を推奨
 
-用途:
-- アーカイブ
-- バックアップ
-- 災害復旧
-```
+st1（スループット最適化HDD）
 
-### スナップショット
+- **使用場面**: 大容量、順次アクセス中心
+- **特徴**: 高いスループット、低いIOPS
+- **コスト**: SSDより大幅に安い
+- **適用例**: ビッグデータ、データウェアハウス、ログ処理
 
-#### 自動化設定
+sc1（コールドHDD）
 
-```json
-{
-  "PolicyDetails": {
-    "PolicyType": "EBS_SNAPSHOT_MANAGEMENT",
-    "ResourceTypes": ["VOLUME"],
-    "TargetTags": [
-      {
-        "Key": "Environment",
-        "Value": "Production"
-      }
-    ],
-    "Schedules": [
-      {
-        "Name": "DailySnapshots",
-        "CreateRule": {
-          "Interval": 24,
-          "IntervalUnit": "HOURS",
-          "Times": ["03:00"]
-        },
-        "RetainRule": {
-          "Count": 7
-        },
-        "CopyTags": true
-      }
-    ]
-  }
-}
-```
+- **使用場面**: 最も低頻度のアクセス
+- **特徴**: 最も安いEBSオプション
+- **性能**: 最低限のスループット
+- **適用例**: アーカイブ、バックアップ
 
-#### 高速スナップショット復元 (FSR)
+### EBSの設計考慮事項
 
-```
-特徴:
-- スナップショットから即座にフル性能
-- 追加料金が発生
-- AZ単位で有効化
+パフォーマンス最適化
 
-用途:
-- 本番環境の迅速復旧
-- 開発環境の高速構築
-- 災害復旧
-```
+- **EBS最適化インスタンス**: 専用帯域幅の確保
+- **マルチアタッチ**: 複数インスタンスからの同時アクセス（io1/io2のみ）
+- **RAID構成**: 複数ボリュームによる性能・冗長性向上
 
-### Multi-Attach
+可用性とバックアップ
 
-#### 設定例
+- **スナップショット戦略**: 定期的な自動バックアップ
+- **クロスリージョンコピー**: 災害復旧対応
+- **高速スナップショット復元**: 大容量ボリュームの高速復元
 
-```bash
-# ボリューム作成
-aws ec2 create-volume \
-    --size 100 \
-    --volume-type io2 \
-    --iops 1000 \
-    --multi-attach-enabled \
-    --availability-zone us-east-1a
+暗号化
 
-# 複数インスタンスにアタッチ
-aws ec2 attach-volume \
-    --volume-id vol-1234567890abcdef0 \
-    --instance-id i-1234567890abcdef0 \
-    --device /dev/sdf
-
-aws ec2 attach-volume \
-    --volume-id vol-1234567890abcdef0 \
-    --instance-id i-0987654321fedcba0 \
-    --device /dev/sdf
-```
-
-#### 注意点
-
-```
-制限:
-- io1/io2のみ対応
-- 同一AZ内のみ
-- 最大16インスタンス
-
-要件:
-- クラスター対応ファイルシステム
-- アプリケーションレベルの調整
-- 適切な同期メカニズム
-```
+- **保存時暗号化**: KMS統合、透過的な暗号化
+- **転送時暗号化**: インスタンス-EBS間の暗号化
+- **スナップショット暗号化**: 自動的な暗号化継承
 
 ### 公式リソース
 
@@ -369,141 +223,79 @@ aws ec2 attach-volume \
 
 ## EFS (Elastic File System)
 
-### 概要
+### 基本概念と特徴
 
-フルマネージド NFS ファイルシステム。複数の EC2 インスタンスから同時アクセス可能。
+EFSの位置づけ
+
+- フルマネージドなNFSファイルシステム
+- 複数のEC2インスタンスから同時アクセス可能
+- POSIX準拠、既存アプリケーションとの互換性
+
+主要な特徴
+
+- **共有アクセス**: 数千のインスタンスから同時接続
+- **自動スケーリング**: ペタバイト規模まで自動拡張
+- **高可用性**: 複数AZでの自動レプリケーション
+- **POSIX準拠**: 標準的なファイルシステムセマンティクス
 
 ### パフォーマンスモード
 
-#### 汎用モード
+汎用モード
 
-```
-特徴:
-- 最大7,000ファイル操作/秒
-- 低レイテンシ
-- 小〜中規模ワークロード向け
+- **特徴**: 最も低いレイテンシ
+- **制限**: 7,000ファイル操作/秒まで
+- **適用場面**: 一般的なワークロード、レイテンシ重視
 
-用途:
-- Webサーバー
-- CMS
-- 一般的なファイル共有
-```
+最大I/Oモード
 
-#### 最大 I/O モード
-
-```
-特徴:
-- 7,000以上のファイル操作/秒
-- 高レイテンシ
-- 大規模並列ワークロード向け
-
-用途:
-- ビッグデータ分析
-- メディア処理
-- 科学計算
-```
+- **特徴**: より高いスループットとIOPS
+- **トレードオフ**: わずかに高いレイテンシ
+- **適用場面**: 高並列性、大規模ワークロード
 
 ### スループットモード
 
-#### プロビジョンドスループット
+バーストスループット
 
-```
-設定例:
-- ファイルシステムサイズ: 100GB
-- プロビジョンドスループット: 500 MB/s
-- 料金: ストレージ + スループット
+- **仕組み**: ファイルシステムサイズに比例
+- **バーストクレジット**: 一時的な高性能
+- **適用場面**: 変動するワークロード
 
-計算:
-ベースライン = 100GB × 0.05 MB/s/GB = 5 MB/s
-追加必要: 500 - 5 = 495 MB/s
-```
+プロビジョンドスループット
 
-#### バーストスループット
+- **仕組み**: 指定したスループットを保証
+- **コスト**: 追加料金が発生
+- **適用場面**: 一貫した高性能が必要
 
-```
-仕組み:
-- ベースライン: 50 MB/s/TB
-- バーストクレジット制
-- 最大100 MB/s
+### ストレージクラス
 
-適用:
-- 断続的な高スループット
-- 予測可能なワークロード
-```
+Standard
 
-### 暗号化
+- **特徴**: 頻繁にアクセスされるデータ
+- **可用性**: 複数AZでの冗長化
+- **コスト**: 高い保存料金
 
-#### 保存時暗号化
+Infrequent Access (IA)
 
-```json
-{
-  "FileSystemPolicy": {
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Deny",
-        "Principal": "*",
-        "Action": "*",
-        "Resource": "arn:aws:elasticfilesystem:*:*:file-system/*",
-        "Condition": {
-          "Bool": {
-            "aws:SecureTransport": "false"
-          }
-        }
-      }
-    ]
-  }
-}
-```
+- **特徴**: 低頻度アクセスデータ
+- **コスト削減**: 最大92%の削減
+- **自動移行**: ライフサイクル管理
 
-### マウント設定
+### 使用場面と設計パターン
 
-#### EC2 からのマウント
+コンテンツ管理
 
-```bash
-# EFS Utilsインストール
-sudo yum install -y amazon-efs-utils
+- **Webサーバー**: 共有コンテンツの配信
+- **メディア処理**: 複数インスタンスでの並列処理
 
-# マウント
-sudo mkdir /mnt/efs
-sudo mount -t efs fs-12345678:/ /mnt/efs
+アプリケーション共有
 
-# 永続化 (/etc/fstab)
-fs-12345678.efs.region.amazonaws.com:/ /mnt/efs efs defaults,_netdev 0 0
-```
+- **設定ファイル**: 複数インスタンス間での設定共有
+- **ログ集約**: 中央集権的なログ管理
 
-#### ECS/Fargate での使用
+データ分析
 
-```json
-{
-  "family": "efs-task",
-  "volumes": [
-    {
-      "name": "efs-volume",
-      "efsVolumeConfiguration": {
-        "fileSystemId": "fs-12345678",
-        "rootDirectory": "/app-data",
-        "transitEncryption": "ENABLED",
-        "authorizationConfig": {
-          "accessPointId": "fsap-12345678",
-          "iam": "ENABLED"
-        }
-      }
-    }
-  ],
-  "containerDefinitions": [
-    {
-      "name": "app",
-      "mountPoints": [
-        {
-          "sourceVolume": "efs-volume",
-          "containerPath": "/data"
-        }
-      ]
-    }
-  ]
-}
-```
+- **ビッグデータ**: 複数の分析ツールからのアクセス
+- **機械学習**: 訓練データの共有
 
 ### 公式リソース
 
@@ -514,206 +306,129 @@ fs-12345678.efs.region.amazonaws.com:/ /mnt/efs efs defaults,_netdev 0 0
 
 ## FSx
 
-### 概要
+### 基本概念
 
-高性能ファイルシステムのマネージドサービス。複数のファイルシステムタイプを提供。
+FSxの位置づけ
+
+- 高性能ファイルシステムのマネージドサービス
+- 特定のワークロードに最適化された複数のオプション
+- オンプレミスファイルシステムからの移行に適している
 
 ### FSx for Windows File Server
 
-#### 特徴
+特徴
 
-```
-プロトコル: SMB
-認証: Active Directory統合
-パフォーマンス: 最大2GB/s、数百万IOPS
-容量: 32GB - 65TB
+- **Windows環境**: Active Directory統合
+- **SMBプロトコル**: Windows標準のファイル共有
+- **高性能**: SSDベース、高いスループット
+- **バックアップ**: 自動バックアップ、ポイントインタイム復旧
 
-機能:
-- DFS (Distributed File System)
-- VSS (Volume Shadow Copy)
-- データ重複排除
-- 暗号化
-```
+使用場面
 
-#### 設定例
-
-```json
-{
-  "FileSystemType": "WINDOWS",
-  "StorageCapacity": 1024,
-  "SubnetIds": ["subnet-12345678"],
-  "SecurityGroupIds": ["sg-12345678"],
-  "WindowsConfiguration": {
-    "ActiveDirectoryId": "d-12345678",
-    "ThroughputCapacity": 512,
-    "WeeklyMaintenanceStartTime": "1:05:00",
-    "DailyAutomaticBackupStartTime": "05:00",
-    "AutomaticBackupRetentionDays": 7,
-    "DeploymentType": "MULTI_AZ_1"
-  }
-}
-```
+- **Windowsワークロード**: .NETアプリケーション
+- **ファイルサーバー移行**: オンプレミスからの移行
+- **共有ストレージ**: Windows環境での共有
 
 ### FSx for Lustre
 
-#### 特徴
+特徴
 
-```
-用途: HPC、機械学習
-パフォーマンス: 最大数百GB/s
-S3統合: 透明なデータアクセス
+- **高性能コンピューティング**: HPC、機械学習向け
+- **S3統合**: S3との透過的な統合
+- **並列処理**: 数百GB/sのスループット
+- **一時的利用**: 処理期間中のみの利用も可能
 
-デプロイメントタイプ:
-- Scratch: 一時的、高性能
-- Persistent: 永続的、レプリケーション
-```
+使用場面
 
-#### S3 統合設定
-
-```json
-{
-  "FileSystemType": "LUSTRE",
-  "StorageCapacity": 1200,
-  "SubnetIds": ["subnet-12345678"],
-  "LustreConfiguration": {
-    "ImportPath": "s3://my-bucket/data/",
-    "ExportPath": "s3://my-bucket/results/",
-    "ImportedFileChunkSize": 1024,
-    "DeploymentType": "PERSISTENT_1",
-    "PerUnitStorageThroughput": 200
-  }
-}
-```
+- **科学計算**: シミュレーション、解析
+- **機械学習**: 大規模データセットの処理
+- **メディア処理**: 動画レンダリング、画像処理
 
 ### FSx for NetApp ONTAP
 
-#### 特徴
+特徴
 
-```
-プロトコル: NFS、SMB、iSCSI
-機能: スナップショット、クローン、重複排除
-統合: SnapMirror、SnapCenter
+- **NetApp機能**: 重複排除、圧縮、スナップショット
+- **マルチプロトコル**: NFS、SMB、iSCSI
+- **ハイブリッド**: オンプレミスとの統合
+- **データ管理**: 高度なデータ管理機能
 
-利点:
-- エンタープライズ機能
-- 既存ONTAP環境との統合
-- 高い効率性
-```
+使用場面
+
+- **エンタープライズ**: 既存NetApp環境の拡張
+- **データベース**: Oracle、SQL Serverなど
+- **仮想化**: VMware環境のストレージ
 
 ### FSx for OpenZFS
 
-#### 特徴
+特徴
 
-```
-プロトコル: NFS
-機能: スナップショット、圧縮、重複排除
-パフォーマンス: 最大4GB/s、160万IOPS
+- **ZFSファイルシステム**: 高い信頼性とパフォーマンス
+- **スナップショット**: 瞬時のスナップショット作成
+- **圧縮**: 透過的なデータ圧縮
+- **NFS**: Linux/Unix環境での利用
 
-利点:
-- 高いデータ効率
-- ポイントインタイム復旧
-- 低レイテンシ
-```
+使用場面
 
-### 公式リソース
-
-- [FSx サービス紹介](https://aws.amazon.com/jp/fsx/)
-- [Amazon FSx Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_FSx.pdf)
+- **Linux/Unix**: オープンソース環境
+- **データベース**: 高性能が要求されるDB
+- **開発環境**: スナップショット機能の活用
 
 ---
 
 ## Storage Gateway
 
-### 概要
+### 基本概念
 
-オンプレミスと AWS クラウドストレージを接続するハイブリッドサービス。
+Storage Gatewayの位置づけ
 
-### ゲートウェイタイプ
+- オンプレミスとAWSクラウドを接続するハイブリッドストレージ
+- 既存のオンプレミス環境を段階的にクラウド化
+- 3つの異なるゲートウェイタイプを提供
 
-#### File Gateway
+### File Gateway
 
-```
-プロトコル: NFS、SMB
-用途: ファイル共有
-ストレージ: S3
+特徴
 
-特徴:
-- ローカルキャッシュ
-- S3への透明なアクセス
-- メタデータ保持
-```
+- **NFS/SMBインターフェース**: 既存アプリケーションとの互換性
+- **S3統合**: ファイルをS3オブジェクトとして保存
+- **ローカルキャッシュ**: 頻繁にアクセスされるデータをローカル保持
 
-#### Volume Gateway
+使用場面
 
-##### Stored Volumes
+- **ファイル共有**: オンプレミスからクラウドへの移行
+- **バックアップ**: ファイルサーバーのクラウドバックアップ
+- **アーカイブ**: 古いファイルのクラウド保管
 
-```
-容量: 1GB - 16TB (ボリューム単位)
-最大: 32ボリューム/ゲートウェイ
-プライマリデータ: オンプレミス
-バックアップ: S3 (スナップショット)
+### Volume Gateway
 
-用途:
-- 既存ストレージの拡張
-- 低レイテンシアクセス
-- 災害復旧
-```
+Stored Volumes
 
-##### Cached Volumes
+- **プライマリデータ**: オンプレミスに保存
+- **非同期バックアップ**: S3への増分バックアップ
+- **容量**: 1GB〜16TBのボリューム
+- **使用場面**: 低レイテンシアクセスが必要、段階的移行
 
-```
-容量: 1GB - 32TB (ボリューム単位)
-最大: 32ボリューム/ゲートウェイ
-プライマリデータ: S3
-キャッシュ: オンプレミス
+Cached Volumes
 
-用途:
-- 頻繁アクセスデータのキャッシュ
-- ストレージコスト削減
-- スケーラビリティ
-```
+- **プライマリデータ**: S3に保存
+- **ローカルキャッシュ**: 頻繁にアクセスされるデータ
+- **容量**: 1GB〜32TBのボリューム
+- **使用場面**: ストレージ容量の拡張、コスト削減
 
-#### Tape Gateway (VTL)
+### Tape Gateway (VTL)
 
-```
-プロトコル: iSCSI
-エミュレート: 物理テープライブラリ
-ストレージ: S3、Glacier
+特徴
 
-特徴:
-- 既存バックアップソフト対応
-- 仮想テープ (100GB - 5TB)
-- 自動アーカイブ
-```
+- **仮想テープライブラリ**: 既存のバックアップソフトウェアと互換
+- **S3/Glacier統合**: 仮想テープをクラウドに保存
+- **コスト削減**: 物理テープインフラの削減
 
-### デプロイメント
+使用場面
 
-#### VM 形式
-
-```
-サポート:
-- VMware vSphere
-- Microsoft Hyper-V
-- Linux KVM
-
-要件:
-- 4vCPU、16GB RAM (最小)
-- ローカルディスク (キャッシュ用)
-- ネットワーク帯域
-```
-
-#### ハードウェアアプライアンス
-
-```
-提供: Dell EMC
-モデル: PowerEdge R640
-用途: 高性能要件
-
-利点:
-- 事前設定済み
-- サポート統合
-- 予測可能な性能
-```
+- **テープバックアップ移行**: 既存のテープ環境からの移行
+- **長期保管**: コンプライアンス要件への対応
+- **コスト最適化**: テープ管理コストの削減
 
 ### 公式リソース
 
@@ -722,153 +437,111 @@ S3統合: 透明なデータアクセス
 
 ---
 
-## DataSync
+## ストレージ選択の指針
 
-### 概要
+### アクセスパターンによる選択
 
-オンプレミスと AWS 間、AWS 内でのデータ転送サービス。
+頻繁なアクセス
 
-### 転送パターン
+- **S3 Standard**: Webアプリケーション、CDN
+- **EBS gp3**: データベース、ファイルシステム
+- **EFS Standard**: 共有ファイルシステム
 
-#### オンプレミス → AWS
+低頻度アクセス
 
-```
-ソース:
-- NFS
-- SMB
-- HDFS
-- オブジェクトストレージ
+- **S3 Standard-IA**: バックアップ、災害復旧
+- **EFS IA**: 共有ファイルの長期保管
+- **Glacier**: アーカイブ、コンプライアンス
 
-デスティネーション:
-- S3
-- EFS
-- FSx
-```
+アーカイブ
 
-#### AWS → AWS
+- **Glacier Deep Archive**: 長期保管、法的要件
+- **S3 Intelligent-Tiering**: 不明なアクセスパターン
 
-```
-パターン:
-- S3 → EFS
-- EFS → S3
-- S3 → FSx
-- FSx → S3
+### パフォーマンス要件による選択
 
-用途:
-- データ移行
-- バックアップ
-- アーカイブ
-```
+高IOPS要件
 
-### エージェント設定
+- **EBS io2**: データベース、高頻度トランザクション
+- **FSx for Lustre**: HPC、機械学習
+- **EFS 最大I/Oモード**: 高並列ワークロード
 
-#### デプロイメント
+高スループット要件
 
-```bash
-# VMware OVA
-# EC2 AMI
-# Hyper-V VHD
+- **EBS st1**: ビッグデータ、ストリーミング
+- **FSx for Lustre**: 大容量ファイル処理
+- **S3 Transfer Acceleration**: 大容量アップロード
 
-# エージェント作成
-aws datasync create-agent \
-    --agent-name "MyAgent" \
-    --activation-key "ABCDE-12345-FGHIJ-67890"
-```
+低レイテンシ要件
 
-#### ネットワーク要件
+- **EBS gp3/io2**: リアルタイム処理
+- **EFS 汎用モード**: 対話的ワークロード
+- **インスタンスストア**: 一時的な高性能
 
-```
-帯域幅: 最小100Mbps推奨
-ポート: 80, 443 (HTTPS)
-NTP: 時刻同期必須
+### 可用性要件による選択
 
-最適化:
-- 専用線使用
-- 帯域幅制限設定
-- 並列転送調整
-```
+高可用性
 
-### タスク設定
+- **S3**: 複数AZ自動レプリケーション
+- **EFS**: 複数AZ冗長化
+- **FSx**: 自動フェイルオーバー
 
-#### 基本設定
+単一AZ許容
 
-```json
-{
-  "SourceLocationArn": "arn:aws:datasync:region:account:location/loc-source",
-  "DestinationLocationArn": "arn:aws:datasync:region:account:location/loc-dest",
-  "Name": "MyTransferTask",
-  "Options": {
-    "VerifyMode": "POINT_IN_TIME_CONSISTENT",
-    "OverwriteMode": "ALWAYS",
-    "Atime": "BEST_EFFORT",
-    "Mtime": "PRESERVE",
-    "Uid": "INT_VALUE",
-    "Gid": "INT_VALUE",
-    "PreserveDeletedFiles": "PRESERVE",
-    "PreserveDevices": "NONE",
-    "PosixPermissions": "PRESERVE",
-    "BytesPerSecond": 104857600
-  }
-}
-```
+- **EBS**: 単一AZ内での冗長化
+- **S3 One Zone-IA**: コスト重視
+- **インスタンスストア**: 一時的利用
 
-### 公式リソース
+### コスト最適化の観点
 
-- [DataSync サービス紹介](https://aws.amazon.com/jp/datasync/)
-- [AWS DataSync Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20200826_BlackBelt_DataSync.pdf)
+ストレージコスト
+
+- **階層化**: アクセス頻度に応じたクラス選択
+- **ライフサイクル管理**: 自動的なクラス移行
+- **圧縮・重複排除**: FSx ONTAP、OpenZFS
+
+データ転送コスト
+
+- **CloudFront**: 配信コストの削減
+- **VPC Endpoint**: AWS内部通信の利用
+- **Direct Connect**: 大容量転送の最適化
+
+運用コスト
+
+- **マネージドサービス**: 運用負荷の削減
+- **自動化**: ライフサイクル、バックアップの自動化
+- **監視**: 使用量の可視化と最適化
 
 ---
 
-## サービス比較
+## まとめ
 
-### ストレージタイプ別比較
+### 試験でのポイント
 
-| 要件                       | 推奨サービス    | 理由                           |
-| -------------------------- | --------------- | ------------------------------ |
-| **オブジェクトストレージ** | S3              | 無制限容量、高耐久性           |
-| **ブロックストレージ**     | EBS             | 高性能、EC2 統合               |
-| **ファイル共有**           | EFS             | NFS プロトコル、マルチアクセス |
-| **Windows 環境**           | FSx for Windows | SMB、AD 統合                   |
-| **HPC**                    | FSx for Lustre  | 超高性能、S3 統合              |
-| **ハイブリッド**           | Storage Gateway | オンプレミス統合               |
+ストレージ選択の判断基準
 
-### パフォーマンス比較
+1. **アクセスパターン**: 頻度、予測可能性
+2. **パフォーマンス要件**: IOPS、スループット、レイテンシ
+3. **可用性要件**: SLA、災害復旧
+4. **コスト要件**: 保存料金、転送料金、運用コスト
+5. **統合要件**: 既存システム、AWSサービス連携
 
-| サービス        | 最大スループット | 最大 IOPS | レイテンシ |
-| --------------- | ---------------- | --------- | ---------- |
-| **EBS gp3**     | 1,000 MB/s       | 16,000    | 低         |
-| **EBS io2**     | 1,000 MB/s       | 64,000    | 最低       |
-| **EFS**         | 10+ GB/s         | 500,000+  | 中         |
-| **FSx Lustre**  | 数百 GB/s        | 数百万    | 低         |
-| **FSx Windows** | 2 GB/s           | 数百万    | 低         |
+よくある設計パターン
 
-### コスト比較 (月額概算)
+- **階層化ストレージ**: アクセス頻度に応じた最適化
+- **ハイブリッド**: オンプレミスとクラウドの組み合わせ
+- **バックアップ戦略**: 複数の保存先、自動化
+- **災害復旧**: クロスリージョン、RTO/RPO要件
 
-#### 1TB データの場合
+コスト最適化戦略
 
-```
-S3 Standard: $23
-S3 Standard-IA: $12.5
-S3 Glacier: $4
-EBS gp3: $80
-EFS Standard: $300
-FSx Windows: $130-390
-```
-
-### 選択フローチャート
-
-```
-データアクセスパターンは？
-├─ 単一インスタンス → ブロックストレージ必要？
-│   ├─ Yes → EBS
-│   └─ No → S3
-├─ 複数インスタンス → プロトコルは？
-│   ├─ NFS → EFS
-│   ├─ SMB → FSx for Windows
-│   └─ 高性能 → FSx for Lustre
-└─ ハイブリッド → Storage Gateway
-```
+- **ライフサイクル管理**: 自動的なクラス移行
+- **適切なサイジング**: 過剰容量の回避
+- **データ転送最適化**: 効率的な転送方法
+- **監視と最適化**: 継続的な使用量分析
 
 ---
 
-_次のセクション: [03. データベースサービス](./03-database.md)_
+## ライセンス
+
+このコンテンツは MIT License の下で公開されています。詳細は [LICENSE](./LICENSE) ファイルをご確認ください。

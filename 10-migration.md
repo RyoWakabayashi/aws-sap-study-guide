@@ -1,9 +1,14 @@
 # 移行戦略
 
+<!-- 
+Copyright (c) 2025 AWS SAP Study Guide
+Licensed under the MIT License. See LICENSE file for details.
+-->
+
 ## 目次
 
 1. [移行の基本概念](#移行の基本概念)
-2. [6 つの R 戦略](#6-つの-r-戦略)
+2. [6つのR戦略](#6つのr戦略)
 3. [アプリケーション移行](#アプリケーション移行)
 4. [データベース移行](#データベース移行)
 5. [データ移行](#データ移行)
@@ -13,1009 +18,382 @@
 
 ## 移行の基本概念
 
-### 移行の動機
+### 移行の動機と目標
 
-#### ビジネス要因
+ビジネス要因
 
-```
-コスト削減:
-- CapEx から OpEx への転換
-- インフラ運用コスト削減
-- ライセンス費用最適化
+- **コスト削減**: CapExからOpExへの転換、運用コスト削減
+- **俊敏性向上**: 迅速なリソース調達、グローバル展開
+- **イノベーション促進**: 最新技術へのアクセス、AI/ML活用
+- **スケーラビリティ**: 需要変動への柔軟な対応
 
-俊敏性向上:
-- 迅速なリソース調達
-- 自動スケーリング
-- グローバル展開
+技術要因
 
-イノベーション促進:
-- 最新技術へのアクセス
-- AI/ML サービス活用
-- サーバーレス技術
-```
+- **レガシーシステム**: 老朽化したインフラ、サポート終了
+- **可用性・信頼性**: 単一障害点の排除、災害復旧能力向上
+- **セキュリティ**: 最新のセキュリティ機能、コンプライアンス対応
+- **保守性**: 運用負荷軽減、自動化の推進
 
-#### 技術要因
+### 移行の課題と考慮事項
 
-```
-レガシーシステム:
-- 老朽化したハードウェア
-- サポート終了OS/ミドルウェア
-- 保守性の低下
+技術的課題
 
-可用性・信頼性:
-- 単一障害点の排除
-- 災害復旧能力向上
-- SLA改善
+- **アプリケーション依存関係**: 複雑な相互依存、レガシー技術
+- **データ移行**: 大容量データ、ダウンタイム制約、整合性確保
+- **パフォーマンス**: ネットワークレイテンシ、処理能力差異
+- **互換性**: OS、ミドルウェア、アプリケーションの互換性
 
-セキュリティ:
-- 最新セキュリティ機能
-- コンプライアンス対応
-- 脅威対策強化
-```
+組織的課題
 
-### 移行の課題
+- **スキル不足**: クラウド技術知識、運用ノウハウ
+- **変更管理**: 組織文化、プロセス変更、抵抗勢力
+- **ガバナンス**: 責任分界、承認プロセス、コンプライアンス
+- **コスト管理**: 予算計画、コスト可視化、最適化
 
-#### 技術的課題
+### 移行評価フレームワーク
 
-```
-アプリケーション依存関係:
-- 複雑な相互依存
-- レガシー技術
-- カスタマイズ部分
+AWS Cloud Adoption Framework (CAF)
 
-データ移行:
-- 大容量データ
-- ダウンタイム制約
-- データ整合性
+- **ビジネス**: 価値実現、ROI測定
+- **人材**: スキル開発、組織変革
+- **ガバナンス**: リスク管理、コンプライアンス
+- **プラットフォーム**: アーキテクチャ設計、技術選択
+- **セキュリティ**: セキュリティ統制、脅威対策
+- **運用**: 運用モデル、監視・管理
 
-パフォーマンス:
-- ネットワークレイテンシ
-- 処理能力差異
-- 最適化不足
-```
+移行準備度評価
 
-#### 組織的課題
-
-```
-スキル不足:
-- クラウド技術知識
-- 運用ノウハウ
-- セキュリティ理解
-
-変更管理:
-- 組織文化
-- プロセス変更
-- 抵抗勢力
-
-ガバナンス:
-- 責任分界
-- 承認プロセス
-- コンプライアンス
-```
-
-### 公式リソース
-
-- [AWS Migration Hub](https://aws.amazon.com/migration-hub/)
-- [AWS Cloud Adoption Framework](https://aws.amazon.com/professional-services/CAF/)
+- **現状分析**: 既存システムの棚卸し、依存関係マッピング
+- **ビジネスケース**: コスト・ベネフィット分析、ROI算出
+- **リスク評価**: 技術的・ビジネス的リスクの特定
+- **組織準備度**: スキル、プロセス、文化の評価
 
 ---
 
-## 6 つの R 戦略
-
-### 概要
-
-AWS が提唱するクラウド移行の 6 つの戦略（6R）。
+## 6つのR戦略
 
 ### 1. Rehost (Lift and Shift)
 
-#### 特徴
+基本概念
 
-```
-アプローチ:
 - 既存システムをそのままクラウドに移行
-- 最小限の変更
-- 迅速な移行
+- 最小限の変更で迅速な移行を実現
+- インフラレベルでの移行
 
-利点:
-- 短期間での移行
-- 低リスク
-- 即座にクラウドメリット享受
+適用場面
 
-欠点:
-- クラウドネイティブ機能未活用
-- 最適化不足
-- 長期的コスト効率低下
-```
+- **迅速な移行**: 短期間での移行が必要
+- **リスク最小化**: 変更による影響を避けたい
+- **コスト削減**: 即座にインフラコストを削減
+- **レガシーシステム**: 変更が困難なシステム
 
-#### 実装例
+メリット・デメリット
 
-```bash
-# AWS Application Migration Service (MGN)
-# 1. レプリケーションエージェントインストール
-sudo ./aws-replication-installer-init.py --region us-east-1 --aws-access-key-id AKIA... --aws-secret-access-key ...
+- **メリット**: 短期間、低リスク、即座にクラウドメリット享受
+- **デメリット**: クラウドネイティブ機能未活用、長期的コスト効率低下
+- **後続戦略**: 移行後にReplatform、Refactorを検討
 
-# 2. 継続的レプリケーション開始
-# MGNコンソールで設定
+実装アプローチ
 
-# 3. テストインスタンス起動
-aws mgn start-test --source-server-id s-1234567890abcdef0
-
-# 4. カットオーバー実行
-aws mgn start-cutover --source-server-id s-1234567890abcdef0
-```
+- **AWS Application Migration Service**: 自動化された移行
+- **VM Import/Export**: 仮想マシンイメージの移行
+- **物理サーバー**: エージェントベースの移行
 
 ### 2. Replatform (Lift, Tinker, and Shift)
 
-#### 特徴
+基本概念
 
-```
-アプローチ:
-- 基本アーキテクチャは維持
-- クラウドサービスを部分活用
-- 段階的最適化
+- 基本アーキテクチャは維持しつつ、クラウドサービスを部分活用
+- 段階的な最適化アプローチ
+- 「クラウド最適化」とも呼ばれる
 
-例:
-- オンプレミスDB → RDS
-- 自前ロードバランサー → ELB
-- 物理サーバー → EC2
-```
+適用場面
 
-#### 実装例
+- **段階的移行**: リスクを分散しながら移行
+- **部分最適化**: 特定領域での改善を図る
+- **運用負荷軽減**: マネージドサービスの活用
+- **パフォーマンス向上**: クラウドサービスでの性能改善
 
-```yaml
-# データベースをRDSに移行
-Resources:
-  Database:
-    Type: AWS::RDS::DBInstance
-    Properties:
-      DBInstanceIdentifier: migrated-database
-      DBInstanceClass: db.r5.xlarge
-      Engine: mysql
-      EngineVersion: 8.0.35
-      AllocatedStorage: 100
-      StorageType: gp3
-      MultiAZ: true
-      BackupRetentionPeriod: 7
-      VPCSecurityGroups:
-        - !Ref DatabaseSecurityGroup
+典型的なパターン
 
-  # アプリケーションサーバーはEC2のまま
-  LaunchTemplate:
-    Type: AWS::EC2::LaunchTemplate
-    Properties:
-      LaunchTemplateName: app-server-template
-      LaunchTemplateData:
-        ImageId: ami-12345678 # 既存アプリケーションAMI
-        InstanceType: m5.large
-        SecurityGroupIds:
-          - !Ref ApplicationSecurityGroup
+- **データベース**: オンプレミスDB → RDS
+- **ロードバランサー**: 物理LB → ELB/ALB
+- **ファイルシステム**: NAS → EFS
+- **バックアップ**: テープ → S3/Glacier
 
-        UserData:
-          Fn::Base64: !Sub |
-            #!/bin/bash
-            # 既存アプリケーション設定
-            # データベース接続先をRDSに変更
-            sed -i 's/old-db-host/${Database.Endpoint.Address}/g' /etc/app/config.ini
-            systemctl restart application
-```
+メリット・デメリット
+
+- **メリット**: 適度なリスク、運用負荷軽減、コスト最適化
+- **デメリット**: 完全なクラウドメリット未実現、複雑性増加
+- **考慮事項**: 段階的な移行計画、依存関係の管理
 
 ### 3. Repurchase (Drop and Shop)
 
-#### 特徴
+基本概念
 
-```
-アプローチ:
-- 既存ソフトウェアを廃止
-- SaaSソリューションに移行
-- ライセンス体系変更
+- 既存ソフトウェアを廃止し、SaaSソリューションに移行
+- ライセンス体系の変更
+- 「SaaS移行」とも呼ばれる
 
-例:
-- オンプレミスCRM → Salesforce
-- 自社メールサーバー → Office 365
-- オンプレミスERP → SAP on AWS
-```
+適用場面
 
-#### 移行計画例
+- **標準機能で十分**: カスタマイズが不要
+- **運用負荷軽減**: インフラ・ソフトウェア管理の削減
+- **最新機能活用**: SaaSの継続的な機能追加
+- **コスト最適化**: ライセンス・運用コストの削減
 
-```python
-def create_repurchase_plan():
-    """Repurchase移行計画"""
+典型的な移行例
 
-    migration_plan = {
-        'current_system': {
-            'email_server': {
-                'type': 'On-premises Exchange',
-                'users': 500,
-                'storage': '2TB',
-                'annual_cost': 50000
-            },
-            'crm_system': {
-                'type': 'Custom CRM',
-                'users': 100,
-                'maintenance_cost': 30000
-            }
-        },
-        'target_system': {
-            'email_service': {
-                'type': 'Microsoft 365',
-                'users': 500,
-                'annual_cost': 30000,
-                'migration_effort': '2 months'
-            },
-            'crm_service': {
-                'type': 'Salesforce',
-                'users': 100,
-                'annual_cost': 24000,
-                'migration_effort': '4 months'
-            }
-        },
-        'benefits': {
-            'cost_savings': 26000,  # 年間
-            'reduced_maintenance': True,
-            'improved_features': True,
-            'automatic_updates': True
-        }
-    }
+- **CRM**: 自社システム → Salesforce
+- **ERP**: オンプレミスERP → SAP on AWS、Workday
+- **メール**: Exchange → Office 365、Google Workspace
+- **HR**: 自社システム → Workday、SuccessFactors
 
-    return migration_plan
-```
+検討事項
+
+- **データ移行**: 既存データの移行可能性
+- **統合**: 他システムとの連携
+- **カスタマイズ**: 業務プロセスの標準化
+- **ベンダーロックイン**: 将来の移行可能性
 
 ### 4. Refactor (Re-architect)
 
-#### 特徴
+基本概念
 
-```
-アプローチ:
 - アーキテクチャを根本的に変更
-- クラウドネイティブ設計
+- クラウドネイティブ設計の採用
 - 最大限のクラウドメリット活用
 
-例:
-- モノリス → マイクロサービス
-- 従来型 → サーバーレス
-- RDBMS → NoSQL
-```
+適用場面
 
-#### 実装例
+- **スケーラビリティ**: 大幅な拡張性向上が必要
+- **パフォーマンス**: 劇的な性能改善が必要
+- **コスト最適化**: 長期的な大幅コスト削減
+- **イノベーション**: 新機能・サービスの実現
 
-```yaml
-# モノリスからマイクロサービスへ
-Resources:
-  # API Gateway
-  ApiGateway:
-    Type: AWS::ApiGateway::RestApi
-    Properties:
-      Name: MicroservicesAPI
-      EndpointConfiguration:
-        Types:
-          - REGIONAL
+典型的なパターン
 
-  # User Service (Lambda)
-  UserService:
-    Type: AWS::Lambda::Function
-    Properties:
-      FunctionName: user-service
-      Runtime: python3.9
-      Handler: user_service.lambda_handler
-      Code:
-        ZipFile: |
-          import json
-          import boto3
+- **モノリス → マイクロサービス**: サービス分割、独立デプロイ
+- **従来型 → サーバーレス**: Lambda、API Gateway活用
+- **RDBMS → NoSQL**: DynamoDB、DocumentDBへの移行
+- **バッチ → ストリーミング**: Kinesis、MSKでのリアルタイム処理
 
-          def lambda_handler(event, context):
-              # ユーザー管理ロジック
-              return {
-                  'statusCode': 200,
-                  'body': json.dumps({'message': 'User service'})
-              }
+考慮事項
 
-  # Order Service (Lambda)
-  OrderService:
-    Type: AWS::Lambda::Function
-    Properties:
-      FunctionName: order-service
-      Runtime: python3.9
-      Handler: order_service.lambda_handler
-
-  # DynamoDB Tables
-  UserTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: Users
-      BillingMode: PAY_PER_REQUEST
-      AttributeDefinitions:
-        - AttributeName: userId
-
-          AttributeType: S
-      KeySchema:
-        - AttributeName: userId
-
-          KeyType: HASH
-
-  OrderTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: Orders
-      BillingMode: PAY_PER_REQUEST
-      AttributeDefinitions:
-        - AttributeName: orderId
-
-          AttributeType: S
-      KeySchema:
-        - AttributeName: orderId
-
-          KeyType: HASH
-```
+- **開発コスト**: 大幅な開発投資が必要
+- **リスク**: 技術的リスク、プロジェクトリスク
+- **スキル**: 新技術への習熟が必要
+- **期間**: 長期間のプロジェクトとなる可能性
 
 ### 5. Retire
 
-#### 特徴
+基本概念
 
-```
-アプローチ:
 - 不要なシステムを廃止
 - 重複機能の統合
-- コスト削減
+- ITポートフォリオの整理
 
-判断基準:
-- 利用率が低い
-- 代替手段がある
-- 保守コストが高い
-- ビジネス価値が低い
-```
+適用場面
 
-#### 廃止計画例
+- **利用率低下**: 使用頻度が極めて低い
+- **機能重複**: 他システムで代替可能
+- **保守コスト高**: 維持コストが価値を上回る
+- **技術的負債**: 古い技術で保守困難
 
-```python
-def create_retirement_plan():
-    """システム廃止計画"""
+廃止判断基準
 
-    systems_analysis = {
-        'legacy_reporting_system': {
-            'usage': '月1回のみ',
-            'users': 3,
-            'maintenance_cost': 10000,
-            'decision': 'RETIRE',
-            'alternative': 'QuickSight dashboard',
-            'timeline': '3 months'
-        },
-        'old_backup_system': {
-            'usage': '重複機能',
-            'maintenance_cost': 15000,
-            'decision': 'RETIRE',
-            'alternative': 'AWS Backup',
-            'timeline': '2 months'
-        },
-        'test_environment_1': {
-            'usage': '未使用',
-            'cost': 5000,
-            'decision': 'RETIRE',
-            'timeline': '1 month'
-        }
-    }
+- **ビジネス価値**: 事業への貢献度
+- **利用状況**: アクセス頻度、ユーザー数
+- **保守コスト**: 運用・保守にかかるコスト
+- **代替手段**: 他システムでの代替可能性
 
-    total_savings = sum(
-        system['maintenance_cost'] if 'maintenance_cost' in system
-        else system.get('cost', 0)
-        for system in systems_analysis.values()
-    )
+廃止プロセス
 
-    return {
-        'systems': systems_analysis,
-        'total_annual_savings': total_savings,
-        'timeline': '6 months'
-    }
-```
+- **影響分析**: 廃止による影響範囲の特定
+- **データ保全**: 必要なデータの移行・アーカイブ
+- **段階的廃止**: リスクを最小化した廃止手順
+- **文書化**: 廃止理由・手順の記録
 
 ### 6. Retain
 
-#### 特徴
+基本概念
 
-```
-アプローチ:
-- 現状維持
-- 移行を延期
-- 段階的移行の一部
+- 現状維持、移行を延期
+- 段階的移行の一部として位置づけ
+- 将来的な移行を前提とした保持
 
-理由:
-- 技術的制約
-- コンプライアンス要件
-- ビジネス継続性
-- ROI不足
-```
+保持理由
 
-#### 保持判断例
+- **技術的制約**: 移行が技術的に困難
+- **コンプライアンス**: 法的・規制要件
+- **ビジネス継続性**: ミッションクリティカルで変更リスク大
+- **ROI不足**: 移行コストが効果を上回る
 
-```python
-def retention_analysis():
-    """保持判断分析"""
+保持戦略
 
-    systems = {
-        'mainframe_system': {
-            'reason': 'Critical business system',
-            'migration_cost': 5000000,
-            'migration_risk': 'HIGH',
-            'decision': 'RETAIN',
-            'review_date': '2025-12-31'
-        },
-        'compliance_system': {
-            'reason': 'Regulatory requirements',
-            'compliance_period': '7 years',
-            'decision': 'RETAIN',
-            'review_date': '2026-06-30'
-        },
-        'legacy_integration': {
-            'reason': 'Complex dependencies',
-            'refactor_effort': '18 months',
-            'decision': 'RETAIN',
-            'migration_plan': 'Phase 2'
-        }
-    }
-
-    return systems
-```
+- **定期見直し**: 保持理由の定期的な再評価
+- **段階的準備**: 将来移行に向けた準備
+- **リスク管理**: 保持に伴うリスクの管理
+- **代替案検討**: 新たな移行オプションの検討
 
 ---
 
 ## アプリケーション移行
 
-### 移行パターン
+### 移行パターンと戦略
 
-#### Strangler Fig Pattern
+Strangler Fig Pattern
 
-```
-概念:
-- 新システムで既存機能を段階的に置換
-- 古いシステムを徐々に「絞め殺す」
-- リスク分散、段階的移行
+- **概念**: 新システムで既存機能を段階的に置換
+- **メリット**: リスク分散、段階的移行、継続的価値提供
+- **実装**: プロキシレイヤー、機能単位移行、段階的切り替え
+- **適用場面**: 大規模システム、ミッションクリティカル
 
-実装:
+Database-per-Service Pattern
 
-1. プロキシレイヤー導入
-
-2. 機能単位で新システムに移行
-
-3. 古いシステムの機能を段階的に停止
-```
-
-#### Database-per-Service Pattern
-
-```
-概念:
-- マイクロサービス毎に専用データベース
-- データの独立性確保
-- 技術選択の自由度
-
-課題:
-- データ整合性
-- トランザクション管理
-- データ結合の複雑化
-```
-
-### AWS Application Migration Service
-
-#### 設定手順
-
-```bash
-# 1. IAMロール作成
-aws iam create-role --role-name MGNRole --assume-role-policy-document file://trust-policy.json
-
-# 2. ポリシーアタッチ
-aws iam attach-role-policy --role-name MGNRole --policy-arn arn:aws:iam::aws:policy/MGNAgentPolicy
-
-# 3. レプリケーション設定テンプレート作成
-aws mgn create-replication-configuration-template \
-    --associate-default-security-group \
-    --bandwidth-throttling 0 \
-    --create-public-ip false \
-    --data-plane-routing PRIVATE_IP \
-    --default-large-staging-disk-type GP3 \
-    --ebs-encryption DEFAULT \
-    --replication-server-instance-type m5.large \
-    --replication-servers-security-groups-i-ds sg-12345678 \
-    --subnet-id subnet-12345678 \
-    --use-dedicated-replication-server false
-
-# 4. 起動設定テンプレート作成
-aws mgn create-launch-configuration-template \
-    --launch-template-name "Migration-Template" \
-    --launch-template-data file://launch-template.json
-```
+- **概念**: マイクロサービス毎に専用データベース
+- **メリット**: データ独立性、技術選択自由度、スケーラビリティ
+- **課題**: データ整合性、トランザクション管理、結合処理
+- **対策**: イベント駆動、SAGA パターン、CQRS
 
 ### コンテナ化移行
 
-#### App2Container
+移行アプローチ
 
-```bash
-# 1. App2Container インストール
-curl -o AWSApp2Container-installer-linux.tar.gz https://app2container-release-us-east-1.s3.us-east-1.amazonaws.com/latest/linux/AWSApp2Container-installer-linux.tar.gz
-tar xvf AWSApp2Container-installer-linux.tar.gz
-sudo ./install.sh
+- **App2Container**: 既存アプリケーションの自動コンテナ化
+- **手動コンテナ化**: Dockerfileの作成、最適化
+- **段階的移行**: 一部機能からの段階的コンテナ化
 
-# 2. 初期化
-sudo app2container init
+コンテナプラットフォーム選択
 
-# 3. アプリケーション検出
-sudo app2container inventory
+- **ECS**: AWS統合、シンプル運用、学習コスト低
+- **EKS**: Kubernetes標準、ポータビリティ、豊富なエコシステム
+- **Fargate**: サーバーレス、運用負荷軽減、変動負荷対応
 
-# 4. アプリケーション分析
-sudo app2container analyze --application-id java-app-12345
+### サーバーレス移行
 
-# 5. コンテナ化
-sudo app2container containerize --application-id java-app-12345
+移行対象の特定
 
-# 6. デプロイメント生成
-sudo app2container generate app-deployment --application-id java-app-12345
+- **イベント駆動処理**: ファイル処理、データ変換
+- **API処理**: RESTful API、GraphQL
+- **バッチ処理**: 定期実行、データ処理
+- **統合処理**: システム間連携、ワークフロー
 
-# 7. デプロイ
-sudo app2container deploy --application-id java-app-12345
-```
+設計考慮事項
+
+- **ステートレス設計**: 状態の外部化
+- **イベント駆動**: 非同期処理、疎結合
+- **エラーハンドリング**: 再試行、デッドレターキュー
+- **監視・ログ**: 分散トレーシング、集約ログ
 
 ---
 
 ## データベース移行
 
+### 移行戦略の選択
+
+同種データベース移行
+
+- **Oracle → Oracle on RDS**: 構造・機能互換性高
+- **MySQL → Aurora MySQL**: MySQL互換、性能向上
+- **SQL Server → RDS SQL Server**: Windows環境統合
+- **PostgreSQL → Aurora PostgreSQL**: PostgreSQL互換、拡張性
+
+異種データベース移行
+
+- **Oracle → PostgreSQL**: オープンソース化、コスト削減
+- **SQL Server → Aurora MySQL**: クロスプラットフォーム
+- **商用DB → DynamoDB**: NoSQL化、スケーラビリティ向上
+- **レガシーDB → DocumentDB**: ドキュメント指向、柔軟性
+
 ### AWS Database Migration Service (DMS)
 
-#### 移行タイプ
+基本概念
 
-##### 同種データベース移行
+- **継続的レプリケーション**: 最小ダウンタイム移行
+- **異種間移行**: Schema Conversion Tool連携
+- **データ検証**: 移行データの整合性確認
+- **監視・アラート**: 移行進捗の可視化
 
-```
-Oracle → Oracle on RDS:
-- 構造・データ型互換
-- 最小限の変更
-- 高い成功率
+移行タイプ
 
-MySQL → Aurora MySQL:
-- MySQL互換性活用
-- 性能向上
-- 管理負荷軽減
-```
+- **フルロード**: 初期データの一括移行
+- **CDC (Change Data Capture)**: 継続的な変更データ同期
+- **フルロード + CDC**: 最小ダウンタイム移行
 
-##### 異種データベース移行
+設計考慮事項
 
-```
-Oracle → PostgreSQL:
-- Schema Conversion Tool使用
-- データ型変換
-- ストアドプロシージャ変換
-
-SQL Server → Aurora MySQL:
-- アプリケーション変更必要
-- パフォーマンステスト重要
-- 段階的移行推奨
-```
-
-#### DMS 設定例
-
-```json
-{
-  "ReplicationInstanceIdentifier": "dms-migration-instance",
-  "ReplicationInstanceClass": "dms.r5.xlarge",
-  "AllocatedStorage": 100,
-  "VpcSecurityGroupIds": ["sg-12345678"],
-  "ReplicationSubnetGroupIdentifier": "dms-subnet-group",
-  "MultiAZ": true,
-  "PubliclyAccessible": false,
-  "EngineVersion": "3.4.7"
-}
-```
-
-#### エンドポイント設定
-
-```json
-{
-  "EndpointIdentifier": "source-oracle-endpoint",
-  "EndpointType": "source",
-  "EngineName": "oracle",
-  "Username": "dms_user",
-  "Password": "password123",
-  "ServerName": "oracle.example.com",
-  "Port": 1521,
-  "DatabaseName": "ORCL",
-  "OracleSettings": {
-    "AsmPassword": "password123",
-    "AsmServer": "oracle-asm.example.com",
-    "AsmUser": "asm_user"
-  }
-}
-```
+- **ネットワーク**: 帯域幅、レイテンシ、セキュリティ
+- **リソース**: レプリケーションインスタンスのサイジング
+- **監視**: 遅延、エラー、パフォーマンス監視
+- **テスト**: データ整合性、パフォーマンステスト
 
 ### Schema Conversion Tool (SCT)
 
-#### 使用手順
+機能概要
 
-```bash
-# 1. SCTダウンロード・インストール
-# AWS SCTをダウンロードしてインストール
+- **自動変換**: DDL、DML、ストアドプロシージャ
+- **評価レポート**: 変換可能性、工数見積もり
+- **手動調整**: 変換不可項目の手動対応
+- **コード生成**: 移行用スクリプト生成
 
-# 2. プロジェクト作成
-# GUI でプロジェクト作成
+変換対象
 
-# 3. ソースデータベース接続
-# Oracle接続情報入力
-
-# 4. ターゲットデータベース選択
-# PostgreSQL選択
-
-# 5. スキーマ変換実行
-# 自動変換 + 手動調整
-
-# 6. 変換レポート確認
-# 変換不可項目の確認・対応
-
-# 7. スクリプト生成・実行
-# DDLスクリプト生成・実行
-```
-
-#### 変換例
-
-```sql
--- Oracle (変換前)
-CREATE TABLE employees (
-    emp_id NUMBER(10) PRIMARY KEY,
-    emp_name VARCHAR2(100) NOT NULL,
-    hire_date DATE DEFAULT SYSDATE,
-    salary NUMBER(10,2),
-    dept_id NUMBER(10),
-    CONSTRAINT fk_dept FOREIGN KEY (dept_id) REFERENCES departments(dept_id)
-);
--- PostgreSQL (変換後)
-CREATE TABLE employees (
-    emp_id INTEGER PRIMARY KEY,
-    emp_name VARCHAR(100) NOT NULL,
-    hire_date DATE DEFAULT CURRENT_DATE,
-    salary DECIMAL(10,2),
-    dept_id INTEGER,
-    CONSTRAINT fk_dept FOREIGN KEY (dept_id) REFERENCES departments(dept_id)
-);
-```
-
-### データベース移行戦略
-
-#### 最小ダウンタイム移行
-
-```python
-def minimal_downtime_migration():
-    """最小ダウンタイム移行手順"""
-
-    steps = [
-        {
-            'phase': 'Phase 1: 準備',
-            'tasks': [
-                'DMSレプリケーションインスタンス作成',
-                'ソース・ターゲットエンドポイント設定',
-                'セキュリティグループ設定',
-                'IAMロール設定'
-            ],
-            'duration': '1-2 days',
-            'downtime': '0 minutes'
-        },
-        {
-            'phase': 'Phase 2: フルロード',
-            'tasks': [
-                'DMSタスク作成（フルロード）',
-                '初期データ移行実行',
-                'データ整合性確認',
-                'パフォーマンステスト'
-            ],
-            'duration': '1-3 days',
-            'downtime': '0 minutes'
-        },
-        {
-            'phase': 'Phase 3: CDC開始',
-            'tasks': [
-                'Change Data Capture有効化',
-                '継続的レプリケーション開始',
-                'レプリケーション遅延監視',
-                'アプリケーションテスト'
-            ],
-            'duration': '1-2 weeks',
-            'downtime': '0 minutes'
-        },
-        {
-            'phase': 'Phase 4: カットオーバー',
-            'tasks': [
-                'アプリケーション停止',
-                '最終データ同期確認',
-                'DNS/接続文字列変更',
-                'アプリケーション再開'
-            ],
-            'duration': '2-4 hours',
-            'downtime': '30-60 minutes'
-        }
-    ]
-
-    return steps
-```
+- **スキーマ**: テーブル、インデックス、制約
+- **プロシージャ**: ストアドプロシージャ、関数
+- **ビュー**: 複雑なビュー定義
+- **トリガー**: データベーストリガー
 
 ---
 
 ## データ移行
 
-### データ移行の種類
-
-#### オンライン移行
-
-```
-特徴:
-- システム稼働中に実行
-- 最小ダウンタイム
-- 継続的データ同期
-
-適用場面:
-- ミッションクリティカルシステム
-- 24/7稼働要件
-- 大容量データベース
-
-技術:
-- AWS DMS
-- Change Data Capture (CDC)
-- レプリケーション技術
-```
-
-#### オフライン移行
-
-```
-特徴:
-- システム停止中に実行
-- 完全データ整合性
-- シンプルな手順
-
-適用場面:
-- メンテナンス窓口利用可能
-- 小〜中規模データ
-- 複雑な依存関係
-
-技術:
-- データベースダンプ/リストア
-- ファイル転送
-- スナップショット移行
-```
-
 ### 大容量データ移行
 
-#### AWS DataSync
+AWS DataSync
 
-```bash
-# DataSyncエージェント設定
-aws datasync create-agent \
-    --agent-name "OnPremiseAgent" \
-    --activation-key "ABCDEF123456"
+- **用途**: オンプレミス ↔ AWS間のデータ同期
+- **特徴**: 増分同期、帯域幅制御、データ検証
+- **プロトコル**: NFS、SMB、HDFS、S3、EFS
+- **適用場面**: 継続的同期、初期移行、災害復旧
 
-# ソースロケーション作成（オンプレミス）
-aws datasync create-location-nfs \
-    --server-hostname "nfs.example.com" \
-    --subdirectory "/data" \
-    --on-prem-config AgentArns=["arn:aws:datasync:us-east-1:123456789012:agent/agent-12345"]
+AWS Snow Family
 
-# ターゲットロケーション作成（S3）
-aws datasync create-location-s3 \
-    --s3-bucket-arn "arn:aws:s3:::migration-bucket" \
-    --s3-config BucketAccessRoleArn="arn:aws:iam::123456789012:role/DataSyncS3Role"
+- **Snowcone**: 8TB、エッジコンピューティング
+- **Snowball Edge**: 80TB、ローカル処理可能
+- **Snowmobile**: 100PB、超大容量移行
+- **適用場面**: 大容量データ、低帯域幅環境、セキュリティ要件
 
-# タスク作成
-aws datasync create-task \
-    --source-location-arn "arn:aws:datasync:us-east-1:123456789012:location/loc-source123" \
-    --destination-location-arn "arn:aws:datasync:us-east-1:123456789012:location/loc-dest456" \
-    --name "DataMigrationTask"
+### ストレージ移行戦略
 
-# タスク実行
-aws datasync start-task-execution \
-    --task-arn "arn:aws:datasync:us-east-1:123456789012:task/task-789"
-```
+段階的移行
 
-#### AWS Snow Family
+- **ホット → コールド**: アクセス頻度による段階化
+- **ライフサイクル管理**: 自動的なストレージクラス移行
+- **コスト最適化**: 保存コストと取得コストのバランス
 
-##### Snowball Edge
+ハイブリッド構成
 
-```python
-def snowball_migration_plan():
-    """Snowball Edge移行計画"""
-    
-    migration_scenarios = {
-        'large_dataset': {
-            'data_size': '80TB',
-            'device': 'Snowball Edge Storage Optimized',
-            'capacity': '80TB usable',
-            'transfer_time': '10 days',
-            'shipping_time': '4-6 days',
-            'total_time': '2-3 weeks'
-        },
-        'compute_migration': {
-            'data_size': '40TB',
-            'device': 'Snowball Edge Compute Optimized',
-            'capacity': '42TB usable',
-            'compute': 'EC2 instances',
-            'use_case': 'データ処理 + 移行'
-        },
-        'continuous_migration': {
-            'device': 'Snowcone',
-            'capacity': '8TB',
-            'connectivity': 'Online/Offline',
-            'use_case': '継続的データ同期'
-        }
-    }
-    
-    return migration_scenarios
+- **Storage Gateway**: オンプレミス ↔ クラウド統合
+- **File Gateway**: NFS/SMB → S3
+- **Volume Gateway**: iSCSI → S3
+- **Tape Gateway**: VTL → S3/Glacier
 
-# Snowball Edge使用手順
-def snowball_workflow():
-    """Snowball Edge ワークフロー"""
-    
-    workflow = [
-        {
-            'step': '1. デバイス注文',
-            'tasks': [
-                'AWS コンソールでジョブ作成',
-                'データ転送先S3バケット指定',
-                'IAMロール設定',
-                '配送先住所指定'
-            ]
-        },
-        {
-            'step': '2. デバイス受領・設定',
-            'tasks': [
-                'デバイス開梱・接続',
-                'Snowball Clientインストール',
-                'デバイスのアンロック',
-                'ネットワーク設定'
-            ]
-        },
-        {
-            'step': '3. データ転送',
-            'tasks': [
-                'Snowball Clientでデータコピー',
-                '転送進捗監視',
-                'データ整合性確認',
-                'ログ確認'
-            ]
-        },
-        {
-            'step': '4. デバイス返送',
-            'tasks': [
-                'データ転送完了確認',
-                'デバイスシャットダウン',
-                '返送ラベル貼付',
-                '配送業者に引き渡し'
-            ]
-        },
-        {
-            'step': '5. データインポート',
-            'tasks': [
-                'AWS でのデータ処理',
-                'S3へのインポート完了',
-                'データ検証',
-                'デバイスデータ消去確認'
-            ]
-        }
-    ]
-    
-    return workflow
-```
+### データ整合性とバックアップ
 
-### ストレージ移行
+整合性確保
 
-#### AWS Storage Gateway
+- **チェックサム検証**: データ転送時の整合性確認
+- **増分バックアップ**: 変更分のみの効率的バックアップ
+- **ポイントインタイム**: 特定時点への復旧可能性
+- **クロスリージョン**: 地理的分散によるリスク軽減
 
-```yaml
-# Storage Gateway設定例
-Resources:
-  StorageGateway:
-    Type: AWS::StorageGateway::Gateway
-    Properties:
-      GatewayName: HybridStorageGateway
-      GatewayType: FILE_S3
-      GatewayTimezone: GMT+9:00
-      
-  FileShare:
-    Type: AWS::StorageGateway::NFSFileShare
-    Properties:
-      GatewayARN: !Ref StorageGateway
-      LocationARN: !Sub "arn:aws:s3:::${MigrationBucket}"
-      Role: !GetAtt StorageGatewayRole.Arn
-      ClientList:
-        - "10.0.0.0/8"
-      DefaultStorageClass: S3_STANDARD_IA
-      GuessMIMETypeEnabled: true
-      
-  MigrationBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: storage-migration-bucket
-      VersioningConfiguration:
-        Status: Enabled
-      LifecycleConfiguration:
-        Rules:
-          - Id: TransitionToIA
-            Status: Enabled
-            Transition:
-              StorageClass: STANDARD_IA
-              TransitionInDays: 30
-          - Id: TransitionToGlacier
-            Status: Enabled
-            Transition:
-              StorageClass: GLACIER
-              TransitionInDays: 90
-```
+バックアップ戦略
 
-#### EFS移行
-
-```bash
-# EFS Utilsインストール
-sudo yum install -y amazon-efs-utils
-
-# 既存データをEFSにマウント
-sudo mkdir /mnt/efs
-sudo mount -t efs fs-12345678:/ /mnt/efs
-
-# データ同期（rsync使用）
-rsync -avz --progress /source/data/ /mnt/efs/
-
-# パフォーマンス監視
-aws efs describe-file-systems --file-system-id fs-12345678
-aws cloudwatch get-metric-statistics \
-    --namespace AWS/EFS \
-    --metric-name TotalIOBytes \
-    --dimensions Name=FileSystemId,Value=fs-12345678 \
-    --start-time 2024-01-01T00:00:00Z \
-    --end-time 2024-01-02T00:00:00Z \
-    --period 3600 \
-    --statistics Sum
-```
-
-### データ整合性確保
-
-#### チェックサム検証
-
-```python
-import hashlib
-import boto3
-
-def verify_data_integrity():
-    """データ整合性検証"""
-    
-    def calculate_file_checksum(file_path):
-        """ファイルのチェックサム計算"""
-        hash_md5 = hashlib.md5()
-        with open(file_path, "rb") as f:
-            for chunk in iter(lambda: f.read(4096), b""):
-                hash_md5.update(chunk)
-        return hash_md5.hexdigest()
-    
-    def verify_s3_object(bucket, key, expected_checksum):
-        """S3オブジェクトの整合性確認"""
-        s3 = boto3.client('s3')
-        
-        # オブジェクトのETagを取得
-        response = s3.head_object(Bucket=bucket, Key=key)
-        etag = response['ETag'].strip('"')
-        
-        # マルチパートアップロードでない場合、ETagはMD5ハッシュ
-        if '-' not in etag:
-            return etag == expected_checksum
-        else:
-            # マルチパートの場合は別途検証が必要
-            return verify_multipart_checksum(bucket, key, expected_checksum)
-    
-    def verify_multipart_checksum(bucket, key, expected_checksum):
-        """マルチパートアップロードの検証"""
-        s3 = boto3.client('s3')
-        
-        # オブジェクトをダウンロードしてチェックサム計算
-        response = s3.get_object(Bucket=bucket, Key=key)
-        content = response['Body'].read()
-        
-        actual_checksum = hashlib.md5(content).hexdigest()
-        return actual_checksum == expected_checksum
-    
-    return {
-        'calculate_checksum': calculate_file_checksum,
-        'verify_s3': verify_s3_object,
-        'verify_multipart': verify_multipart_checksum
-    }
-```
+- **3-2-1ルール**: 3つのコピー、2つの媒体、1つのオフサイト
+- **自動化**: スケジュール実行、ライフサイクル管理
+- **テスト**: 定期的な復旧テスト、RTO/RPO検証
+- **監視**: バックアップ成功/失敗の監視
 
 ---
 
@@ -1023,550 +401,112 @@ def verify_data_integrity():
 
 ### 移行プロジェクト管理
 
-#### 移行フェーズ
+フェーズ別アプローチ
 
-```python
-def migration_phases():
-    """移行プロジェクトフェーズ"""
-    
-    phases = {
-        'phase_1_assessment': {
-            'name': '現状評価・計画',
-            'duration': '4-8 weeks',
-            'deliverables': [
-                'アプリケーション棚卸し',
-                '依存関係マップ',
-                'リスク評価',
-                '移行戦略決定',
-                'ROI分析'
-            ],
-            'key_activities': [
-                'Discovery & Assessment',
-                'Application Portfolio Analysis',
-                'Migration Strategy Selection',
-                'Business Case Development'
-            ]
-        },
-        'phase_2_design': {
-            'name': '設計・準備',
-            'duration': '6-12 weeks',
-            'deliverables': [
-                'ターゲットアーキテクチャ',
-                '移行計画書',
-                'テスト計画',
-                'ロールバック計画',
-                'セキュリティ設計'
-            ],
-            'key_activities': [
-                'Target Architecture Design',
-                'Migration Runbook Creation',
-                'Security & Compliance Review',
-                'Testing Strategy Development'
-            ]
-        },
-        'phase_3_pilot': {
-            'name': 'パイロット移行',
-            'duration': '2-4 weeks',
-            'deliverables': [
-                'パイロット結果レポート',
-                '課題・対策リスト',
-                '手順書改善版',
-                'パフォーマンス評価'
-            ],
-            'key_activities': [
-                'Pilot Application Migration',
-                'Process Validation',
-                'Performance Testing',
-                'Issue Resolution'
-            ]
-        },
-        'phase_4_migration': {
-            'name': '本格移行',
-            'duration': '12-24 weeks',
-            'deliverables': [
-                '移行完了レポート',
-                '運用手順書',
-                'ナレッジ移転',
-                'コスト最適化提案'
-            ],
-            'key_activities': [
-                'Wave-based Migration',
-                'Continuous Monitoring',
-                'Issue Management',
-                'Optimization Implementation'
-            ]
-        },
-        'phase_5_optimization': {
-            'name': '最適化・運用移管',
-            'duration': '4-8 weeks',
-            'deliverables': [
-                '最適化レポート',
-                '運用移管完了',
-                'ベストプラクティス',
-                'プロジェクト完了報告'
-            ],
-            'key_activities': [
-                'Performance Optimization',
-                'Cost Optimization',
-                'Operations Handover',
-                'Knowledge Transfer'
-            ]
-        }
-    }
-    
-    return phases
-```
+1. **評価・計画**: 現状分析、移行戦略策定、ROI算出
+2. **設計・準備**: アーキテクチャ設計、移行計画詳細化
+3. **パイロット**: 小規模移行、プロセス検証
+4. **本格移行**: Wave単位での段階的移行
+5. **最適化**: パフォーマンス調整、コスト最適化
 
-#### Wave計画
+Wave計画
 
-```python
-def create_migration_waves():
-    """移行Wave計画作成"""
-    
-    wave_criteria = {
-        'complexity': ['Low', 'Medium', 'High'],
-        'business_criticality': ['Low', 'Medium', 'High', 'Critical'],
-        'dependencies': ['None', 'Few', 'Many', 'Complex'],
-        'data_size': ['Small', 'Medium', 'Large', 'Very Large'],
-        'downtime_tolerance': ['High', 'Medium', 'Low', 'None']
-    }
-    
-    wave_strategy = {
-        'wave_1': {
-            'name': 'Quick Wins',
-            'criteria': {
-                'complexity': 'Low',
-                'business_criticality': 'Low',
-                'dependencies': 'None',
-                'data_size': 'Small'
-            },
-            'applications': [
-                'Static websites',
-                'Development environments',
-                'Non-critical batch jobs'
-            ],
-            'duration': '2-4 weeks',
-            'risk': 'Low'
-        },
-        'wave_2': {
-            'name': 'Standard Applications',
-            'criteria': {
-                'complexity': 'Medium',
-                'business_criticality': 'Medium',
-                'dependencies': 'Few',
-                'data_size': 'Medium'
-            },
-            'applications': [
-                'Internal tools',
-                'Reporting systems',
-                'Secondary databases'
-            ],
-            'duration': '4-8 weeks',
-            'risk': 'Medium'
-        },
-        'wave_3': {
-            'name': 'Complex Systems',
-            'criteria': {
-                'complexity': 'High',
-                'business_criticality': 'High',
-                'dependencies': 'Many',
-                'data_size': 'Large'
-            },
-            'applications': [
-                'ERP systems',
-                'Customer-facing applications',
-                'Core databases'
-            ],
-            'duration': '8-16 weeks',
-            'risk': 'High'
-        },
-        'wave_4': {
-            'name': 'Mission Critical',
-            'criteria': {
-                'complexity': 'High',
-                'business_criticality': 'Critical',
-                'dependencies': 'Complex',
-                'downtime_tolerance': 'None'
-            },
-            'applications': [
-                'Core banking systems',
-                'Trading platforms',
-                'Real-time systems'
-            ],
-            'duration': '12-24 weeks',
-            'risk': 'Very High'
-        }
-    }
-    
-    return wave_strategy
-```
+- **Wave 1**: 低リスク、シンプルなシステム
+- **Wave 2**: 標準的なアプリケーション
+- **Wave 3**: 複雑なシステム、依存関係あり
+- **Wave 4**: ミッションクリティカル、高リスク
 
 ### リスク管理
 
-#### リスク評価マトリックス
+技術的リスク
 
-```python
-def risk_assessment_matrix():
-    """リスク評価マトリックス"""
-    
-    risk_categories = {
-        'technical_risks': {
-            'application_compatibility': {
-                'probability': 'Medium',
-                'impact': 'High',
-                'mitigation': [
-                    'Thorough compatibility testing',
-                    'Pilot migration',
-                    'Fallback procedures'
-                ]
-            },
-            'data_loss': {
-                'probability': 'Low',
-                'impact': 'Very High',
-                'mitigation': [
-                    'Multiple backup strategies',
-                    'Data validation procedures',
-                    'Rollback capabilities'
-                ]
-            },
-            'performance_degradation': {
-                'probability': 'Medium',
-                'impact': 'Medium',
-                'mitigation': [
-                    'Performance testing',
-                    'Capacity planning',
-                    'Auto-scaling configuration'
-                ]
-            }
-        },
-        'business_risks': {
-            'service_disruption': {
-                'probability': 'Medium',
-                'impact': 'High',
-                'mitigation': [
-                    'Maintenance windows',
-                    'Blue-green deployment',
-                    'Communication plan'
-                ]
-            },
-            'cost_overrun': {
-                'probability': 'High',
-                'impact': 'Medium',
-                'mitigation': [
-                    'Detailed cost estimation',
-                    'Regular cost monitoring',
-                    'Budget controls'
-                ]
-            },
-            'timeline_delay': {
-                'probability': 'High',
-                'impact': 'Medium',
-                'mitigation': [
-                    'Buffer time allocation',
-                    'Parallel execution',
-                    'Resource scaling'
-                ]
-            }
-        },
-        'operational_risks': {
-            'skill_gap': {
-                'probability': 'High',
-                'impact': 'Medium',
-                'mitigation': [
-                    'Training programs',
-                    'External consultants',
-                    'Knowledge transfer'
-                ]
-            },
-            'security_vulnerabilities': {
-                'probability': 'Medium',
-                'impact': 'Very High',
-                'mitigation': [
-                    'Security assessments',
-                    'Compliance validation',
-                    'Security monitoring'
-                ]
-            }
-        }
-    }
-    
-    return risk_categories
-```
+- **互換性問題**: アプリケーション、OS、ミドルウェア
+- **パフォーマンス劣化**: レスポンス時間、スループット
+- **データ損失**: 移行時の整合性、バックアップ
+- **セキュリティ**: 設定ミス、アクセス制御
 
-### テスト戦略
+ビジネスリスク
 
-#### テストフェーズ
+- **サービス停止**: ダウンタイム、業務影響
+- **コスト超過**: 予算オーバー、隠れたコスト
+- **スケジュール遅延**: 依存関係、リソース不足
+- **品質問題**: 機能不具合、ユーザビリティ
 
-```python
-def testing_strategy():
-    """移行テスト戦略"""
-    
-    test_phases = {
-        'unit_testing': {
-            'scope': 'Individual components',
-            'timing': 'During development',
-            'tools': ['JUnit', 'pytest', 'Mocha'],
-            'criteria': [
-                'Code coverage > 80%',
-                'All unit tests pass',
-                'No critical bugs'
-            ]
-        },
-        'integration_testing': {
-            'scope': 'Component interactions',
-            'timing': 'After unit testing',
-            'tools': ['Postman', 'SoapUI', 'REST Assured'],
-            'criteria': [
-                'API contracts validated',
-                'Data flow verified',
-                'Error handling tested'
-            ]
-        },
-        'system_testing': {
-            'scope': 'End-to-end functionality',
-            'timing': 'Pre-migration',
-            'tools': ['Selenium', 'Cypress', 'LoadRunner'],
-            'criteria': [
-                'All business scenarios work',
-                'Performance requirements met',
-                'Security controls validated'
-            ]
-        },
-        'user_acceptance_testing': {
-            'scope': 'Business validation',
-            'timing': 'Pre-production',
-            'participants': ['Business users', 'Stakeholders'],
-            'criteria': [
-                'Business requirements satisfied',
-                'User experience acceptable',
-                'Sign-off obtained'
-            ]
-        },
-        'production_validation': {
-            'scope': 'Live environment',
-            'timing': 'Post-migration',
-            'tools': ['CloudWatch', 'New Relic', 'Datadog'],
-            'criteria': [
-                'System stability confirmed',
-                'Performance baselines met',
-                'No critical issues'
-            ]
-        }
-    }
-    
-    return test_phases
-```
+リスク軽減策
 
-### 移行実行
+- **十分なテスト**: 機能、性能、統合テスト
+- **ロールバック計画**: 問題発生時の復旧手順
+- **段階的移行**: リスク分散、影響最小化
+- **監視・アラート**: 早期問題検出、迅速対応
 
-#### カットオーバー計画
+### 移行実行とカットオーバー
 
-```python
-def cutover_plan():
-    """カットオーバー実行計画"""
-    
-    cutover_steps = {
-        'pre_cutover': {
-            'timeline': 'T-24 hours',
-            'activities': [
-                'Final data synchronization',
-                'Application freeze',
-                'Backup verification',
-                'Team readiness check',
-                'Communication to stakeholders'
-            ],
-            'checkpoints': [
-                'Data sync lag < 5 minutes',
-                'All backups completed',
-                'Team members available',
-                'Rollback procedures tested'
-            ]
-        },
-        'cutover_execution': {
-            'timeline': 'T-0 to T+4 hours',
-            'activities': [
-                'Application shutdown',
-                'Final data sync',
-                'DNS/Load balancer switch',
-                'Application startup',
-                'Smoke testing'
-            ],
-            'checkpoints': [
-                'Clean application shutdown',
-                'Data consistency verified',
-                'Traffic routing confirmed',
-                'Core functions working',
-                'No critical errors'
-            ]
-        },
-        'post_cutover': {
-            'timeline': 'T+4 to T+24 hours',
-            'activities': [
-                'Full system validation',
-                'Performance monitoring',
-                'User acceptance confirmation',
-                'Issue resolution',
-                'Success communication'
-            ],
-            'checkpoints': [
-                'All systems operational',
-                'Performance within SLA',
-                'Users can access system',
-                'No P1/P2 issues',
-                'Stakeholder approval'
-            ]
-        }
-    }
-    
-    rollback_triggers = [
-        'Data corruption detected',
-        'Critical functionality failure',
-        'Performance degradation > 50%',
-        'Security breach identified',
-        'Business process disruption'
-    ]
-    
-    return {
-        'cutover_steps': cutover_steps,
-        'rollback_triggers': rollback_triggers
-    }
-```
+カットオーバー戦略
+
+- **ビッグバン**: 一括切り替え、短時間完了
+- **段階的**: 機能・ユーザー単位での段階切り替え
+- **並行運用**: 新旧システム並行、段階的移行
+- **ブルーグリーン**: 環境切り替え、即座のロールバック
+
+実行管理
+
+- **チェックリスト**: 詳細な作業手順、確認項目
+- **コミュニケーション**: ステークホルダーへの状況報告
+- **監視**: システム状態、パフォーマンス監視
+- **エスカレーション**: 問題発生時の対応体制
 
 ### 移行後最適化
 
-#### パフォーマンス最適化
+パフォーマンス最適化
 
-```python
-def post_migration_optimization():
-    """移行後最適化計画"""
-    
-    optimization_areas = {
-        'compute_optimization': {
-            'activities': [
-                'Right-sizing instances',
-                'Reserved Instance planning',
-                'Spot Instance utilization',
-                'Auto Scaling configuration'
-            ],
-            'tools': [
-                'AWS Compute Optimizer',
-                'CloudWatch metrics',
-                'Cost Explorer'
-            ],
-            'expected_savings': '20-40%'
-        },
-        'storage_optimization': {
-            'activities': [
-                'Storage class optimization',
-                'Lifecycle policies',
-                'Data archiving',
-                'Compression implementation'
-            ],
-            'tools': [
-                'S3 Storage Class Analysis',
-                'EBS Volume optimization',
-                'Storage Gateway'
-            ],
-            'expected_savings': '30-50%'
-        },
-        'network_optimization': {
-            'activities': [
-                'CloudFront implementation',
-                'VPC endpoint usage',
-                'Direct Connect evaluation',
-                'Traffic pattern analysis'
-            ],
-            'tools': [
-                'VPC Flow Logs',
-                'CloudFront analytics',
-                'Network monitoring'
-            ],
-            'expected_savings': '10-30%'
-        },
-        'database_optimization': {
-            'activities': [
-                'Query optimization',
-                'Index tuning',
-                'Read replica implementation',
-                'Caching strategies'
-            ],
-            'tools': [
-                'RDS Performance Insights',
-                'ElastiCache',
-                'Database monitoring'
-            ],
-            'expected_improvement': '2-5x performance'
-        }
-    }
-    
-    return optimization_areas
-```
+- **リソース最適化**: インスタンスタイプ、サイジング
+- **ネットワーク最適化**: CDN、VPC Endpoint活用
+- **データベース最適化**: インデックス、クエリチューニング
+- **キャッシュ活用**: ElastiCache、CloudFront
 
-### 移行成功指標
+コスト最適化
 
-#### KPI定義
+- **リザーブドインスタンス**: 長期利用でのコスト削減
+- **スポットインスタンス**: 適用可能ワークロードでの活用
+- **ストレージ最適化**: ライフサイクル管理、適切なクラス選択
+- **監視・分析**: Cost Explorer、Trusted Advisor活用
 
-```python
-def migration_kpis():
-    """移行成功指標"""
-    
-    kpis = {
-        'technical_kpis': {
-            'availability': {
-                'target': '99.9%',
-                'measurement': 'Uptime monitoring',
-                'frequency': 'Real-time'
-            },
-            'performance': {
-                'target': 'Within 10% of baseline',
-                'measurement': 'Response time metrics',
-                'frequency': 'Continuous'
-            },
-            'data_integrity': {
-                'target': '100%',
-                'measurement': 'Checksum validation',
-                'frequency': 'Daily'
-            }
-        },
-        'business_kpis': {
-            'cost_reduction': {
-                'target': '20-30%',
-                'measurement': 'Monthly cost comparison',
-                'frequency': 'Monthly'
-            },
-            'time_to_market': {
-                'target': '50% improvement',
-                'measurement': 'Deployment frequency',
-                'frequency': 'Weekly'
-            },
-            'user_satisfaction': {
-                'target': '> 4.0/5.0',
-                'measurement': 'User surveys',
-                'frequency': 'Quarterly'
-            }
-        },
-        'operational_kpis': {
-            'incident_reduction': {
-                'target': '40% reduction',
-                'measurement': 'Incident count',
-                'frequency': 'Monthly'
-            },
-            'deployment_success': {
-                'target': '95%',
-                'measurement': 'Successful deployments',
-                'frequency': 'Per deployment'
-            },
-            'recovery_time': {
-                'target': '< 4 hours',
-                'measurement': 'MTTR tracking',
-                'frequency': 'Per incident'
-            }
-        }
-    }
-    
-    return kpis
-```
+運用最適化
+
+- **自動化**: デプロイ、監視、バックアップの自動化
+- **監視**: CloudWatch、X-Ray、Config活用
+- **セキュリティ**: Security Hub、GuardDuty、Inspector
+- **ガバナンス**: Organizations、Control Tower、Well-Architected
 
 ---
 
-_この教材は AWS Solution Architect Professional 試験の包括的な学習ガイドです。各分野を深く理解し、実践的な経験を積むことで合格に近づけます。_
+## まとめ
+
+### 試験でのポイント
+
+移行戦略の選択基準
+
+1. **ビジネス要件**: 時間、コスト、リスク許容度
+2. **技術的制約**: 互換性、依存関係、複雑性
+3. **組織的要因**: スキル、リソース、変更許容度
+4. **長期的視点**: 将来の拡張性、保守性、最適化
+
+よくある移行パターン
+
+- **段階的移行**: リスク分散、継続的価値提供
+- **ハイブリッド構成**: オンプレミスとクラウドの組み合わせ
+- **データ中心**: データベース・ストレージ移行優先
+- **アプリケーション中心**: アプリケーション現代化優先
+
+成功要因
+
+- **十分な計画**: 詳細な現状分析、リスク評価
+- **段階的実行**: Wave計画、パイロット実施
+- **継続的最適化**: 移行後の改善、コスト最適化
+- **組織的取り組み**: スキル開発、変更管理、ガバナンス
+
+---
+
+## ライセンス
+
+このコンテンツは MIT License の下で公開されています。詳細は [LICENSE](./LICENSE) ファイルをご確認ください。

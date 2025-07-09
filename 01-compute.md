@@ -1,146 +1,112 @@
 # コンピューティングサービス
 
+<!-- 
+Copyright (c) 2025 AWS SAP Study Guide
+Licensed under the MIT License. See LICENSE file for details.
+-->
+
 ## 目次
 
 1. [EC2 (Elastic Compute Cloud)](#ec2-elastic-compute-cloud)
-2. [ECS (Elastic Container Service)](#ecs-elastic-container-service)
-3. [EKS (Elastic Kubernetes Service)](#eks-elastic-kubernetes-service)
-4. [Lambda](#lambda)
-5. [Fargate](#fargate)
-6. [Batch](#batch)
-7. [Auto Scaling](#auto-scaling)
-8. [サービス比較](#サービス比較)
+2. [コンテナサービス](#コンテナサービス)
+3. [サーバーレスコンピューティング](#サーバーレスコンピューティング)
+4. [バッチ処理](#バッチ処理)
+5. [Auto Scaling](#auto-scaling)
+6. [サービス選択の指針](#サービス選択の指針)
 
 ---
 
 ## EC2 (Elastic Compute Cloud)
 
-### 概要
+### 基本概念と特徴
 
-仮想サーバーインスタンスを提供するサービス。最も基本的なコンピューティングサービス。
+EC2の位置づけ
 
-### インスタンスタイプ
+- AWSの基盤となる仮想サーバーサービス
+- 最も柔軟性が高く、あらゆるワークロードに対応可能
+- インフラレベルの制御が必要な場合の第一選択肢
 
-#### 汎用インスタンス
+主要な特徴
 
-| タイプ     | 特徴                   | 用途                 | vCPU:メモリ比 |
-| ---------- | ---------------------- | -------------------- | ------------- |
-| **t3/t4g** | バーストパフォーマンス | 軽量ワークロード     | 1:2           |
-| **m5/m6i** | バランス型             | 一般的なワークロード | 1:4           |
-| **a1**     | ARM Graviton           | コスト効率重視       | 1:2           |
+- **完全な管理者権限**: OS レベルからの制御が可能
+- **豊富なインスタンスタイプ**: ワークロードに最適化された選択肢
+- **柔軟な料金体系**: オンデマンド、リザーブド、スポットインスタンス
+- **高い可用性**: 複数AZでの冗長構成が可能
 
-#### コンピューティング最適化
+### インスタンスタイプの選択指針
 
-| タイプ     | 特徴             | 用途             | vCPU:メモリ比 |
-| ---------- | ---------------- | ---------------- | ------------- |
-| **c5/c6i** | 高性能プロセッサ | CPU 集約的処理   | 1:2           |
-| **c6g**    | ARM Graviton2    | 高性能・低コスト | 1:2           |
+汎用インスタンス（T, M シリーズ）
 
-#### メモリ最適化
+- **使用場面**: 一般的なWebアプリケーション、小〜中規模データベース
+- **特徴**: CPUとメモリのバランスが良い
+- **T シリーズ**: バーストパフォーマンス、変動するワークロード向け
+- **M シリーズ**: 安定したパフォーマンス、予測可能なワークロード向け
 
-| タイプ     | 特徴         | 用途             | vCPU:メモリ比 |
-| ---------- | ------------ | ---------------- | ------------- |
-| **r5/r6i** | 高メモリ     | インメモリ DB    | 1:8           |
-| **x1e**    | 超高メモリ   | SAP HANA         | 1:16          |
-| **z1d**    | 高周波数 CPU | 単一スレッド性能 | 1:8           |
+コンピューティング最適化（C シリーズ）
 
-#### ストレージ最適化
+- **使用場面**: 高性能Webサーバー、科学計算、ゲームサーバー
+- **特徴**: 高性能プロセッサ、CPU集約的処理に最適
+- **選択基準**: CPU使用率が継続的に高いワークロード
 
-| タイプ     | 特徴     | 用途                 | ストレージ         |
-| ---------- | -------- | -------------------- | ------------------ |
-| **i3/i4i** | NVMe SSD | 高 IOPS              | インスタンスストア |
-| **d2/d3**  | HDD      | 分散ファイルシステム | インスタンスストア |
+メモリ最適化（R, X, Z シリーズ）
 
-### 購入オプション
+- **使用場面**: インメモリデータベース、リアルタイム分析、キャッシュ
+- **特徴**: 大容量メモリ、メモリ集約的処理に最適
+- **選択基準**: 大量のデータをメモリに保持する必要がある場合
 
-#### オンデマンドインスタンス
+ストレージ最適化（I, D シリーズ）
 
-```
-特徴:
-- 時間単位課金
-- 最小利用時間なし
-- 予約不要
+- **使用場面**: 分散ファイルシステム、データウェアハウス、高頻度OLTP
+- **特徴**: 高速なローカルストレージ、高いIOPS
+- **選択基準**: ストレージ性能がボトルネックとなるワークロード
 
-用途:
-- 予測不可能なワークロード
-- 短期間の使用
-- 開発・テスト環境
-```
+### 購入オプションの使い分け
 
-#### リザーブドインスタンス
+オンデマンドインスタンス
 
-```
-標準リザーブドインスタンス:
-- 1年/3年契約
-- 最大75%割引
-- インスタンスタイプ固定
+- **適用場面**: 開発・テスト環境、予測不可能なワークロード
+- **メリット**: 柔軟性、初期コストなし
+- **デメリット**: 最も高い時間単価
 
-コンバーティブルリザーブドインスタンス:
-- インスタンスタイプ変更可能
-- 最大54%割引
-- より柔軟性が高い
-```
+リザーブドインスタンス
 
-#### スポットインスタンス
+- **適用場面**: 安定した本番環境、予測可能なワークロード
+- **メリット**: 最大75%のコスト削減
+- **選択基準**: 1年以上の継続利用が見込める場合
 
-```
-特徴:
-- 最大90%割引
-- 2分前通知で中断
-- 需要と供給で価格変動
+スポットインスタンス
 
-用途:
-- バッチ処理
-- CI/CD
-- 障害耐性のあるワークロード
+- **適用場面**: バッチ処理、障害許容性のあるワークロード
+- **メリット**: 最大90%のコスト削減
+- **注意点**: 中断される可能性、ステートレスな処理に限定
 
-スポットフリート:
-- 複数のインスタンスタイプ指定
-- 自動的に最安値選択
-- 中断リスクの分散
-```
+Savings Plans
 
-### プレイスメントグループ
+- **適用場面**: 複数のサービスを組み合わせて利用
+- **メリット**: EC2、Fargate、Lambdaに適用可能
+- **選択基準**: 柔軟性とコスト削減のバランス
 
-#### クラスタープレイスメントグループ
+### 設計上の考慮事項
 
-```
-特徴:
-- 単一AZ内の物理的近接配置
-- 10Gbps ネットワーク性能
-- 低レイテンシ
+可用性設計
 
-用途:
-- HPC (High Performance Computing)
-- 分散データベース
-```
+- **マルチAZ配置**: 単一障害点の排除
+- **Auto Scaling**: 需要変動への自動対応
+- **ロードバランサー**: トラフィック分散と健全性チェック
 
-#### パーティションプレイスメントグループ
+セキュリティ設計
 
-```
-特徴:
-- 異なるハードウェアラックに分散
-- 最大7パーティション/AZ
-- 障害分離
+- **セキュリティグループ**: ステートフルファイアウォール
+- **NACLs**: サブネットレベルのアクセス制御
+- **IAMロール**: 一時的な認証情報の提供
 
-用途:
-- Hadoop
-- Cassandra
-- Kafka
-```
+パフォーマンス最適化
 
-#### スプレッドプレイスメントグループ
+- **プレイスメントグループ**: ネットワーク性能の最適化
+- **拡張ネットワーキング**: SR-IOV、DPDK対応
+- **EBS最適化**: ストレージ性能の向上
 
-```
-特徴:
-- 異なる物理ハードウェアに配置
-- 最大7インスタンス/AZ
-- 最大の障害分離
-
-用途:
-- 重要なアプリケーション
-- 高可用性要件
-```
+---
 
 ### 公式リソース
 
@@ -148,472 +114,96 @@
 - [EC2 Black Belt](https://aws.amazon.com/jp/blogs/news/aws-black-belt-seminar-amazon-ec2-introduction/)
 - [EC2 インスタンスタイプ](https://aws.amazon.com/jp/ec2/instance-types/)
 
----
+## コンテナサービス
 
-## ECS (Elastic Container Service)
+### ECS (Elastic Container Service)
 
-### 概要
+基本概念
 
-Docker コンテナのオーケストレーションサービス。AWS 独自のコンテナ管理サービス。
+- AWSネイティブなコンテナオーケストレーションサービス
+- DockerコンテナをAWS環境で簡単に実行・管理
+- AWS他サービスとの深い統合
 
-### 起動タイプ
+主要コンポーネント
 
-#### EC2 起動タイプ
+- **クラスター**: コンテナインスタンスの論理グループ
+- **タスク定義**: コンテナの設定テンプレート
+- **サービス**: タスクの実行とスケーリングを管理
+- **タスク**: 実行中のコンテナインスタンス
 
-```
-特徴:
-- EC2インスタンス上でコンテナ実行
-- インスタンス管理が必要
-- より細かい制御が可能
+使用場面
 
-用途:
-- 既存のEC2環境との統合
-- カスタムAMI使用
-- GPU使用ワークロード
-```
+- **マイクロサービスアーキテクチャ**: サービス間の疎結合
+- **CI/CDパイプライン**: コンテナベースのデプロイメント
+- **レガシーアプリケーションの移行**: 段階的なコンテナ化
 
-#### Fargate 起動タイプ
+ECS vs EKS の選択基準
 
-```
-特徴:
-- サーバーレスコンテナ実行
-- インスタンス管理不要
-- vCPU/メモリ単位課金
+- **ECS選択**: AWS環境に特化、シンプルな運用、AWS統合重視
+- **EKS選択**: Kubernetes標準、マルチクラウド、既存K8s資産活用
 
-用途:
-- 運用負荷軽減
-- 短期間のタスク
-- マイクロサービス
-```
-
-### タスク定義
-
-#### 基本構成
-
-```json
-{
-  "family": "web-app",
-  "networkMode": "awsvpc",
-  "requiresCompatibilities": ["FARGATE"],
-  "cpu": "256",
-  "memory": "512",
-  "containerDefinitions": [
-    {
-      "name": "web-container",
-      "image": "nginx:latest",
-      "portMappings": [
-        {
-          "containerPort": 80,
-          "protocol": "tcp"
-        }
-      ],
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/ecs/web-app",
-          "awslogs-region": "us-east-1"
-        }
-      }
-    }
-  ]
-}
-```
-
-#### リソース制限
-
-```json
-{
-  "containerDefinitions": [
-    {
-      "name": "app",
-      "cpu": 256,
-      "memory": 512,
-      "memoryReservation": 256,
-      "essential": true,
-      "ulimits": [
-        {
-          "name": "nofile",
-          "softLimit": 65536,
-          "hardLimit": 65536
-        }
-      ]
-    }
-  ]
-}
-```
-
-### サービス設定
-
-#### Auto Scaling
-
-```json
-{
-  "serviceName": "web-service",
-  "desiredCount": 3,
-  "deploymentConfiguration": {
-    "maximumPercent": 200,
-    "minimumHealthyPercent": 50
-  },
-  "placementStrategy": [
-    {
-      "type": "spread",
-      "field": "attribute:ecs.availability-zone"
-    }
-  ]
-}
-```
-
-### ネットワーキング
-
-#### awsvpc ネットワークモード
-
-```
-
-特徴:
-- 各タスクに専用 ENI
-- セキュリティグループ適用可能
-- VPC 内での通信
-
-利点:
-- ネットワーク分離
-- 詳細な制御
-- 監視の容易さ
-```
-
-### 公式リソース
+#### 公式リソース
 
 - [ECS サービス紹介](https://aws.amazon.com/jp/ecs/)
 - [ECS Black Belt](https://aws.amazon.com/jp/blogs/news/aws-black-belt-online-seminar-con201-ecs-overview/)
 - [ECS ベストプラクティス](https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/)
 
----
+### EKS (Elastic Kubernetes Service)
 
-## EKS (Elastic Kubernetes Service)
+基本概念
 
-### 概要
+- マネージドKubernetesサービス
+- Kubernetesコントロールプレーンの運用をAWSが担当
+- CNCF認定、標準的なKubernetes API
 
-マネージド Kubernetes サービス。Kubernetes コントロールプレーンを自動管理。
+主要な特徴
 
-### アーキテクチャ
+- **標準準拠**: 標準的なKubernetes環境
+- **マルチクラウド対応**: ポータビリティの確保
+- **豊富なエコシステム**: Kubernetesツールチェーンの活用
 
-#### コントロールプレーン
+使用場面
 
-```
-AWS 管理:
-- Kubernetes API Server
-- etcd
-- Controller Manager
-- Scheduler
+- **既存Kubernetes資産**: オンプレミスからの移行
+- **マルチクラウド戦略**: ベンダーロックイン回避
+- **複雑なワークロード**: 高度なオーケストレーション要件
 
-特徴:
-- 高可用性 (Multi-AZ)
-- 自動パッチ適用
-- バックアップ・復旧
-```
+運用上の考慮事項
 
-#### ワーカーノード
+- **学習コスト**: Kubernetesの専門知識が必要
+- **運用複雑性**: より多くの設定と管理が必要
+- **コスト**: コントロールプレーンの追加料金
 
-```
-管理オプション:
-
-1. マネージドノードグループ
-2. セルフマネージドノード
-3. Fargate
-
-選択基準:
-- 運用負荷
-- カスタマイズ要件
-- コスト
-```
-
-### ノードグループ比較
-
-| タイプ               | 管理レベル   | カスタマイズ | コスト | 用途         |
-| -------------------- | ------------ | ------------ | ------ | ------------ |
-| **マネージド**       | AWS 管理     | 制限あり     | 中     | 一般的用途   |
-| **セルフマネージド** | ユーザー管理 | 自由         | 低     | 特殊要件     |
-| **Fargate**          | AWS 管理     | 制限あり     | 高     | サーバーレス |
-
-### ネットワーキング
-
-#### VPC CNI
-
-```yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: amazon-vpc-cni
-  namespace: kube-system
-data:
-  enable-pod-eni: "true"
-  enable-prefix-delegation: "true"
-  warm-prefix-target: "1"
-```
-
-#### セキュリティグループ for Pods
-
-```yaml
-apiVersion: vpcresources.k8s.aws/v1beta1
-kind: SecurityGroupPolicy
-metadata:
-  name: database-policy
-spec:
-  podSelector:
-    matchLabels:
-      app: database
-  securityGroups:
-    groupIds:
-      - sg-1234567890abcdef0
-```
-
-### Add-ons
-
-#### 重要な Add-ons
-
-```
-AWS Load Balancer Controller:
-- ALB/NLB 統合
-- Ingress/Service 対応
-
-EBS CSI Driver:
-- 永続ボリューム
-- 動的プロビジョニング
-
-EFS CSI Driver:
-- 共有ファイルシステム
-- ReadWriteMany 対応
-
-Cluster Autoscaler:
-- ノード自動スケーリング
-- コスト最適化
-```
-
-### 公式リソース
+#### 公式リソース
 
 - [EKS サービス紹介](https://aws.amazon.com/jp/eks/)
 - [EKS Black Belt](https://aws.amazon.com/jp/blogs/news/aws-black-belt-online-seminar-con221-introduction-eks/)
 - [EKS ベストプラクティス](https://aws.github.io/aws-eks-best-practices/)
 
----
+### Fargate
 
-## Lambda
+基本概念
 
-### 概要
+- サーバーレスコンテナ実行環境
+- インフラ管理不要、コンテナに集中可能
+- ECS、EKS両方で利用可能
 
-サーバーレスコンピューティングサービス。イベント駆動でコードを実行。
+主要な特徴
 
-### 実行環境
+- **インフラ抽象化**: サーバー管理が不要
+- **自動スケーリング**: 需要に応じた自動調整
+- **セキュリティ**: タスクレベルの分離
 
-#### ランタイム
+使用場面
 
-```
-サポート言語:
-- Python 3.8, 3.9, 3.10, 3.11
-- Node.js 16.x, 18.x
-- Java 8, 11, 17
-- .NET Core 3.1, 6
-- Go 1.x
-- Ruby 2.7, 3.2
-- カスタムランタイム (Provided)
-```
+- **運用負荷軽減**: インフラ管理を避けたい場合
+- **変動するワークロード**: 予測困難な負荷パターン
+- **開発効率重視**: アプリケーション開発に集中
 
-#### リソース制限
+EC2 vs Fargate の選択基準
 
-```
-メモリ: 128MB - 10,240MB (1MB 単位)
-CPU: メモリに比例 (1,769MB で 1vCPU)
-実行時間: 最大 15 分
-一時ディスク: 512MB - 10,240MB
-環境変数: 4KB
-ペイロード: 6MB (同期), 256KB (非同期)
-```
-
-### イベントソース
-
-#### 同期実行
-
-```
-API Gateway:
-- REST API
-- HTTP API
-- WebSocket API
-
-Application Load Balancer:
-- HTTP(S)リクエスト
-- パスベースルーティング
-
-直接呼び出し:
-- AWS SDK
-- AWS CLI
-```
-
-#### 非同期実行
-
-```
-S3:
-- オブジェクト作成/削除
-- バケット通知
-
-SNS:
-- メッセージ配信
-- ファンアウトパターン
-
-EventBridge:
-- スケジュール実行
-- カスタムイベント
-
-SQS:
-- メッセージ処理
-- バッチ処理
-```
-
-### パフォーマンス最適化
-
-#### コールドスタート対策
-
-```python
-import json
-import boto3
-
-# グローバル変数で初期化（コンテナ再利用時に効果）
-dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('MyTable')
-
-def lambda_handler(event, context):
-    # 処理ロジック
-    response = table.get_item(Key={'id': event['id']})
-    return {
-        'statusCode': 200,
-        'body': json.dumps(response['Item'])
-    }
-```
-
-#### Provisioned Concurrency
-
-```yaml
-# SAM Template例
-Resources:
-  MyFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: src/
-      Handler: app.lambda_handler
-      Runtime: python3.9
-      ProvisionedConcurrencyConfig:
-        ProvisionedConcurrencyLevel: 10
-```
-
-### エラーハンドリング
-
-#### リトライ設定
-
-```json
-{
-  "maximumRetryAttempts": 2,
-  "maximumEventAge": 3600,
-  "destinationConfig": {
-    "onFailure": {
-      "destination": "arn:aws:sqs:region:account:dlq"
-    },
-    "onSuccess": {
-      "destination": "arn:aws:sns:region:account:success-topic"
-    }
-  }
-}
-```
-
-### 公式リソース
-
-- [Lambda サービス紹介](https://aws.amazon.com/jp/lambda/)
-- [Lambda Black Belt](https://aws.amazon.com/jp/modern-apps/recommendation-guide/serverless/aws-lambda/)
-- [Lambda ベストプラクティス](https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html)
-
----
-
-## Fargate
-
-### 概要
-
-サーバーレスコンテナ実行環境。ECS/EKS で利用可能。
-
-### 特徴
-
-#### サーバーレス
-
-```
-利点:
-- インフラ管理不要
-- 自動スケーリング
-- セキュリティパッチ自動適用
-
-制限:
-- カスタマイズ制限
-- 特定のインスタンスタイプ不可
-- GPU未対応
-```
-
-#### リソース設定
-
-```
-CPU/メモリ組み合わせ:
-- 0.25 vCPU: 0.5GB, 1GB, 2GB
-- 0.5 vCPU: 1GB - 4GB
-- 1 vCPU: 2GB - 8GB
-- 2 vCPU: 4GB - 16GB
-- 4 vCPU: 8GB - 30GB
-- 8 vCPU: 16GB - 60GB
-- 16 vCPU: 32GB - 120GB
-```
-
-### ECS on Fargate
-
-#### タスク定義例
-
-```json
-{
-  "family": "fargate-task",
-  "networkMode": "awsvpc",
-  "requiresCompatibilities": ["FARGATE"],
-  "cpu": "1024",
-  "memory": "2048",
-  "executionRoleArn": "arn:aws:iam::account:role/ecsTaskExecutionRole",
-  "taskRoleArn": "arn:aws:iam::account:role/ecsTaskRole",
-  "containerDefinitions": [
-    {
-      "name": "web-app",
-      "image": "nginx:latest",
-      "portMappings": [
-        {
-          "containerPort": 80,
-          "protocol": "tcp"
-        }
-      ]
-    }
-  ]
-}
-```
-
-### EKS on Fargate
-
-#### Fargate Profile
-
-```yaml
-apiVersion: eksctl.io/v1alpha5
-kind: ClusterConfig
-metadata:
-  name: my-cluster
-  region: us-east-1
-
-fargateProfiles:
-  - name: default
-
-    selectors:
-      - namespace: default
-      - namespace: kube-system
-
-        labels:
-          k8s-app: kube-dns
-```
+- **EC2選択**: コスト最適化、特殊な要件、長時間実行
+- **Fargate選択**: 運用簡素化、短時間実行、変動負荷
 
 ### 公式リソース
 
@@ -622,88 +212,100 @@ fargateProfiles:
 
 ---
 
-## Batch
+## サーバーレスコンピューティング
 
-### 概要
+### Lambda
 
-バッチ処理専用のマネージドサービス。大規模な並列処理に最適。
+基本概念
 
-### コンポーネント
+- イベント駆動型のサーバーレス実行環境
+- コードの実行時間に対してのみ課金
+- 自動スケーリング、高可用性を内蔵
 
-#### Job Definition
+主要な特徴
 
-```json
-{
-  "jobDefinitionName": "batch-job",
-  "type": "container",
-  "containerProperties": {
-    "image": "busybox",
-    "vcpus": 2,
-    "memory": 2048,
-    "jobRoleArn": "arn:aws:iam::account:role/BatchJobRole"
-  },
-  "retryStrategy": {
-    "attempts": 3
-  },
-  "timeout": {
-    "attemptDurationSeconds": 3600
-  }
-}
-```
+- **イベント駆動**: 様々なAWSサービスとの統合
+- **自動スケーリング**: 同時実行数の自動調整
+- **多言語対応**: 主要プログラミング言語をサポート
+- **ステートレス**: 関数間での状態共有なし
 
-#### Compute Environment
+使用場面
 
-```json
-{
-  "computeEnvironmentName": "batch-compute-env",
-  "type": "MANAGED",
-  "state": "ENABLED",
-  "computeResources": {
-    "type": "EC2",
-    "minvCpus": 0,
-    "maxvCpus": 1000,
-    "desiredvCpus": 10,
-    "instanceTypes": ["m5.large", "m5.xlarge"],
-    "spotIamFleetRequestRole": "arn:aws:iam::account:role/aws-ec2-spot-fleet-role",
-    "bidPercentage": 50
-  }
-}
-```
+- **APIバックエンド**: API Gatewayとの組み合わせ
+- **データ処理**: S3、DynamoDBのイベント処理
+- **定期実行**: CloudWatch Eventsでのスケジュール実行
+- **リアルタイム処理**: Kinesis、SQSとの連携
 
-### 使用パターン
+設計上の考慮事項
 
-#### 科学計算
+- **実行時間制限**: 最大15分の制約
+- **コールドスタート**: 初回実行時の遅延
+- **同時実行制限**: アカウント・リージョンレベルの制限
+- **メモリ設定**: パフォーマンスとコストのバランス
 
-```
-用途:
-- 気象シミュレーション
-- 金融リスク計算
-- 機械学習トレーニング
+Lambda vs EC2 の選択基準
 
-特徴:
-- 大量の並列処理
-- 長時間実行
-- 高性能インスタンス使用
-```
+- **Lambda選択**: 短時間処理、イベント駆動、運用負荷軽減
+- **EC2選択**: 長時間処理、常時稼働、特殊な環境要件
 
-#### データ処理
+#### 公式リソース
 
-```
-用途:
-- ログ解析
-- ETL処理
-- 画像/動画変換
+- [Lambda サービス紹介](https://aws.amazon.com/jp/lambda/)
+- [Lambda Black Belt](https://aws.amazon.com/jp/modern-apps/recommendation-guide/serverless/aws-lambda/)
+- [Lambda ベストプラクティス](https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html)
 
-特徴:
-- スケジュール実行
-- 依存関係管理
-- エラーハンドリング
-```
+### Step Functions
 
-### 公式リソース
+基本概念
 
-- [Batch サービス紹介](https://aws.amazon.com/jp/batch/)
-- [Batch Black Belt](https://aws.amazon.com/jp/blogs/news/webinar-bb-aws-batch-2019/)
+- サーバーレスワークフローオーケストレーション
+- 複数のAWSサービスを組み合わせたワークフロー構築
+- 視覚的なワークフロー定義と監視
+
+主要な特徴
+
+- **状態管理**: ワークフローの状態を自動管理
+- **エラーハンドリング**: 再試行、エラー分岐の定義
+- **並列処理**: 複数タスクの並列実行
+- **視覚化**: ワークフローの可視化と監視
+
+使用場面
+
+- **複雑なビジネスプロセス**: 多段階の処理フロー
+- **データパイプライン**: ETL処理の自動化
+- **マイクロサービス連携**: サービス間の調整
+
+---
+
+## バッチ処理
+
+### AWS Batch
+
+基本概念
+
+- 大規模バッチ処理のためのフルマネージドサービス
+- コンピューティングリソースの自動プロビジョニング
+- ジョブキューとスケジューリングの管理
+
+主要な特徴
+
+- **動的スケーリング**: 需要に応じたリソース調整
+- **コスト最適化**: スポットインスタンスの活用
+- **ジョブ依存関係**: 複雑な依存関係の管理
+- **多様な実行環境**: EC2、Fargate、EKSでの実行
+
+使用場面
+
+- **科学計算**: 大規模シミュレーション、解析処理
+- **画像・動画処理**: メディアファイルの変換
+- **データ処理**: 大量データのETL処理
+- **機械学習**: モデル訓練、推論処理
+
+設計パターン
+
+- **ジョブキュー**: 優先度に基づく処理順序制御
+- **コンピューティング環境**: リソースタイプの最適化
+- **ジョブ定義**: 実行環境とリソース要件の定義
 
 ---
 
@@ -711,236 +313,155 @@ fargateProfiles:
 
 ### EC2 Auto Scaling
 
-#### 起動テンプレート
+基本概念
 
-```json
-{
-  "LaunchTemplateName": "web-server-template",
-  "LaunchTemplateData": {
-    "ImageId": "ami-0abcdef1234567890",
-    "InstanceType": "t3.micro",
-    "KeyName": "my-key-pair",
-    "SecurityGroupIds": ["sg-1234567890abcdef0"],
-    "UserData": "IyEvYmluL2Jhc2gKZWNobyAiSGVsbG8gV29ybGQi",
-    "IamInstanceProfile": {
-      "Name": "EC2-SSM-Role"
-    },
-    "BlockDeviceMappings": [
-      {
-        "DeviceName": "/dev/xvda",
-        "Ebs": {
-          "VolumeSize": 20,
-          "VolumeType": "gp3",
-          "DeleteOnTermination": true
-        }
-      }
-    ]
-  }
-}
-```
+- EC2インスタンスの自動スケーリング
+- 需要変動に応じたキャパシティ調整
+- 可用性とコストの最適化
 
-#### スケーリングポリシー
+スケーリングポリシー
 
-##### ターゲット追跡スケーリング
+- **ターゲット追跡**: 特定メトリクスの目標値維持
+- **ステップスケーリング**: 段階的なスケーリング
+- **シンプルスケーリング**: 単純な閾値ベース
+- **予測スケーリング**: 機械学習による予測
 
-```json
-{
-  "TargetValue": 70.0,
-  "PredefinedMetricSpecification": {
-    "PredefinedMetricType": "ASGAverageCPUUtilization"
-  },
-  "ScaleOutCooldown": 300,
-  "ScaleInCooldown": 300
-}
-```
+設計上の考慮事項
 
-##### ステップスケーリング
-
-```json
-{
-  "AdjustmentType": "ChangeInCapacity",
-  "StepAdjustments": [
-    {
-      "MetricIntervalLowerBound": 0,
-      "MetricIntervalUpperBound": 50,
-      "ScalingAdjustment": 1
-    },
-    {
-      "MetricIntervalLowerBound": 50,
-      "ScalingAdjustment": 2
-    }
-  ],
-  "Cooldown": 300
-}
-```
+- **スケーリング指標**: CPU、メモリ、カスタムメトリクス
+- **クールダウン期間**: スケーリング動作の安定化
+- **ヘルスチェック**: インスタンスの健全性監視
+- **AZ分散**: 可用性を考慮した配置
 
 ### Application Auto Scaling
 
-#### 対応サービス
+対象サービス
 
-```
-- DynamoDB (テーブル/GSI)
-- ECS (サービス)
-- EC2 Spot Fleet
-- EMR (クラスター)
-- AppStream 2.0 (フリート)
-- Aurora (レプリカ)
-- SageMaker (エンドポイント)
-- Lambda (プロビジョンド同時実行数)
-- Comprehend (ドキュメント分類)
-- Keyspaces (テーブル)
-```
+- ECS サービス
+- DynamoDB テーブル
+- Aurora レプリカ
+- Lambda 同時実行数
+- その他多数のAWSサービス
 
-#### DynamoDB Auto Scaling例
+統一されたスケーリング体験
 
-```json
-{
-  "ServiceNamespace": "dynamodb",
-  "ResourceId": "table/my-table",
-  "ScalableDimension": "dynamodb:table:ReadCapacityUnits",
-  "MinCapacity": 5,
-  "MaxCapacity": 1000,
-  "TargetTrackingScalingPolicies": [
-    {
-      "TargetValue": 70.0,
-      "PredefinedMetricSpecification": {
-        "PredefinedMetricType": "DynamoDBReadCapacityUtilization"
-      }
-    }
-  ]
-}
-```
+- 一貫したAPIとコンソール体験
+- 共通のスケーリングポリシー
+- 統合された監視とアラート
 
 ### 公式リソース
 
 - [Auto Scaling サービス紹介](https://aws.amazon.com/jp/autoscaling/)
-- [Auto Scaling Black Belt](https://aws.amazon.com/jp/blogs/news/webinar-bb-amazon-ec2-auto-scaling-and-aws-auto-scaling-2019/())
+- [Auto Scaling Black Belt](https://aws.amazon.com/jp/blogs/news/webinar-bb-amazon-ec2-auto-scaling-and-aws-auto-scaling-2019/)
 
 ---
 
-## サービス比較
+## サービス選択の指針
 
-### 用途別比較
+### ワークロード特性による選択
 
-| 要件                   | 推奨サービス | 理由                       |
-| ---------------------- | ------------ | -------------------------- |
-| **長時間実行**         | EC2          | コスト効率、カスタマイズ性 |
-| **短時間処理**         | Lambda       | サーバーレス、従量課金     |
-| **コンテナ管理簡素化** | Fargate      | インフラ管理不要           |
-| **Kubernetes 使用**    | EKS          | 標準的な K8s API           |
-| **バッチ処理**         | Batch        | 並列処理最適化             |
-| **イベント駆動**       | Lambda       | 自動スケーリング           |
+継続稼働型アプリケーション
 
-### コスト比較
+- **EC2**: 長時間稼働、安定した負荷
+- **ECS/EKS**: マイクロサービス、コンテナ化済み
+- **考慮事項**: 可用性、スケーラビリティ、運用負荷
 
-#### 24 時間稼働の場合
+イベント駆動型処理
 
-```
-EC2 t3.micro (オンデマンド):
-$0.0104/時間 × 24時間 × 30日 = $7.49/月
+- **Lambda**: 短時間、非同期処理
+- **Step Functions**: 複雑なワークフロー
+- **考慮事項**: 実行時間、頻度、複雑性
 
-Lambda (1GB, 100ms実行, 100万回/月):
-$0.0000166667 × 100万 = $16.67/月
+バッチ処理
 
-Fargate (0.25vCPU, 0.5GB, 24時間):
-($0.04048 + $0.004445) × 24 × 30 = $32.36/月
-```
+- **Batch**: 大規模、並列処理
+- **Lambda**: 軽量、定期実行
+- **EC2**: 特殊要件、長時間処理
 
-### パフォーマンス比較
+### コスト最適化の観点
 
-| サービス    | 起動時間   | スケーリング速度 | 最大性能 |
-| ----------- | ---------- | ---------------- | -------- |
-| **EC2**     | 1-2 分     | 中               | 高       |
-| **Lambda**  | 数秒-数分  | 高               | 中       |
-| **Fargate** | 30 秒-2 分 | 高               | 中       |
-| **EKS**     | 1-3 分     | 中               | 高       |
+予測可能なワークロード
 
-### 選択フローチャート
+- リザーブドインスタンス、Savings Plans
+- 適切なインスタンスサイジング
+- スケジュールベースのスケーリング
 
-```
-処理時間は15分以内？
-├─ Yes → イベント駆動？
-│   ├─ Yes → Lambda
-│   └─ No → コンテナ使用？
-│       ├─ Yes → Fargate
-│       └─ No → EC2 (短時間)
-└─ No → コンテナ使用？
-    ├─ Yes → Kubernetes必要？
-    │   ├─ Yes → EKS
-    │   └─ No → ECS
-    └─ No → バッチ処理？
-        ├─ Yes → Batch
-        └─ No → EC2
-```
+変動するワークロード
 
----
+- Auto Scaling の活用
+- スポットインスタンスの検討
+- サーバーレスアーキテクチャ
 
-## 実践演習
+開発・テスト環境
 
-### 演習 1: 3 層アーキテクチャ
+- スポットインスタンス
+- 自動停止・開始
+- 小さなインスタンスタイプ
 
-```
-要件:
-- Web層: Auto Scaling対応
-- App層: コンテナ化
-- DB層: 高可用性
+### 運用負荷の観点
 
-解答例:
-- Web層: ALB + EC2 Auto Scaling
-- App層: ECS Fargate
-- DB層: RDS Multi-AZ
-```
+運用負荷を最小化
 
-### 演習 2: サーバーレス処理
+- マネージドサービスの選択
+- サーバーレスアーキテクチャ
+- 自動化の推進
 
-```
-要件:
-- S3アップロード時に画像リサイズ
-- 処理結果をDynamoDBに保存
-- エラー時は管理者に通知
+制御性を重視
 
-解答例:
-S3 → Lambda (画像処理) → DynamoDB
-     ↓ (エラー時)
-    SNS → Email
-```
+- EC2 での詳細制御
+- カスタム設定の必要性
+- 特殊な要件への対応
 
-### 演習 3: バッチ処理基盤
+### セキュリティの観点
 
-```
-要件:
-- 大量データの並列処理
-- スポットインスタンス活用
-- 処理完了時に通知
+分離レベル
 
-解答例:
-EventBridge → Batch → SNS
-(スケジュール)  (並列処理) (通知)
-```
+- **VM レベル**: EC2 インスタンス
+- **コンテナレベル**: ECS、EKS
+- **関数レベル**: Lambda
+
+ネットワーク制御
+
+- VPC での詳細制御
+- セキュリティグループ、NACL
+- プライベートサブネット配置
+
+アクセス制御
+
+- IAM ロールの適切な設定
+- 最小権限の原則
+- 一時的な認証情報の使用
 
 ---
 
 ## まとめ
 
-### 重要ポイント
+### 試験でのポイント
 
-1. **適切なサービス選択**: 要件に応じた最適なサービス選択
+サービス選択の判断基準
 
-2. **コスト最適化**: 購入オプション、リソース設定の最適化
+1. **ワークロードの特性**: 継続性、実行時間、負荷パターン
+2. **運用要件**: 管理負荷、制御レベル、専門知識
+3. **コスト要件**: 予算制約、最適化の必要性
+4. **セキュリティ要件**: 分離レベル、コンプライアンス
+5. **可用性要件**: SLA、災害復旧、冗長性
 
-3. **スケーラビリティ**: Auto Scaling の適切な設定
+よくある設計パターン
 
-4. **可用性**: Multi-AZ、複数インスタンスタイプの活用
+- **3層アーキテクチャ**: Web、App、DB層の分離
+- **マイクロサービス**: サービス分割とコンテナ化
+- **サーバーレス**: イベント駆動とFaaS活用
+- **ハイブリッド**: 複数サービスの組み合わせ
 
-5. **セキュリティ**: IAM ロール、セキュリティグループの適切な設定
+コスト最適化戦略
 
-### 試験対策
-
-- 各サービスの特徴と制限を理解
-- コスト計算ができるようになる
-- アーキテクチャ図から適切なサービスを選択
-- パフォーマンス要件に応じた設定を理解
+- **適切なサイジング**: 過剰スペックの回避
+- **購入オプション**: リザーブド、スポット活用
+- **自動スケーリング**: 需要変動への対応
+- **ライフサイクル管理**: 不要リソースの削除
 
 ---
 
-_次のセクション: [02. ストレージサービス](./02-storage.md)_
+## ライセンス
+
+このコンテンツは MIT License の下で公開されています。詳細は [LICENSE](./LICENSE) ファイルをご確認ください。
