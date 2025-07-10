@@ -1,6 +1,6 @@
 // AWS Solution Architect Professional 試験対策クイズ問題データ
 // 自動生成ファイル - 手動編集しないでください
-// 生成日時: 2025-07-09T14:23:30.738Z
+// 生成日時: 2025-07-10T00:38:46.792Z
 
 // 全問題データ
 const allQuestions = [
@@ -4036,7 +4036,7 @@ const allQuestions = [
   },
   {
     id: 'migration-multi-1',
-    category: '移行戦略',
+    category: '移行・統合',
     question: 'AWS移行の6つのR戦略を3つ選択してください。',
     options: [
       'Rehost (Lift and Shift)',
@@ -4056,7 +4056,7 @@ const allQuestions = [
   },
   {
     id: 'migration-multi-2',
-    category: '移行戦略',
+    category: '移行・統合',
     question: 'AWS Application Migration Service (MGN)の機能として正しいものを2つ選択してください。',
     options: [
       'ブロックレベルレプリケーション',
@@ -4075,7 +4075,7 @@ const allQuestions = [
   },
   {
     id: 'migration-multi-3',
-    category: '移行戦略',
+    category: '移行・統合',
     question: 'AWS Database Migration Service (DMS)でサポートされている移行パターンを3つ選択してください。',
     options: [
       '同種データベース間の移行',
@@ -4095,7 +4095,7 @@ const allQuestions = [
   },
   {
     id: 'migration-multi-4',
-    category: '移行戦略',
+    category: '移行・統合',
     question: 'AWS Snow Familyのデバイスとして正しいものを2つ選択してください。',
     options: [
       'AWS Snowball Edge',
@@ -4114,7 +4114,7 @@ const allQuestions = [
   },
   {
     id: 'migration-multi-5',
-    category: '移行戦略',
+    category: '移行・統合',
     question: 'クラウド移行の成功要因として正しいものを3つ選択してください。',
     options: [
       '経営陣のサポート',
@@ -4134,7 +4134,7 @@ const allQuestions = [
   },
   {
     id: 'migration-multi-6',
-    category: '移行戦略',
+    category: '移行・統合',
     question: 'AWS Schema Conversion Tool (SCT) の機能として正しいものを2つ選択してください。',
     options: [
       'データベーススキーマの変換',
@@ -4153,7 +4153,7 @@ const allQuestions = [
   },
   {
     id: 'migration-multi-7',
-    category: '移行戦略',
+    category: '移行・統合',
     question: 'AWS Migration Hub の機能として正しいものを3つ選択してください。',
     options: [
       '移行プロジェクトの一元管理',
@@ -4173,7 +4173,7 @@ const allQuestions = [
   },
   {
     id: 'migration-multi-8',
-    category: '移行戦略',
+    category: '移行・統合',
     question: 'AWS Application Discovery Service の機能として正しいものを2つ選択してください。',
     options: [
       'オンプレミス環境の自動検出',
@@ -4192,7 +4192,7 @@ const allQuestions = [
   },
   {
     id: 'migration-multi-9',
-    category: '移行戦略',
+    category: '移行・統合',
     question: 'Large-scale migration のベストプラクティスとして正しいものを3つ選択してください。',
     options: [
       'パイロットプロジェクトの実施',
@@ -4212,7 +4212,7 @@ const allQuestions = [
   },
   {
     id: 'migration-multi-10',
-    category: '移行戦略',
+    category: '移行・統合',
     question: 'AWS Migration Acceleration Program (MAP) の特徴として正しいものを2つ選択してください。',
     options: [
       '移行プロジェクトの資金支援',
@@ -4881,7 +4881,7 @@ const allQuestions = [
   },
   {
     id: 'analytics-multi-1',
-    category: 'アナリティクス',
+    category: '分析・機械学習',
     question: 'Amazon Redshiftの特徴として正しいものを3つ選択してください。',
     options: [
       'カラムナーストレージ',
@@ -4901,7 +4901,7 @@ const allQuestions = [
   },
   {
     id: 'analytics-multi-2',
-    category: 'アナリティクス',
+    category: '分析・機械学習',
     question: 'AWS Glueの機能として正しいものを2つ選択してください。',
     options: [
       'データカタログ管理',
@@ -4920,7 +4920,7 @@ const allQuestions = [
   },
   {
     id: 'analytics-multi-3',
-    category: 'アナリティクス',
+    category: '分析・機械学習',
     question: 'Amazon Kinesisのサービスとして正しいものを3つ選択してください。',
     options: [
       'Kinesis Data Streams',
@@ -4940,7 +4940,7 @@ const allQuestions = [
   },
   {
     id: 'analytics-multi-4',
-    category: 'アナリティクス',
+    category: '分析・機械学習',
     question: 'Amazon EMRでサポートされているビッグデータフレームワークを2つ選択してください。',
     options: [
       'Apache Spark',
@@ -4959,7 +4959,7 @@ const allQuestions = [
   },
   {
     id: 'analytics-multi-5',
-    category: 'アナリティクス',
+    category: '分析・機械学習',
     question: 'Amazon QuickSightの機能として正しいものを3つ選択してください。',
     options: [
       'インタラクティブなダッシュボード',
@@ -4979,7 +4979,7 @@ const allQuestions = [
   },
   {
     id: 'analytics-multi-6',
-    category: 'アナリティクス',
+    category: '分析・機械学習',
     question: 'Amazon Athena の特徴として正しいものを2つ選択してください。',
     options: [
       'サーバーレスクエリサービス',
@@ -4998,7 +4998,7 @@ const allQuestions = [
   },
   {
     id: 'analytics-multi-7',
-    category: 'アナリティクス',
+    category: '分析・機械学習',
     question: 'AWS Lake Formation の機能として正しいものを3つ選択してください。',
     options: [
       'データレイクの構築・管理',
@@ -5018,7 +5018,7 @@ const allQuestions = [
   },
   {
     id: 'analytics-multi-8',
-    category: 'アナリティクス',
+    category: '分析・機械学習',
     question: 'Amazon OpenSearch Service の機能として正しいものを2つ選択してください。',
     options: [
       '全文検索機能',
@@ -5037,7 +5037,7 @@ const allQuestions = [
   },
   {
     id: 'analytics-multi-9',
-    category: 'アナリティクス',
+    category: '分析・機械学習',
     question: 'Amazon MSK (Managed Streaming for Apache Kafka) の利点として正しいものを3つ選択してください。',
     options: [
       'フルマネージドKafkaクラスター',
@@ -5057,7 +5057,7 @@ const allQuestions = [
   },
   {
     id: 'analytics-multi-10',
-    category: 'アナリティクス',
+    category: '分析・機械学習',
     question: 'AWS Data Pipeline の機能として正しいものを2つ選択してください。',
     options: [
       'データ処理ワークフローの定義',
@@ -5401,7 +5401,7 @@ const allQuestions = [
   },
   {
     id: 'integration-multi-1',
-    category: '統合サービス',
+    category: 'アプリケーション統合',
     question: 'Amazon SQSの特徴として正しいものを2つ選択してください。',
     options: [
       'メッセージの順序保証（FIFO）',
@@ -5420,7 +5420,7 @@ const allQuestions = [
   },
   {
     id: 'integration-multi-2',
-    category: '統合サービス',
+    category: 'アプリケーション統合',
     question: 'Amazon SNSでサポートされている配信プロトコルを3つ選択してください。',
     options: [
       'HTTP/HTTPS',
@@ -5440,7 +5440,7 @@ const allQuestions = [
   },
   {
     id: 'integration-multi-3',
-    category: '統合サービス',
+    category: 'アプリケーション統合',
     question: 'AWS Step Functionsの機能として正しいものを3つ選択してください。',
     options: [
       'ワークフローの可視化',
@@ -5460,7 +5460,7 @@ const allQuestions = [
   },
   {
     id: 'integration-multi-4',
-    category: '統合サービス',
+    category: 'アプリケーション統合',
     question: 'Amazon API Gatewayの認証方式として正しいものを2つ選択してください。',
     options: [
       'IAM認証',
@@ -5479,7 +5479,7 @@ const allQuestions = [
   },
   {
     id: 'integration-multi-5',
-    category: '統合サービス',
+    category: 'アプリケーション統合',
     question: 'Amazon EventBridgeのイベントソースとして正しいものを3つ選択してください。',
     options: [
       'AWSサービス',
@@ -5499,7 +5499,7 @@ const allQuestions = [
   },
   {
     id: 'integration-multi-6',
-    category: '統合サービス',
+    category: 'アプリケーション統合',
     question: 'Amazon MQ の特徴として正しいものを2つ選択してください。',
     options: [
       'Apache ActiveMQ サポート',
@@ -5518,7 +5518,7 @@ const allQuestions = [
   },
   {
     id: 'integration-multi-7',
-    category: '統合サービス',
+    category: 'アプリケーション統合',
     question: 'AWS AppSync の機能として正しいものを3つ選択してください。',
     options: [
       'GraphQL API の提供',
@@ -5538,7 +5538,7 @@ const allQuestions = [
   },
   {
     id: 'integration-multi-8',
-    category: '統合サービス',
+    category: 'アプリケーション統合',
     question: 'Amazon Simple Workflow Service (SWF) の特徴として正しいものを2つ選択してください。',
     options: [
       '長時間実行ワークフローのサポート',
@@ -5557,7 +5557,7 @@ const allQuestions = [
   },
   {
     id: 'integration-multi-9',
-    category: '統合サービス',
+    category: 'アプリケーション統合',
     question: 'AWS X-Ray の統合機能として正しいものを3つ選択してください。',
     options: [
       'Lambda関数のトレーシング',
@@ -5577,7 +5577,7 @@ const allQuestions = [
   },
   {
     id: 'integration-multi-10',
-    category: '統合サービス',
+    category: 'アプリケーション統合',
     question: 'Amazon Kinesis Data Firehose の配信先として正しいものを2つ選択してください。',
     options: [
       'Amazon S3',
@@ -7481,7 +7481,7 @@ const allQuestions = [
   },
   {
     id: 'architecture-multi-1',
-    category: 'アーキテクチャパターン',
+    category: 'アーキテクチャ',
     question: 'AWS Well-Architected Frameworkの6つの柱を3つ選択してください。',
     options: [
       '運用上の優秀性',
@@ -7501,7 +7501,7 @@ const allQuestions = [
   },
   {
     id: 'architecture-multi-2',
-    category: 'アーキテクチャパターン',
+    category: 'アーキテクチャ',
     question: 'マイクロサービスアーキテクチャの利点として正しいものを2つ選択してください。',
     options: [
       '独立したデプロイメント',
@@ -7520,7 +7520,7 @@ const allQuestions = [
   },
   {
     id: 'architecture-multi-3',
-    category: 'アーキテクチャパターン',
+    category: 'アーキテクチャ',
     question: 'イベント駆動アーキテクチャで使用されるAWSサービスを3つ選択してください。',
     options: [
       'Amazon EventBridge',
@@ -7540,7 +7540,7 @@ const allQuestions = [
   },
   {
     id: 'architecture-multi-4',
-    category: 'アーキテクチャパターン',
+    category: 'アーキテクチャ',
     question: 'サーバーレスアーキテクチャの特徴として正しいものを2つ選択してください。',
     options: [
       '使用量ベースの課金',
@@ -7559,7 +7559,7 @@ const allQuestions = [
   },
   {
     id: 'architecture-multi-5',
-    category: 'アーキテクチャパターン',
+    category: 'アーキテクチャ',
     question: 'CQRS（Command Query Responsibility Segregation）パターンの利点として正しいものを3つ選択してください。',
     options: [
       '読み取りと書き込みの独立最適化',
@@ -7579,7 +7579,7 @@ const allQuestions = [
   },
   {
     id: 'architecture-multi-6',
-    category: 'アーキテクチャパターン',
+    category: 'アーキテクチャ',
     question: 'Twelve-Factor Appの原則として正しいものを3つ選択してください。',
     options: [
       'コードベースの統一',
@@ -7599,7 +7599,7 @@ const allQuestions = [
   },
   {
     id: 'architecture-multi-7',
-    category: 'アーキテクチャパターン',
+    category: 'アーキテクチャ',
     question: 'Circuit Breakerパターンの利点として正しいものを2つ選択してください。',
     options: [
       'カスケード障害の防止',
@@ -7618,7 +7618,7 @@ const allQuestions = [
   },
   {
     id: 'architecture-multi-8',
-    category: 'アーキテクチャパターン',
+    category: 'アーキテクチャ',
     question: 'Strangler Fig パターンの特徴として正しいものを3つ選択してください。',
     options: [
       '段階的なシステム移行',
@@ -7638,7 +7638,7 @@ const allQuestions = [
   },
   {
     id: 'architecture-multi-9',
-    category: 'アーキテクチャパターン',
+    category: 'アーキテクチャ',
     question: 'API Gatewayパターンの機能として正しいものを2つ選択してください。',
     options: [
       'リクエストルーティング',
@@ -7657,7 +7657,7 @@ const allQuestions = [
   },
   {
     id: 'architecture-multi-10',
-    category: 'アーキテクチャパターン',
+    category: 'アーキテクチャ',
     question: 'Bulkhead パターンの利点として正しいものを3つ選択してください。',
     options: [
       '障害の分離',
@@ -8848,7 +8848,7 @@ const allQuestions = [
   },
   {
     id: 'operations-multi-1',
-    category: '運用管理',
+    category: '運用・デプロイ',
     question: 'AWS Systems Managerの機能として正しいものを3つ選択してください。',
     options: [
       'Parameter Store',
@@ -8868,7 +8868,7 @@ const allQuestions = [
   },
   {
     id: 'operations-multi-2',
-    category: '運用管理',
+    category: '運用・デプロイ',
     question: 'AWS CloudFormationの機能として正しいものを2つ選択してください。',
     options: [
       'Infrastructure as Code',
@@ -8887,7 +8887,7 @@ const allQuestions = [
   },
   {
     id: 'operations-multi-3',
-    category: '運用管理',
+    category: '運用・デプロイ',
     question: 'AWS Configの機能として正しいものを3つ選択してください。',
     options: [
       'リソース設定の記録',
@@ -8907,7 +8907,7 @@ const allQuestions = [
   },
   {
     id: 'operations-multi-4',
-    category: '運用管理',
+    category: '運用・デプロイ',
     question: 'AWS OpsWorksでサポートされているスタックタイプを2つ選択してください。',
     options: [
       'Chef Automate',
@@ -8926,7 +8926,7 @@ const allQuestions = [
   },
   {
     id: 'operations-multi-5',
-    category: '運用管理',
+    category: '運用・デプロイ',
     question: 'AWS Service Catalogの利点として正しいものを3つ選択してください。',
     options: [
       'IT管理の標準化',
@@ -8946,7 +8946,7 @@ const allQuestions = [
   },
   {
     id: 'operations-multi-6',
-    category: '運用管理',
+    category: '運用・デプロイ',
     question: 'AWS CodePipeline の機能として正しいものを2つ選択してください。',
     options: [
       '継続的インテグレーション',
@@ -8965,7 +8965,7 @@ const allQuestions = [
   },
   {
     id: 'operations-multi-7',
-    category: '運用管理',
+    category: '運用・デプロイ',
     question: 'AWS Systems Manager Automation の機能として正しいものを3つ選択してください。',
     options: [
       'EC2インスタンスの自動化タスク',
@@ -8985,7 +8985,7 @@ const allQuestions = [
   },
   {
     id: 'operations-multi-8',
-    category: '運用管理',
+    category: '運用・デプロイ',
     question: 'AWS CodeDeploy の配信戦略として正しいものを2つ選択してください。',
     options: [
       'Blue/Green デプロイメント',
@@ -9004,7 +9004,7 @@ const allQuestions = [
   },
   {
     id: 'operations-multi-9',
-    category: '運用管理',
+    category: '運用・デプロイ',
     question: 'AWS Well-Architected Tool の機能として正しいものを3つ選択してください。',
     options: [
       'アーキテクチャレビューの実施',
@@ -9024,7 +9024,7 @@ const allQuestions = [
   },
   {
     id: 'operations-multi-10',
-    category: '運用管理',
+    category: '運用・デプロイ',
     question: 'AWS Resource Groups の機能として正しいものを2つ選択してください。',
     options: [
       'リソースの論理的なグループ化',
