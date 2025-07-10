@@ -102,7 +102,11 @@ allQuestions.forEach((question, index) => {
     // ID形式チェック（category-number形式）
     const idPattern = /^[a-z-]+-\d+$/
     if (!idPattern.test(question.id)) {
-      console.warn(chalk.yellow(`⚠️  Question ${questionNum}: ID should follow 'category-number' format, got '${question.id}'`))
+      console.warn(
+        chalk.yellow(
+          `⚠️  Question ${questionNum}: ID should follow 'category-number' format, got '${question.id}'`
+        )
+      )
       warnings++
     }
   }
@@ -142,10 +146,17 @@ allQuestions.forEach((question, index) => {
       chalk.red(`❌ Question ${questionNum}: Options must be an array`)
     )
     errors++
-  } else if (question.options.length !== 4) {
+  } else if (!question.multipleChoice && question.options.length !== 4) {
     console.error(
       chalk.red(
         `❌ Question ${questionNum}: Must have exactly 4 options, got ${question.options.length}`
+      )
+    )
+    errors++
+  } else if (question.multipleChoice && question.options.length !== 6) {
+    console.error(
+      chalk.red(
+        `❌ Question ${questionNum}: Must have exactly 6 options for multiple choice, got ${question.options.length}`
       )
     )
     errors++
@@ -165,20 +176,46 @@ allQuestions.forEach((question, index) => {
   }
 
   // 正解インデックスのチェック
-  if (typeof question.correct !== 'number') {
-    console.error(
-      chalk.red(
-        `❌ Question ${questionNum}: Correct answer index must be a number`
+  if (question.multipleChoice) {
+    // 複数選択問題の場合
+    if (!Array.isArray(question.correct) || question.correct.length === 0) {
+      console.error(
+        chalk.red(
+          `❌ Question ${questionNum}: Multiple choice question must have 'correct' as a non-empty array`
+        )
       )
-    )
-    errors++
-  } else if (question.correct < 0 || question.correct > 3) {
-    console.error(
-      chalk.red(
-        `❌ Question ${questionNum}: Correct answer index must be between 0 and 3, got ${question.correct}`
+      errors++
+    } else {
+      question.correct.forEach((index, idx) => {
+        if (typeof index !== 'number' || index < 0 || index > 5) {
+          console.error(
+            chalk.red(
+              `❌ Question ${questionNum}: Correct answer index at position ${
+                idx + 1
+              } must be a number between 0 and 3, got ${index}`
+            )
+          )
+          errors++
+        }
+      })
+    }
+  } else {
+    // 単一選択問題の場合
+    if (typeof question.correct !== 'number') {
+      console.error(
+        chalk.red(
+          `❌ Question ${questionNum}: Correct answer index must be a number`
+        )
       )
-    )
-    errors++
+      errors++
+    } else if (question.correct < 0 || question.correct > 3) {
+      console.error(
+        chalk.red(
+          `❌ Question ${questionNum}: Correct answer index must be between 0 and 3, got ${question.correct}`
+        )
+      )
+      errors++
+    }
   }
 
   // 解説のチェック
@@ -213,29 +250,6 @@ allQuestions.forEach((question, index) => {
     warnings++
   }
 })
-
-// IDの連続性チェック
-const sortedIds = Array.from(usedIds).sort((a, b) => a - b)
-const expectedIds = Array.from(
-  { length: allQuestions.length },
-  (_, i) => i + 1
-)
-const missingIds = expectedIds.filter((id) => !usedIds.has(id))
-const extraIds = sortedIds.filter((id) => id > allQuestions.length)
-
-if (missingIds.length > 0) {
-  console.warn(chalk.yellow(`⚠️  Missing IDs: ${missingIds.join(', ')}`))
-  warnings++
-}
-
-if (extraIds.length > 0) {
-  console.warn(
-    chalk.yellow(
-      `⚠️  Extra IDs (beyond expected range): ${extraIds.join(', ')}`
-    )
-  )
-  warnings++
-}
 
 // 結果の表示
 console.log('\n' + chalk.blue('📊 Validation Summary:'))

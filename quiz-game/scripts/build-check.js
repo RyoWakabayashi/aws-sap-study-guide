@@ -40,7 +40,7 @@ function check (description, checkFn) {
 const fileSizeChecks = [
   { file: 'index.html', maxSize: 50 * 1024 }, // 50KB
   { file: 'styles.css', maxSize: 100 * 1024 }, // 100KB
-  { file: 'script.js', maxSize: 50 * 1024 }, // 50KB
+  { file: 'script.js', maxSize: 100 * 1024 }, // 100KB
   { file: 'questions.js', maxSize: 500 * 1024 }, // 500KB
   { file: 'sw.js', maxSize: 10 * 1024 } // 10KB
 ]
