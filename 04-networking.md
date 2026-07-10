@@ -296,7 +296,7 @@ Classic Load Balancer (CLB)
 #### 公式リソース
 
 - [CloudFront サービス紹介](https://aws.amazon.com/jp/cloudfront/)
-- [CloudFront Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20190730_AWS-BlackBelt_Amazon_CloudFront.pdf)
+- [CloudFront Black Belt (2025年版・基礎編)](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2025_Amazon-CloudFront-Basic_0725_v1.pdf)
 
 ### Amazon Route 53
 
@@ -516,6 +516,8 @@ DMZ設計
 - **概要**: サービス間通信をVPC・アカウント境界を越えて統一的に管理するアプリケーションネットワーキングサービス。サービスメッシュに近い機能をマネージドで提供
 - **Resource Gateway**: IP/DNS/ARNで指定した単一リソース（データベースなどのTCPリソースを含む）をVPC Latticeに公開でき、VPC Endpoint (PrivateLink) やTransit Gatewayに代わる、より低コストな選択肢として登場
 - **試験での着眼点**: マイクロサービス間の認証・認可・可観測性を統一したい、複数VPC/アカウントにまたがるサービス公開をシンプルにしたいという要件で、Transit Gateway・PrivateLinkとの比較が問われる可能性
+- [PrivateLink and Lattice Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2025_AWS-PrivateLink_0707_v1.pdf)
+  （[動画](https://www.youtube.com/watch?v=rI2Bp7nn5oE)）
 
 ### AWS Verified Access
 

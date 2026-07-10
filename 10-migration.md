@@ -8,7 +8,7 @@ Licensed under the MIT License. See LICENSE file for details.
 ## 目次
 
 1. [移行の基本概念](#移行の基本概念)
-2. [6つのR戦略](#6つのr戦略)
+2. [7つのR戦略](#7つのr戦略)
 3. [アプリケーション移行](#アプリケーション移行)
 4. [データベース移行](#データベース移行)
 5. [データ移行](#データ移行)
@@ -70,7 +70,10 @@ AWS Cloud Adoption Framework (CAF)
 
 ---
 
-## 6つのR戦略
+## 7つのR戦略
+
+現行のSAP-C02試験ガイドではRehost・Replatform・Repurchase・Refactor/Re-architect・Retire・Retainに加え、
+**Relocate**を含めた「7つのR (7Rs)」が移行戦略評価の基本フレームワークとして明記されています。
 
 ### 1. Rehost (Lift and Shift)
 
@@ -99,7 +102,36 @@ AWS Cloud Adoption Framework (CAF)
 - **VM Import/Export**: 仮想マシンイメージの移行
 - **物理サーバー**: エージェントベースの移行
 
-### 2. Replatform (Lift, Tinker, and Shift)
+#### 公式リソース
+
+- [AWS Application Migration Service (AWS MGN) 概要【AWS Black Belt】](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AWS_MGN_0430_v1.pdf)
+  （[動画](https://www.youtube.com/watch?v=HktS_jCIv9Q)）
+
+### 2. Relocate (Hypervisor-level lift and shift)
+
+基本概念
+
+- ハイパーバイザーレベルでインフラをそのままAWSへ移行し、OS・アプリケーションには一切手を加えない
+- Rehostよりもさらに変更を伴わない「純粋な移行」で、主にVMware環境が対象
+- ライセンス・運用ツールなど既存のVMware資産をそのまま引き継げる
+
+適用場面
+
+- **VMware資産の維持**: 既存のVMwareライセンス・運用手順・監視ツールを変更したくない
+- **極めて短期間での移行**: アプリケーション改修を一切行わずに移行したい
+- **大規模VM群の一括移行**: 個々のVMを再設定せずまとめて移行したい
+
+実装アプローチ
+
+- **VMware Cloud on AWS**: オンプレミスのVMware環境をAWS上のベアメタルインフラにそのまま再配置
+- **Amazon EVS (Elastic VMware Service)**: AWS上でVMware環境をネイティブに実行
+
+メリット・デメリット
+
+- **メリット**: アプリケーション変更ゼロ、最短の移行期間、既存VMwareスキル・ツールをそのまま活用
+- **デメリット**: クラウドネイティブサービスの活用は限定的、Rehost同様に後続の最適化(Replatform/Refactor)が別途必要
+
+### 3. Replatform (Lift, Tinker, and Shift)
 
 基本概念
 
@@ -127,7 +159,7 @@ AWS Cloud Adoption Framework (CAF)
 - **デメリット**: 完全なクラウドメリット未実現、複雑性増加
 - **考慮事項**: 段階的な移行計画、依存関係の管理
 
-### 3. Repurchase (Drop and Shop)
+### 4. Repurchase (Drop and Shop)
 
 基本概念
 
@@ -156,7 +188,7 @@ AWS Cloud Adoption Framework (CAF)
 - **カスタマイズ**: 業務プロセスの標準化
 - **ベンダーロックイン**: 将来の移行可能性
 
-### 4. Refactor (Re-architect)
+### 5. Refactor (Re-architect)
 
 基本概念
 
@@ -185,7 +217,7 @@ AWS Cloud Adoption Framework (CAF)
 - **スキル**: 新技術への習熟が必要
 - **期間**: 長期間のプロジェクトとなる可能性
 
-### 5. Retire
+### 6. Retire
 
 基本概念
 
@@ -214,7 +246,7 @@ AWS Cloud Adoption Framework (CAF)
 - **段階的廃止**: リスクを最小化した廃止手順
 - **文書化**: 廃止理由・手順の記録
 
-### 6. Retain
+### 7. Retain
 
 基本概念
 
@@ -343,6 +375,14 @@ Database-per-Service Pattern
 - **プロシージャ**: ストアドプロシージャ、関数
 - **ビュー**: 複雑なビュー定義
 - **トリガー**: データベーストリガー
+
+#### 公式リソース
+
+- [AWS Database Migration Service 概要【AWS Black Belt】](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2025_Amazon_DatabaseMigrationService_0219_v1.pdf)
+  （[動画](https://www.youtube.com/watch?v=oopjz4vu9CY)）
+- [AWS DMS ベストプラクティス - 計画編【AWS Black Belt】](https://www.youtube.com/watch?v=teaU4tWraXE)
+- [AWS DMS ベストプラクティス - 実践編【AWS Black Belt】](https://www.youtube.com/watch?v=2tE9uCGrk6M)
+- [AWS DMS ベストプラクティス - トラブルシューティング編【AWS Black Belt】](https://www.youtube.com/watch?v=HDa_f9Tmf-U)
 
 ---
 

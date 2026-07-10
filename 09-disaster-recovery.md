@@ -179,6 +179,13 @@ AWS Backup
 - **アクセス制御**: バックアップデータの保護
 - **コスト最適化**: ストレージクラス、ライフサイクル
 
+#### 公式リソース
+
+- [AWS Backup で考える DR 戦略 #1 基本編【AWS Black Belt】](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2025_AWS-Backup-DR-Strategy-Basic_0430_v1.pdf)
+  （[動画](https://www.youtube.com/watch?v=FrHWPtZfsuM)）
+- [AWS Backup で考える DR 戦略 #2 PITR編【AWS Black Belt】](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2025_AWS-Backup-DR-Strategy-PITR_1130_v1.pdf)
+  （[動画](https://www.youtube.com/watch?v=zfjZiQniPCA)）
+
 ---
 
 ## 高可用性設計
@@ -453,6 +460,9 @@ AWS Elastic Disaster Recovery (AWS DRS) は、オンプレミスおよびクラ�
 
 - [AWS Elastic Disaster Recovery](https://aws.amazon.com/disaster-recovery/)
 - [AWS Well-Architected Reliability Pillar](https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/)
+- [AWS Application Migration Service (AWS MGN) 概要【AWS Black Belt】](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AWS_MGN_0430_v1.pdf)
+  （[動画](https://www.youtube.com/watch?v=HktS_jCIv9Q)）
+- [AWS Resilience Hub Black Belt (Part1 基本編)](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2024_AWS-Resilience-Hub-Part01_1015_v1.pdf)
 
 ---
 

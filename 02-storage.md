@@ -528,6 +528,8 @@ Cached Volumes
   ポリシー管理。マルチアカウント・マルチリージョンのバックアップボールト、論理的にエアギャップされた
   保管庫（Backup vault lock）による ransomware 対策が設計問題で問われやすい
 - **FSx for NetApp ONTAP / OpenZFS**: オンプレミスNAS資産の移行先として、重複排除・圧縮による大幅なコスト削減が可能
+- [AWS Backup で考える DR 戦略 #1 基本編【AWS Black Belt】](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2025_AWS-Backup-DR-Strategy-Basic_0430_v1.pdf)
+  （[動画](https://www.youtube.com/watch?v=FrHWPtZfsuM)）
 
 ### 試験での着眼点
 

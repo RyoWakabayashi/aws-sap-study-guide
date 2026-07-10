@@ -139,7 +139,8 @@ Aurora を選択する場合
 #### 公式リソース
 
 - [DynamoDB サービス紹介](https://aws.amazon.com/jp/dynamodb/)
-- [DynamoDB Black Belt](https://docs.aws.amazon.com/ja_jp/dynamodb/)
+- [DynamoDB Black Belt (How it works)](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_Amazon-DynamoDB-How-it-works_1231_v1.pdf)
+  （[動画](https://youtu.be/ndtg5Gx0rKE)）
 
 ### Amazon DocumentDB
 
@@ -167,7 +168,7 @@ Aurora を選択する場合
 #### 公式リソース
 
 - [DocumentDB サービス紹介](https://aws.amazon.com/jp/documentdb/)
-- [DocumentDB Black Belt](https://docs.aws.amazon.com/ja_jp/documentdb/latest/developerguide/connect_programmatically.html)
+- [DocumentDB Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/20190625_AWS_BlackBelt_AmazonDocumentDB_rev.pdf)
 
 ### Amazon Keyspaces (Apache Cassandra)
 
@@ -292,7 +293,8 @@ Memcached の特徴
 #### 公式リソース
 
 - [ElastiCache サービス紹介](https://aws.amazon.com/jp/elasticache/)
-- [ElastiCache Black Belt](https://docs.aws.amazon.com/ja_jp/AmazonElastiCache/latest/dg/WhatIs.corecomponents.html)
+- [ElastiCache Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_Amazon-ElastiCache_0228_v1.pdf)
+  （[動画](https://www.youtube.com/watch?v=-NU1U8_fxo4)）
 
 ### Amazon MemoryDB for Redis
 
@@ -316,6 +318,10 @@ ElastiCache Redis との違い
 - **高速トランザクション**: 金融、広告
 - **セッション管理**: 大規模 Web アプリケーション
 - **キャッシュ**: 高耐久性が必要なキャッシュ
+
+#### 公式リソース
+
+- [MemoryDB for Redis Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_Amazon-MemoryDB_1231_v1.pdf)
 
 ---
 

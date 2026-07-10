@@ -438,6 +438,14 @@ SaaS・Web サービス
 - Cost Efficiency Metric（1 − 潜在的な節約額 ÷ 最適化可能な総支出）× 100% という指標が導入され、組織のコスト効率を定量的に追跡可能に
 - 全リソースタイプ（EC2、Lambda、EBS、DB等）の最適化提案を単一ダッシュボードに統合
 - **試験での着眼点**: Trusted Advisor・Compute Optimizer・Cost Explorerとの役割分担（それぞれ「推奨事項」「使用率分析」「可視化・予測」のどこに強みがあるか）を整理して覚えること
+- [AWS Cost Optimization Hub Black Belt (2026年版)](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2026_AWS-Cost-Optimization-Hub_0610_v1.pdf)
+
+### コスト管理関連の公式リソース (Black Belt)
+
+- [AWS Cost Explorer Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2024_AWS-CostExplorer_0630_v1.pdf)
+- [AWS Budgets Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AWS-Budgets_1031_v1.pdf)
+- [AWS Cost and Usage Reports Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AWS-CostAndUsageReports_1031_v1.pdf)
+- [AWS Trusted Advisor Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2022_AWS_Trusted_Advisor_0915_v1.pdf)
 
 ### 試験での着眼点まとめ
 

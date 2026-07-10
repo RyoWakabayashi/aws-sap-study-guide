@@ -329,6 +329,10 @@ EventBridge活用
 - **変換**: イベントデータの変換・加工
 - **統合**: 外部システムとの連携
 
+#### 公式リソース
+
+- [AWS Systems Manager - Explorer / OpsCenter 編【AWS Black Belt】](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AWS-SystemsManager-Explorer-OpsCenter_0331_v1.pdf)
+
 ---
 
 ## 監視設計パターン

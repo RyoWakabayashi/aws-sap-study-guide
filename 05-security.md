@@ -170,7 +170,8 @@ AWS SSO (Identity Center)
 #### 公式リソース
 
 - [KMS サービス紹介](https://aws.amazon.com/jp/kms/)
-- [KMS Black Belt](https://d1.awsstatic.com/webinars/jp/pdf/services/20160928_AWS-BlackBelt-KMS.pdf)
+- [KMS Black Belt (2024年版)](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2024_AWS_KeyManagementService_0331_v1.pdf)
+  （[動画](https://youtu.be/jdX_NcNrco4)）
 
 ### サービス別暗号化
 
@@ -391,6 +392,12 @@ DDoS対策設計
 - **アクセス分析**: データアクセスパターンの分析
 - **アラート**: 高リスクデータの検知通知
 
+#### 公式リソース
+
+- [Amazon Inspector Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AmazonInspector_0228_v1.pdf)
+  （[動画](https://youtu.be/QTqvtIIGDVg)）
+- [Amazon Macie Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/20200812_AWS-BlackBelt-Macie.pdf) ([動画](https://youtu.be/I7slUbShAqM))
+
 ---
 
 ## コンプライアンス・ガバナンス
@@ -411,6 +418,10 @@ Config Rules
 - **修復アクション**: 非準拠時の自動修復
 - **評価トリガー**: 設定変更時、定期実行
 
+#### 公式リソース
+
+- [AWS Config Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/20190618_AWS-Blackbelt_Config.pdf) ([動画](https://youtu.be/vnqX0gMj6jw))
+
 ### AWS CloudTrail
 
 API監査ログ
@@ -426,6 +437,10 @@ API監査ログ
 - **CloudWatch統合**: リアルタイム監視、アラート
 - **暗号化**: KMS暗号化、ログファイル整合性
 - **マルチリージョン**: 全リージョンでの統一ログ
+
+#### 公式リソース
+
+- [AWS CloudTrail Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/20210119_AWSBlackbelt_CloudTrail.pdf) ([動画](https://youtu.be/_mmZa1Blxc4))
 
 ### AWS Organizations
 
@@ -443,6 +458,11 @@ API監査ログ
 - **バックアップポリシー**: 組織全体のバックアップ
 - **AI Opt-out**: AI/ML サービスの利用制限
 
+#### 公式リソース
+
+- [AWS Organizations Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2026_AWS-Organizations_0331_v1.pdf)
+  （[動画](https://youtu.be/YUnvAkQ_mEg)）
+
 ### AWS Control Tower
 
 ランディングゾーン
@@ -458,6 +478,11 @@ API監査ログ
 - **強く推奨**: ベストプラクティス統制
 - **選択的**: 組織固有の要件
 - **予防的・検知的**: 事前防止と事後検知
+
+#### 公式リソース
+
+- [AWS Control Tower Black Belt (手順編)](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AWS-ControlTower-Procedures_0831_v1.pdf)
+  （[動画](https://youtu.be/PzHFGi-viTI)）
 
 ---
 

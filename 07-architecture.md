@@ -175,6 +175,12 @@ Well-Architected Frameworkの目的
 
 - [Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
 - [Well-Architected Tool](https://aws.amazon.com/well-architected-tool/)
+- [Well-Architected Framework Black Belt (Part1 基礎編)](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2025_AWS-Well-Architected-Framework-part1_0331_v1.pdf)
+  （[動画](https://youtu.be/HvHxD6BKQ2c)）
+- [AWS Organizations Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2026_AWS-Organizations_0331_v1.pdf)
+  （[動画](https://youtu.be/YUnvAkQ_mEg)）
+- [AWS Control Tower Black Belt (手順編)](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AWS-ControlTower-Procedures_0831_v1.pdf)
+  （[動画](https://youtu.be/PzHFGi-viTI)）
 
 ---
 
@@ -539,6 +545,7 @@ RTO/RPO要件
 - SLO・マルチAZ/マルチリージョンDR要件・データ復旧要件などを組み合わせた「モジュール式レジリエンスポリシー」を定義可能
 - AWS Organizationsと統合し、委任管理者アカウントから組織全体のレジリエンス状況を一元評価
 - **試験での着眼点**: RTO/RPOを起点にした従来のDR設計に加え、「アプリケーションのレジリエンス成熟度を継続的に評価・改善する仕組み」自体が新しい出題テーマになりうる（Domain 3: 継続的改善と直結）
+- [AWS Resilience Hub Black Belt (Part1 基本編)](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2024_AWS-Resilience-Hub-Part01_1015_v1.pdf)
 
 ### マルチアカウント統治
 

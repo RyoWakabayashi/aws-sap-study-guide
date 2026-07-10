@@ -86,6 +86,46 @@ SAP-C02 は 2022 年 11 月に改訂され、現在は **4 つのドメイン**�
 - [AWS Black Belt Online Seminar](https://aws.amazon.com/jp/events/webinars/blackbelt/)
 - [AWS re:Invent セッション](https://reinvent.awsevents.com/)
 
+### 🎥 動画で学ぶ
+
+各分野ファイルの「公式リソース」欄には該当サービスの AWS Black Belt 資料・動画を個別リンクしていますが、
+それ以外にも以下の動画コンテンツが学習に有用です。
+
+#### AWS Black Belt Online Seminar（日本語・体系的にサービスを学べる定番シリーズ）
+
+- [AWS Black Belt Online Seminar YouTube 再生リスト][bb-playlist] — 全セッションの動画がここに集約
+- [AWS Black Belt Online Seminar 資料一覧（AWS 公式ブログ）](https://aws.amazon.com/jp/blogs/news/aws-blackbelt-overview/) —
+  開催月ごとの資料・動画公開案内
+- [AWS Black Belt Online Seminar 一覧まとめ（DevelopersIO）](https://dev.classmethod.jp/articles/blackbelt-list/) —
+  サービス名から資料・動画を横断検索できる非公式まとめ。個別リンクが見つからないサービスはここで検索すると良い
+- [re:Invent 2025 速報アップデート（AWS Black Belt）](https://aws.amazon.com/jp/blogs/news/2025-12-reinvent2025-aws-blackbelt/) —
+  re:Invent の新発表を日本語でキャッチアップできる回
+
+#### AWS Skill Builder（AWS公式の無料学習プラットフォーム）
+
+- [Exam Prep: AWS Certified Solutions Architect - Professional (SAP-C02)][skillbuilder-examprep] —
+  ドメインごとの解説動画と公式練習問題（Standard コースは無料、模擬試験等は有料サブスクリプション）
+- [Exam Prep Plan: SAP-C02][skillbuilder-plan] — 学習の進め方をステップ形式で提示するラーニングプラン
+
+#### 英語の無料フルコース
+
+- [AWS Certified Solutions Architect Professional (SAP-C02) 認定コース](https://www.youtube.com/watch?v=hyEw7dQ9-JE) —
+  freeCodeCamp / Andrew Brown による約70時間の無料フルコース
+
+#### re:Invent・アーキテクチャ事例
+
+- [AWS Events 公式 YouTube チャンネル（re:Invent 過去セッション含む）](https://www.youtube.com/@AWSEventsChannel/playlists)
+- [This Is My Architecture（顧客・パートナーの実アーキテクチャ事例を2〜5分で紹介）](https://aws.amazon.com/this-is-my-architecture/)
+- [Amazon Web Services Japan 公式 YouTube チャンネル](https://www.youtube.com/channel/UCnjKWUK2t5QJYfeqqilhJhQ)
+
+> Black Belt の資料 (PDF) には対応する解説動画 (YouTube) が用意されていることがほとんどです。
+> 本ガイド内のリンクが PDF の場合も、動画版を見たい場合は上記のまとめサイトやプレイリストから
+> 同名のセッションを検索してください。
+
+[bb-playlist]: https://www.youtube.com/playlist?list=PLzWGOASvSx6FIwIC2X1nObr1KcMCBBlqY
+[skillbuilder-examprep]: https://skillbuilder.aws/category/exam-prep/solutions-architect-professional-SAP-C02
+[skillbuilder-plan]: https://skillbuilder.aws/learning-plan/2WE6EHYVK5/exam-prep-plan-aws-certified-solutions-architect--professional-sapc02--english/FY9X4K2SVJ
+
 ## 学習の進め方
 
 ### Phase 1: 基礎固め (2-3 週間)

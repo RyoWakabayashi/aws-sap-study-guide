@@ -251,7 +251,7 @@ Lambda vs EC2 の選択基準
 #### 公式リソース
 
 - [Lambda サービス紹介](https://aws.amazon.com/jp/lambda/)
-- [Lambda Black Belt](https://aws.amazon.com/jp/modern-apps/recommendation-guide/serverless/aws-lambda/)
+- [Lambda Black Belt (Part1 & 2)](https://pages.awscloud.com/rs/112-TZM-766/images/20190402_AWSBlackbelt_AWSLambda%20Part1&2.pdf)
 - [Lambda ベストプラクティス](https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html)
 
 ### Step Functions
@@ -274,6 +274,11 @@ Lambda vs EC2 の選択基準
 - **複雑なビジネスプロセス**: 多段階の処理フロー
 - **データパイプライン**: ETL処理の自動化
 - **マイクロサービス連携**: サービス間の調整
+
+#### 公式リソース
+
+- [Step Functions Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/20190522_AWS-Blackbelt_StepFunctions.pdf)
+  （[動画](https://youtu.be/PGyasNJ1QTQ)）
 
 ---
 
@@ -306,6 +311,10 @@ Lambda vs EC2 の選択基準
 - **ジョブキュー**: 優先度に基づく処理順序制御
 - **コンピューティング環境**: リソースタイプの最適化
 - **ジョブ定義**: 実行環境とリソース要件の定義
+
+#### 公式リソース
+
+- [AWS Batch Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AWS-Batch_0929_v1.pdf) ([動画](https://youtu.be/EFuLmazpH_o))
 
 ---
 
