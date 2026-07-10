@@ -565,6 +565,37 @@ const advancedSecurityQuestions = [
 - **Air-Gapped Network + Hardware Security Module + Multi-Level Security + Trusted Computing + PKI + SIEM**を使用し、完全分離セキュリティを構築する: 完全分離は運用性とコスト面で課題
 - **Dedicated Hosts + VPC + Security Groups + NACLs + CloudWatch + VPC Flow Logs + AWS Backup**を使用し、専用環境セキュリティを構築する: 専用環境のみでは軍事特有の高度な脅威対策に不十分`
   },
+  {
+    id: 'adv-sec-011',
+    category: 'セキュリティ',
+    question: `中堅ECサイト運営会社が、セキュリティ運用チームの体制を見直しています。以下の課題があります：
+
+1. 現在、IAM資格情報の不審利用・S3の異常アクセス・EKSの侵害兆候のアラートがそれぞれ個別に発報され、担当者が手動で相関分析している
+2. 多段階にわたる高度な攻撃（例：認証情報窃取→S3データ持ち出し）を見逃すインシデントが発生した
+3. 複数のセキュリティサービス（GuardDuty、Macie、Inspector）の結果が分散しており、組織全体のリスクの優先順位付けができていない
+4. 追加のエージェント導入や大きな追加コストは避けたい
+5. マイクロサービスAPI単位できめ細かい認可ロジックを実装したいが、認可ロジックがアプリケーションコードに散在している
+
+これらの課題を解決するために最も適切な組み合わせはどれですか？`,
+    options: [
+      'GuardDuty Extended Threat Detection（多段階攻撃検知）+ Security Hub CSPM（統合リスク可視化）+ Amazon Verified Permissions（きめ細かい認可の外部化）を使用する',
+      'サードパーティSIEMを新規導入し、全ログを転送して独自の相関分析ルールを構築する',
+      'GuardDutyを解約し、Amazon Inspectorの脆弱性スキャン強化のみで対応する',
+      'IAMポリシーをすべて拒否リストに変更し、CloudTrailログを毎日手動でレビューする'
+    ],
+    correct: 0,
+    explanation: `最も適切なのは「GuardDuty Extended Threat Detection（多段階攻撃検知）+ Security Hub CSPM（統合リスク可視化）+ Amazon Verified Permissions（きめ細かい認可の外部化）を使用する」です。
+
+理由：
+1. **GuardDuty Extended Threat Detection**: IAM資格情報の不審利用、S3の異常アクセス、EKSクラスタの侵害兆候など複数のデータソースを自動的に相関分析し、多段階攻撃を単一の重大度の高いFindingとして検知する。GuardDutyを有効化するだけで追加コストなく利用でき、追加エージェントも不要
+2. **Security Hub CSPM**: GuardDuty・Macie・Inspector等複数サービスの結果を集約し、リスクの優先順位付けと「Exposure」ダッシュボードによる可視化を提供、組織全体のリスクを一元把握できる
+3. **Amazon Verified Permissions**: Cedarポリシー言語を使ったきめ細かい認可をアプリケーションに組み込むことで、認可ロジックをコードから分離・一元管理できる
+
+他の選択肢の問題点：
+- **サードパーティSIEMを新規導入**: 追加コストと導入・運用の工数が大きく、要件（追加コストを避けたい）に反する
+- **GuardDutyを解約しInspectorのみで対応**: Inspectorは脆弱性スキャンが主目的であり、IAM/S3/EKSを横断した多段階攻撃の検知はできない
+- **IAMポリシーを拒否リストに変更し手動レビュー**: 拒否リスト方式は最小権限の原則に反し抜け漏れが生じやすく、手動レビューはスケールしない`
+  },
 
   // 複数選択問題
   {

@@ -206,16 +206,18 @@ const advancedArchitectureQuestions = [
 
 この要件を満たすために、最も適切なクラウドゲーミングアーキテクチャはどれですか？`,
     options: [
-      'GameLift + Global Accelerator + EC2 GPU Instances + ElastiCache + DynamoDB Global Tables + Kinesis + SageMaker + CloudFront + Lambda@Edgeを使用し、クラウドゲーミング特化アーキテクチャを構築する',
+      'EC2 Auto Scaling（GPUインスタンスの専用セッションホスト管理）+ Global Accelerator + EC2 GPU Instances + ElastiCache + DynamoDB Global Tables + Kinesis + SageMaker + CloudFront + Lambda@Edgeを使用し、クラウドゲーミング特化アーキテクチャを構築する',
       'ECS + Application Load Balancer + RDS + ElastiCache + S3 + CloudFront + Lambda + API Gatewayを使用し、コンテナベースゲーミングアーキテクチャを構築する',
       'Lambda + API Gateway + DynamoDB + S3 + CloudFront + Step Functions + SQS + SNSを使用し、サーバーレスゲーミングアーキテクチャを構築する',
       'Kubernetes + Docker + NVIDIA GPU + Redis + PostgreSQL + Kafka + Prometheus + Grafanaを使用し、オープンソースゲーミングアーキテクチャを構築する'
     ],
     correct: 0,
-    explanation: `ゲーム会社のクラウドゲーミングプラットフォームには、GameLift + Global Accelerator + EC2 GPU Instances + ElastiCache + DynamoDB Global Tables + Kinesis + SageMaker + CloudFront + Lambda@Edgeの組み合わせが最適です。
+    explanation: `ゲーム会社のクラウドゲーミングプラットフォームには、EC2 Auto Scaling（GPUインスタンスの専用セッションホスト管理）+ Global Accelerator + EC2 GPU Instances + ElastiCache + DynamoDB Global Tables + Kinesis + SageMaker + CloudFront + Lambda@Edgeの組み合わせが最適です。
+
+> **補足**: Amazon GameLift はマルチプレイヤーゲームのセッション管理に特化したサービスですが、SAP-C02の公式試験ガイドでは明示的に Out of scope とされています。試験対策としては、EC2 Auto Scalingで専用ホストのフリートを管理する汎用的なアプローチを理解しておきましょう。
 
 理由：
-1. **GameLift**: ゲーム専用のマネージドサービス
+1. **EC2 Auto Scaling + GPU Instances**: GPUレンダリング用インスタンスフリートを需要に応じて自動スケーリング
 2. **Global Accelerator**: 20ms以下の低レイテンシ実現
 3. **EC2 GPU Instances**: クラウドレンダリング処理
 4. **ElastiCache**: 高速データアクセス
@@ -384,6 +386,37 @@ const advancedArchitectureQuestions = [
 - **Multi-Account + IAM + KMS + VPC + CloudFront + Route 53 + RDS + Lambda + API Gatewayを使用し、標準政府アーキテクチャを構築する**: 標準環境は政府の最高機密要件に不十分
 - **Kubernetes + Docker + Istio + Vault + Consul + Prometheus + Grafana + ELK Stackを使用し、オープンソース政府アーキテクチャを構築する**: オープンソースは政府の規制要件対応が困難
 - **Hybrid Cloud + VMware + OpenStack + Kubernetes + Red Hat + SUSE + Ubuntuを使用し、マルチベンダー政府アーキテクチャを構築する**: マルチベンダーは統合管理とセキュリティに課題`
+  },
+  {
+    id: 'adv-arch-011',
+    category: 'アーキテクチャ',
+    question: `急成長中のフィンテック企業が、事業部門ごとに20以上のAWSアカウントを持つマルチアカウント環境を運用しています。以下の課題があります：
+
+1. 新規アカウント作成のたびに、セキュリティ基準（暗号化、ロギング等）の設定が手作業で漏れることがある
+2. 各アカウントのコンプライアンス状況を経営層が横断的に把握できていない
+3. Well-Architected Frameworkの6つの柱に基づいた評価を、事業部門ごとにバラバラの基準で実施している
+4. アカウント発行のガバナンスプロセスに時間がかかりすぎている
+5. 新しいAWSサービス（Aurora DSQL、VPC Lattice等）を採用する際、どの柱の課題を解決するのか整理できていない
+
+これらの課題を解決するために最も適切なアプローチはどれですか？`,
+    options: [
+      'AWS Control TowerでランディングゾーンとAccount Factoryを標準化し、AWS Well-Architected Toolで統一基準の評価を組織全体に適用する',
+      '各事業部門に完全な裁量を与え、アカウント管理を分散化する',
+      'すべてのワークロードを単一アカウントに統合し、アカウント管理自体を廃止する',
+      '新しいAWSサービスの採用を凍結し、既存構成のまま運用を継続する'
+    ],
+    correct: 0,
+    explanation: `最も適切なのは「AWS Control TowerでランディングゾーンとAccount Factoryを標準化し、AWS Well-Architected Toolで統一基準の評価を組織全体に適用する」です。
+
+理由：
+1. **AWS Control Tower**: ランディングゾーンの標準化とAccount Factoryにより、新規アカウント作成時のセキュリティ基準（暗号化、ロギング等）を予防的・発見的ガードレールとして自動適用でき、手作業の漏れを防止する
+2. **統合ダッシュボード**: Control Towerのダッシュボードで複数アカウントのコンプライアンス状況を経営層が横断的に把握できる
+3. **AWS Well-Architected Tool**: 6つの柱（運用上の優秀性、セキュリティ、信頼性、パフォーマンス効率、コスト最適化、持続可能性）に基づく統一基準での評価を組織全体に適用でき、新サービス採用時も「どの柱の課題を解決するか」という観点で整理できる
+
+他の選択肢の問題点：
+- **各事業部門に完全な裁量を与える**: ガバナンスの一貫性がさらに損なわれ、課題を悪化させる
+- **単一アカウントへの統合**: マルチアカウント戦略による分離・blast radius限定の利点を失い、Domain 1で問われる「マルチアカウント環境の設計」という設計思想にも反する
+- **新サービスの採用凍結**: 根本課題（評価の仕組み化）を解決せず、技術的な機会損失を生む`
   },
 
   // 複数選択問題

@@ -444,22 +444,23 @@ const advancedMonitoringQuestions = [
 
 この要件を満たすために、最も適切なゲーム業界向け監視アーキテクチャはどれですか？`,
     options: [
-      'CloudWatch + X-Ray + Kinesis + OpenSearch + QuickSight + SageMaker + Lambda + SNS + GameLift Metricsを使用し、ゲーム特化監視を構築する',
+      'CloudWatch（カスタムメトリクス）+ X-Ray + Kinesis + OpenSearch + QuickSight + SageMaker + Lambda + SNSを使用し、ゲーム特化監視を構築する',
       'CloudWatch Logs + CloudWatch Metrics + CloudWatch Alarms + S3 + Athena + EMRを使用し、従来型ゲーム監視を構築する',
       'DataDog + New Relic + Splunk + Grafana + Prometheus + InfluxDBを使用し、サードパーティゲーム監視を構築する',
       'DynamoDB + Lambda + API Gateway + S3 + CloudFront + Route 53を使用し、サーバーレスゲーム監視を構築する'
     ],
     correct: 0,
-    explanation: `ゲーム会社のオンライン監視には、CloudWatch + X-Ray + Kinesis + OpenSearch + QuickSight + SageMaker + Lambda + SNS + GameLift Metricsの組み合わせが最適です。
+    explanation: `ゲーム会社のオンライン監視には、CloudWatch（ゲームサーバーからのカスタムメトリクス）+ X-Ray + Kinesis + OpenSearch + QuickSight + SageMaker + Lambda + SNSの組み合わせが最適です。
 
 理由：
-1. **CloudWatch**: ゲームインフラの統合監視
+1. **CloudWatch**: ゲームインフラの統合監視、ゲームサーバーが発行するカスタムメトリクス（同時接続数、ティックレート等）の収集
 2. **X-Ray**: ゲームサービスの分散トレーシング
 3. **Kinesis**: プレイヤー行動ログのリアルタイム処理
 4. **OpenSearch**: ゲームログの高速検索と分析
 5. **QuickSight**: ゲームバランス分析ダッシュボード
 6. **SageMaker**: チート検知の機械学習
-7. **GameLift Metrics**: ゲーム専用の監視メトリクス
+
+> **補足**: Amazon GameLiftを利用する場合はGameLift Metricsも活用できますが、GameLift自体はSAP-C02の試験範囲外（公式試験ガイドでOut of scopeと明記）です。試験対策としては、CloudWatchのカスタムメトリクスで自前のゲームサーバーを監視するアプローチを押さえておきましょう。
 
 他の選択肢の問題点：
 - **CloudWatch Logs + CloudWatch Metrics + CloudWatch Alarms + S3 + Athena + EMRを使用し、従来型ゲーム監視を構築する**: 従来型アプローチはゲーム特有の監視要件に不十分
@@ -539,6 +540,37 @@ const advancedMonitoringQuestions = [
 - **CloudWatch Logs + CloudWatch Metrics + CloudWatch Alarms + S3 + Athena + Glueを使用し、従来型エネルギー監視を構築する**: 従来型アプローチはスマートグリッドの複雑な監視要件に不十分
 - **OSIsoft PI + Wonderware + GE Predix + Schneider EcoStruxure + Siemens MindSphereを使用し、産業用エネルギー監視を構築する**: 産業用システムは高コストでクラウド統合が困難
 - **InfluxDB + Grafana + Telegraf + Kapacitor + Chronograf + Prometheusを使用し、時系列特化エネルギー監視を構築する**: 時系列特化のみではエネルギー業界の包括的監視に不十分`
+  },
+  {
+    id: 'adv-mon-011',
+    category: '監視・ログ',
+    question: `急成長中のフィンテック企業が、マイクロサービス基盤の可観測性を強化しています。以下の課題があります：
+
+1. 20以上のマイクロサービスの依存関係が把握できておらず、障害発生時の影響範囲特定に時間がかかる
+2. サービス間のトポロジー図を手作業で維持しているが、更新が追いつかない
+3. RDSとAuroraのパフォーマンス問題を、アプリケーションのどのコード部分が原因か特定するのに時間がかかる
+4. 複数アカウントに分散したデータベースを一元的に監視したい
+5. ビジネス要件（可用性99.9%、レイテンシ200ms以下）を技術メトリクスと直接紐付けて追跡したい
+6. RDS Performance Insightsの新規機能追加が2025年11月で終了することを知り、移行を検討している
+
+これらの課題を解決するために最も適切な組み合わせはどれですか？`,
+    options: [
+      'CloudWatch Application Signals（自動トポロジー検出・SLO監視）+ CloudWatch Database Insights（クロスアカウントDB監視）を使用する',
+      'X-Rayのみを導入し、トレースデータを手動で分析する',
+      'サードパーティAPMツールを個別契約し、各チームがバラバラに導入する',
+      'CloudWatch Logs Insightsのクエリを増やし、ログの手動相関分析を継続する'
+    ],
+    correct: 0,
+    explanation: `最も適切なのは「CloudWatch Application Signals（自動トポロジー検出・SLO監視）+ CloudWatch Database Insights（クロスアカウントDB監視）を使用する」です。
+
+理由：
+1. **CloudWatch Application Signals**: インストルメンテーション（コード変更）なしでアプリケーショントポロジを自動検出・可視化するアプリケーションマップ機能を持ち、SLO(Service Level Objective)の定義・監視をネイティブサポートするため、ビジネス要件と技術メトリクスを直接紐付けられる
+2. **CloudWatch Database Insights**: RDS Performance Insightsの後継サービスで、フリート単位の監視、ロック分析、実行計画のキャプチャを統合。クロスアカウント・クロスリージョンでの集中監視に対応し、Application Signalsと連携してアプリケーションコードのどの部分がDB負荷を生んでいるかを相関分析できる
+
+他の選択肢の問題点：
+- **X-Rayのみを導入し手動分析する**: X-Rayは分散トレーシングには有効だが、トポロジーの自動可視化やSLO管理、DB性能の統合分析はカバーできない
+- **サードパーティAPMツールを個別契約**: チームごとにバラバラな導入は統合的な可観測性を損ない、運用コストも増大する
+- **CloudWatch Logs Insightsのクエリを増やす**: 手動相関分析はスケールせず、根本的な課題（トポロジー把握・DB性能の相関分析）を解決しない`
   },
 
   // 複数選択問題

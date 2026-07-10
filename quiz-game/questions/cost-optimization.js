@@ -200,6 +200,30 @@ const costOptimizationQuestions = [
     correct: 3,
     explanation: '効果的なタグベースコスト配分には、一貫したタグ付け、階層化された構造、自動化されたタグ付けが重要です。'
   },
+  {
+    id: 'cost-optimization-26',
+    category: 'コスト最適化',
+    question: '2025年12月に発表された、RDS・Aurora・DynamoDB・ElastiCache・DocumentDBを横断して1年コミットで最大35%割引を受けられる購入オプションはどれですか？',
+    options: ['Compute Savings Plans', 'Database Savings Plans', 'EC2 Reserved Instances', 'Spot Instances'],
+    correct: 1,
+    explanation: 'Database Savings Plansは、複数のマネージドデータベースサービスを横断し、特定のインスタンスタイプやリージョンに縛られずに最大35%の割引を受けられる購入オプションです。EC2/Fargate/LambdaはCompute Savings Plansが対象になります。'
+  },
+  {
+    id: 'cost-optimization-27',
+    category: 'コスト最適化',
+    question: 'Cost Optimization Hubで導入された、(1 − 潜在的な節約額 ÷ 最適化可能な総支出) × 100% で算出される指標はどれですか？',
+    options: ['Cost Efficiency Metric', 'Savings Plans Utilization', 'Coverage Ratio', 'Reserved Instance Utilization'],
+    correct: 0,
+    explanation: 'Cost Efficiency Metricは、(1 − 潜在的な節約額 ÷ 最適化可能な総支出) × 100% という計算式で算出され、90日間の履歴に基づいて組織のコスト効率を定量的に追跡できる指標です。'
+  },
+  {
+    id: 'cost-optimization-28',
+    category: 'コスト最適化',
+    question: 'Cost Optimization Hubで2025年に追加された、Savings PlansやReserved Instancesの推奨事項をカスタマイズできる機能はどれですか？',
+    options: ['期間・支払いオプションの好みの事前設定', '自動購入の即時実行', 'サードパーティクラウドとの比較', 'リアルタイム為替換算'],
+    correct: 0,
+    explanation: 'Cost Optimization Hubは、Savings PlansやReserved Instancesの「期間・支払いオプションの好み」を事前設定し、その条件に基づくレコメンデーションを受け取れるように強化されました。'
+  },
   // 複数選択問題
   {
     id: 'cost-optimization-multi-1',

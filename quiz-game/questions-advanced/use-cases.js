@@ -100,14 +100,14 @@ const advancedUseCasesQuestions = [
     question:
       '大手ゲーム会社が、次世代クラウドゲーミングプラットフォームを構築しています。ストリーミングゲーム、マルチプレイヤー、AI NPC、ブロックチェーン統合が要件です。最適なソリューションアーキテクチャはどれですか？',
     options: [
-      'GameLift + Global Accelerator + EC2 GPU + Kinesis + DynamoDB + SageMaker + Managed Blockchain + Lambda + API Gatewayを使用する',
+      'EC2 GPU Instances（Auto Scaling） + Global Accelerator + Kinesis + DynamoDB + SageMaker + Managed Blockchain + Lambda + API Gatewayを使用する',
       'EC2 + Auto Scaling + Application Load Balancer + RDS + ElastiCache + S3を使用する',
       'Kubernetes + Docker + Unity + Unreal Engine + Redis + PostgreSQL + Prometheusを使用する',
       'Game Engines + Multiplayer Servers + CDN + Analytics + Payment + Social Featuresを使用する'
     ],
     correct: 0,
     explanation:
-      'クラウドゲーミングには、GameLift + Global Accelerator + EC2 GPU + Kinesis + DynamoDB + SageMaker + Managed Blockchain + Lambda + API Gatewayが最適です。ゲーム特化機能、GPU処理、AI、ブロックチェーン統合を実現できます。'
+      'クラウドゲーミングには、EC2 GPUインスタンス（Auto Scalingでレンダリング/ストリーミングセッションホストを管理）+ Global Accelerator + Kinesis + DynamoDB + SageMaker + Managed Blockchain + Lambda + API Gatewayが最適です。GPU処理、AI NPC、ブロックチェーン統合を実現できます（マルチプレイヤーのセッション管理にはAmazon GameLiftも有力候補ですが、SAP-C02試験の範囲外です）。'
   },
   {
     id: 'adv-uc-007',

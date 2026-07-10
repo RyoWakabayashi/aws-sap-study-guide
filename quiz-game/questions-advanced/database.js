@@ -481,6 +481,38 @@ const advancedDatabaseQuestions = [
 - **DocumentDB + Atlas Search + EMR + Redshift + QuickSight + AWS Configを使用し、NoSQL保険データベースを構築する**: DocumentDBは保険業界の厳格なデータ整合性要件に不十分
 - **PostgreSQL + PostGIS + pgpool + Patroni + Barman + Zabbixを使用し、オープンソース保険データベースを構築する**: オープンソースは保険業界の規制要件対応が困難`
   },
+  {
+    id: 'adv-db-011',
+    category: 'データベース',
+    question: `グローバル決済プラットフォーム企業が、複数リージョンにまたがる残高管理システムを刷新しています。以下の要件があります：
+
+1. 東京・フランクフルト・バージニアの3リージョンから同時に残高を更新する必要がある
+2. 二重引き落とし・二重加算を絶対に許容できない（強整合性が必須）
+3. インフラ運用チームを増員せずにほぼ無制限のスケールに対応したい
+4. PostgreSQL互換のドライバ・SQL構文を維持し、開発者の学習コストを抑えたい
+5. 単一障害点のない高可用性アーキテクチャ（99.99%以上）が必要
+
+この要件を満たすために最も適切なデータベースはどれですか？`,
+    options: [
+      'Amazon Aurora DSQL',
+      'Amazon Aurora Global Database（Aurora PostgreSQL互換）',
+      'Amazon DynamoDB Global Tables',
+      'Amazon RDS for PostgreSQL Multi-AZ DBクラスターをリージョンごとに構築し、アプリケーション層で同期する'
+    ],
+    correct: 0,
+    explanation: `最も適切なのは「Amazon Aurora DSQL」です。
+
+理由：
+1. **マルチリージョン強整合性**: Aurora DSQLはActive-Active構成でマルチリージョンの強整合性書き込みをネイティブにサポートし、二重引き落とし・二重加算のリスクを排除できる
+2. **運用負荷ゼロに近いスケーリング**: サーバーレスでインフラ管理が不要、ほぼ無制限にスケール可能
+3. **PostgreSQL互換**: 既存のPostgreSQLドライバ・SQL構文をそのまま利用でき、開発者の学習コストを抑えられる
+4. **高可用性**: 単一リージョンで99.99%、マルチリージョンで99.999%の可用性を実現する単一障害点のないアーキテクチャ
+
+他の選択肢の問題点：
+- **Aurora Global Database（Aurora PostgreSQL互換）**: 書き込みが単一リージョンに集約され、他リージョンは結果整合性の読み取りレプリカとなるため、複数リージョン同時書き込みの強整合性要件を満たせない
+- **DynamoDB Global Tables**: 標準構成は結果整合性が基本で、「二重引き落としを絶対に許容できない」という強整合性要件と相性が悪い
+- **RDS for PostgreSQL Multi-AZ DBクラスターをリージョンごとに構築し、アプリケーション層で同期する**: 独自の同期ロジックの開発・運用負荷が非常に高く、強整合性の保証も困難`
+  },
 
   // 複数選択問題
   {

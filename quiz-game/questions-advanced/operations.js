@@ -82,14 +82,14 @@ const advancedOperationsQuestions = [
     question:
       '大手ゲーム会社が、オンラインゲームの運用基盤を構築しています。プレイヤー体験監視、サーバー負荷管理、チート検知、リアルタイム対応が要件です。最適な運用アーキテクチャはどれですか？',
     options: [
-      'GameLift Monitoring + CloudWatch + X-Ray + Lambda + Kinesis + SageMaker + Step Functions + SNSを使用する',
+      'CloudWatch（カスタムメトリクス）+ X-Ray + Lambda + Kinesis + SageMaker + Step Functions + SNSを使用する',
       'Prometheus + Grafana + ELK Stack + Kafka + Spark + Alertmanagerを使用する',
       'New Relic + Datadog + Splunk + Machine Learning + PagerDutyを使用する',
       '手動監視 + プレイヤー報告 + GM対応を使用する'
     ],
     correct: 0,
     explanation:
-      'ゲーム運用には、GameLift Monitoring + CloudWatch + X-Ray + Lambda + Kinesis + SageMaker + Step Functions + SNSが最適です。ゲーム特化監視、プレイヤー体験管理、チート検知、自動対応を実現できます。'
+      'ゲーム運用には、CloudWatch（ゲームサーバーからのカスタムメトリクス）+ X-Ray + Lambda + Kinesis + SageMaker + Step Functions + SNSが最適です。プレイヤー体験管理、チート検知（SageMakerの異常検知）、自動対応（Step Functions）を実現できます（実運用ではAmazon GameLiftも有力候補ですが、SAP-C02試験の範囲外です）。'
   },
   {
     id: 'adv-ops-007',

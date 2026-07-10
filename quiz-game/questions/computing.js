@@ -240,6 +240,30 @@ const computingQuestions = [
     correct: 1,
     explanation: 'Horizontal Pod Autoscaler（HPA）は、メトリクスに基づいてPodの数を自動的にスケールします。'
   },
+  {
+    id: 'computing-31',
+    category: 'コンピューティング',
+    question: 'EKSクラスターのノードのプロビジョニング・スケーリング・パッチ適用をAWSが自動管理する機能はどれですか？',
+    options: ['EKS Fargate Profile', 'EKS Auto Mode', 'Cluster Autoscaler', 'Managed Node Groups'],
+    correct: 1,
+    explanation: 'EKS Auto Modeは、Karpenterベースの仕組みでノードのプロビジョニング、スケーリング、パッチ適用、セキュリティ更新をAWSが自動的に管理する機能です。EC2 Managed Instancesとして稼働し、K8s標準APIを維持しながら運用負荷を大幅に軽減します。'
+  },
+  {
+    id: 'computing-32',
+    category: 'コンピューティング',
+    question: '最大1年間のワークフローを、アイドル時間の課金なしで実行できるLambdaの新機能はどれですか？',
+    options: ['Lambda SnapStart', 'Lambda Provisioned Concurrency', 'Lambda Durable Functions', 'Lambda Function URLs'],
+    correct: 2,
+    explanation: 'Lambda Durable Functionsは、複数ステップにまたがる処理を、アイドル時間の課金なしで最長1年間かけて信頼性高く実行できる機能です。従来Step Functionsが担っていた長時間ワークフローの一部をLambda単体で実現できます。'
+  },
+  {
+    id: 'computing-33',
+    category: 'コンピューティング',
+    question: 'Graviton4と比較したGraviton5の主な特徴として正しいものはどれですか？',
+    options: ['x86アーキテクチャへの回帰', 'エージェント型AIワークロード向けに最大25%性能向上', 'GPU機能の統合', 'ストレージ最適化に特化'],
+    correct: 1,
+    explanation: 'Graviton5は2025年のre:Inventで発表され、エージェント型AIワークロードを見据えてGraviton4比で最大25%の性能向上を実現しています。Gravitonシリーズは引き続きArmベースのプロセッサです。'
+  },
   // 複数選択問題
   {
     id: 'computing-multi-1',

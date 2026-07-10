@@ -286,6 +286,35 @@ const architectureQuestions = [
     explanation:
       'Observabilityの3つの柱は、メトリクス、ログ、トレースです。アラートは監視の手段ですが、柱ではありません。'
   },
+  {
+    id: 'architecture-26',
+    category: 'アーキテクチャ',
+    question: '次世代AWS Resilience Hubで導入された、System・Journey・Serviceから成るモデリング手法において、「重要なユーザー導線」を表す概念はどれですか？',
+    options: ['System', 'Journey', 'Service', 'Policy'],
+    correct: 1,
+    explanation: '次世代Resilience Hubのビジネス視点モデリングでは、System＝ビジネスアプリケーション、Journey＝重要なユーザー導線、Service＝AWSリソース・コード・可観測性から成るデプロイ単位、という3つの概念で技術要素とビジネス影響を直接紐付けます。'
+  },
+  {
+    id: 'architecture-27',
+    category: 'アーキテクチャ',
+    question: '現行のSAP-C02試験ガイドが定める4つのドメインの出題比率として正しい組み合わせはどれですか？',
+    options: [
+      '組織の複雑さ26% / 新規ソリューション29% / 継続的改善25% / 移行20%',
+      '組織の複雑さ12.5% / 新規ソリューション31% / 移行25% / コスト12.5% / 継続的改善19%',
+      '組織の複雑さ30% / 新規ソリューション30% / 継続的改善20% / 移行20%',
+      '組織の複雑さ25% / 新規ソリューション25% / 継続的改善25% / 移行25%'
+    ],
+    correct: 0,
+    explanation: 'SAP-C02試験は、Domain 1: 組織の複雑さに対応するソリューション設計(26%)、Domain 2: 新しいソリューションの設計(29%)、Domain 3: 既存ソリューションの継続的改善(25%)、Domain 4: ワークロードの移行とモダナイゼーションの加速(20%)の4ドメインで構成されます。5ドメイン構成は旧バージョンの情報のため注意が必要です。'
+  },
+  {
+    id: 'architecture-28',
+    category: 'アーキテクチャ',
+    question: 'AWS Organizationsを使った多くのマルチアカウント環境で、ランディングゾーンの標準化とガードレールによる自動コンプライアンス強制を提供するサービスはどれですか？',
+    options: ['AWS Service Catalog', 'AWS Control Tower', 'AWS Config', 'AWS License Manager'],
+    correct: 1,
+    explanation: 'AWS Control Towerは、AWS Organizationsを基盤としたマルチアカウント環境の標準化されたランディングゾーンを構築し、予防的・発見的ガードレールによる自動コンプライアンス強制を提供するサービスです。'
+  },
   // 複数選択問題
   {
     id: 'architecture-multi-1',

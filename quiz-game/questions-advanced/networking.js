@@ -422,17 +422,17 @@ const advancedNetworkingQuestions = [
 
 この要件を満たすために、最も適切なゲーミングネットワークアーキテクチャはどれですか？`,
     options: [
-      'Global Accelerator + GameLift + Network Load Balancer + Route 53 + Shield + CloudWatch + VPC Flow Logsを使用し、ゲーミング特化ネットワークを構築する',
+      'Global Accelerator + EC2 Auto Scaling（ゲームサーバーフリート）+ Network Load Balancer + Route 53 + Shield + CloudWatch + VPC Flow Logsを使用し、ゲーミング特化ネットワークを構築する',
       'CloudFront + Application Load Balancer + Auto Scaling + ElastiCache + WAF + GuardDutyを使用し、Webベースゲームネットワークを構築する',
       'Direct Connect + Transit Gateway + PrivateLink + VPC Endpoints + NAT Gateway + Internet Gatewayを使用し、専用線ゲームネットワークを構築する',
       'API Gateway + Lambda + DynamoDB + Kinesis + SQS + Step Functionsを使用し、サーバーレスゲームネットワークを構築する'
     ],
     correct: 0,
-    explanation: `リアルタイムマルチプレイヤーゲームには、Global Accelerator + GameLift + Network Load Balancer + Route 53 + Shield + CloudWatch + VPC Flow Logsの組み合わせが最適です。
+    explanation: `リアルタイムマルチプレイヤーゲームには、Global Accelerator + EC2 Auto Scaling（ゲームサーバーフリート）+ Network Load Balancer + Route 53 + Shield + CloudWatch + VPC Flow Logsの組み合わせが最適です（実運用ではAmazon GameLiftも有力候補ですが、SAP-C02試験の範囲外です）。
 
 理由：
 1. **Global Accelerator**: Anycastネットワークで世界中から50ms以下のレイテンシ
-2. **GameLift**: ゲーム専用のマネージドサービスで100万同時接続対応
+2. **EC2 Auto Scaling**: 同時接続数などのカスタムメトリクスで100万同時接続に対応するゲームサーバーフリート管理
 3. **Network Load Balancer**: 低レイテンシでの高性能負荷分散
 4. **Route 53**: 地理的ルーティングによる最適サーバー選択
 5. **Shield**: DDoS攻撃からのゲームサーバー保護
@@ -516,6 +516,37 @@ const advancedNetworkingQuestions = [
 - **AWS Wavelength + 5G + IoT Core + Greengrass + PrivateLink + Direct Connect + GuardDuty**を使用し、エッジコンピューティングベーススマートグリッドを構築する: Wavelengthは5G前提で、既存電力インフラには不適切
 - **Direct Connect + Virtual Private Gateway + BGP + VPC Peering + NAT Gateway + Internet Gateway**を使用し、専用線ベーススマートグリッドを構築する: 専用線は大規模電力網の管理に複雑
 - **Global Accelerator + CloudFront + Application Load Balancer + Auto Scaling + ElastiCache + WAF**を使用し、クラウドベーススマートグリッドを構築する: インターネットベースは重要インフラの安全性要件に不適切`
+  },
+  {
+    id: 'adv-net-011',
+    category: 'ネットワーキング',
+    question: `急成長中のSaaS企業が、社内向け管理コンソールと、20以上のマイクロサービスAPIの通信基盤を刷新しています。以下の要件があります：
+
+1. 社内従業員は、VPNクライアントを配布せずに社内管理コンソールへ安全にアクセスしたい
+2. マイクロサービス間の通信は複数VPC・複数AWSアカウントにまたがっており、サービス単位での認証・認可・可観測性を統一したい
+3. 顧客向けWebアプリのオリジン（ALB）は、インターネットに一切公開せずCDN配信したい
+4. Transit GatewayやVPC Peeringの複雑なルーティング設定を極力減らしたい
+5. 運用チームの人数を増やさずに実現したい
+
+これらの要件を満たす最も適切な組み合わせはどれですか？`,
+    options: [
+      'AWS Verified Access（社内アクセス）+ Amazon VPC Lattice（サービス間通信）+ Amazon CloudFront VPC Origins（顧客向けWeb配信）を使用する',
+      'AWS Site-to-Site VPN（社内アクセス）+ AWS Transit Gateway（サービス間通信）+ CloudFront + Origin Access Control（顧客向けWeb配信）を使用する',
+      'AWS Client VPN（社内アクセス）+ VPC Peering全接続（サービス間通信）+ ALBをパブリックサブネットに配置（顧客向けWeb配信）を使用する',
+      'Amazon Cognito（社内アクセス）+ API Gateway直接連携（サービス間通信）+ S3静的ホスティング（顧客向けWeb配信）を使用する'
+    ],
+    correct: 0,
+    explanation: `最も適切なのは「AWS Verified Access（社内アクセス）+ Amazon VPC Lattice（サービス間通信）+ Amazon CloudFront VPC Origins（顧客向けWeb配信）を使用する」です。
+
+理由：
+1. **AWS Verified Access**: ゼロトラストモデルに基づき、VPNクライアント配布なしで社内アプリケーションへの安全なアクセスを実現。IAM Identity Centerと連携したデバイス・IDポリシー評価が可能
+2. **Amazon VPC Lattice**: VPC・アカウント境界を越えてサービス間通信を統一管理するアプリケーションネットワーキングサービスで、Transit GatewayやVPC Peeringのような複雑なルーティング設定なしにサービス単位の認証・認可・可観測性を実現
+3. **CloudFront VPC Origins**: プライベートサブネット内のALBを直接オリジンに指定でき、インターネットに一切公開せずグローバル配信が可能
+
+他の選択肢の問題点：
+- **Site-to-Site VPN + Transit Gateway + Origin Access Control**: VPNは拠点間接続向けで従業員個人へのゼロトラストアクセスには不向き、Transit Gatewayはルーティング設定が複雑になりやすい
+- **Client VPN + VPC Peering全接続 + ALBをパブリックサブネットに配置**: VPCクライアント配布が必要になり要件に反し、全接続VPC Peeringはメッシュ状で管理が煩雑、ALBの公開はセキュリティ要件に反する
+- **Cognito + API Gateway直接連携 + S3静的ホスティング**: Cognitoは主にエンドユーザー認証向けであり社内コンソールのゼロトラストアクセスやサービス間通信基盤としては要件を満たさない`
   },
 
   // 複数選択問題

@@ -191,16 +191,18 @@ const advancedDisasterRecoveryQuestions = [
 
 この要件を満たす最適なゲーム災害復旧アーキテクチャはどれですか？`,
     options: [
-      'GameLift + DynamoDB Global Tables + ElastiCache Global Datastore + Route 53 + Global Accelerator + Kinesis + Lambda + Step Functions + CloudWatch + Systems Managerを使用し、ゲーム特化災害復旧システムを構築する',
+      'EC2 Auto Scaling（マルチリージョン・ゲームサーバーフリート）+ DynamoDB Global Tables + ElastiCache Global Datastore + Route 53 + Global Accelerator + Kinesis + Lambda + Step Functions + CloudWatch + Systems Managerを使用し、ゲーム特化災害復旧システムを構築する',
       'EC2 Auto Scaling + RDS Multi-AZ + ElastiCache + Route 53 + CloudWatchを使用し、従来型ゲーム災害復旧システムを構築する',
       'EKS + Kubernetes + Istio + Redis + PostgreSQL + Prometheusを使用し、コンテナベースゲーム災害復旧システムを構築する',
       'Lambda + API Gateway + DynamoDB + S3 + CloudFront + SQSを使用し、サーバーレスゲーム災害復旧システムを構築する'
     ],
     correct: 0,
-    explanation: `ゲーム会社のオンライン災害復旧には、GameLift + DynamoDB Global Tables + ElastiCache Global Datastore + Route 53 + Global Accelerator + Kinesis + Lambda + Step Functions + CloudWatch + Systems Managerの組み合わせが最適です。
+    explanation: `ゲーム会社のオンライン災害復旧には、EC2 Auto Scaling（マルチリージョン・ゲームサーバーフリート）+ DynamoDB Global Tables + ElastiCache Global Datastore + Route 53 + Global Accelerator + Kinesis + Lambda + Step Functions + CloudWatch + Systems Managerの組み合わせが最適です。
+
+> **補足**: Amazon GameLift はゲームサーバーの自動フェイルオーバーに特化した実運用上の有力な選択肢ですが、SAP-C02試験では明示的にOut of scopeとされているため、本問ではマルチリージョンのEC2 Auto Scalingによる自動復旧を正解としています。
 
 理由：
-1. **GameLift**: ゲームサーバーの自動フェイルオーバーと復旧
+1. **EC2 Auto Scaling（マルチリージョン）**: ヘルスチェック連動によるゲームサーバーの自動フェイルオーバーと復旧
 2. **DynamoDB Global Tables**: プレイヤーデータのグローバル同期
 3. **ElastiCache Global Datastore**: セッションデータの高速復旧
 4. **Route 53**: 1分以内のDNSフェイルオーバー
@@ -445,6 +447,38 @@ const advancedDisasterRecoveryQuestions = [
 - **RDS Multi-AZ + ElastiCache + Route 53 + Auto Scaling + Lambda + CloudWatchを使用し、従来型保険災害復旧システムを構築する**: Multi-AZは単一リージョン、保険業界のグローバル要件に不適切
 - **DocumentDB + S3 + Route 53 + Lambda + API Gateway + CloudFrontを使用し、NoSQL保険災害復旧システムを構築する**: NoSQLは保険の複雑なデータ関係性管理に不適切
 - **Oracle RAC + Data Guard + GoldenGate + Exadata + ASMを使用し、Oracle統合保険災害復旧システムを構築する**: Oracle統合は高コストで、クラウドネイティブな拡張性に限界`
+  },
+  {
+    id: 'adv-dr-011',
+    category: '災害復旧',
+    question: `急成長中のマルチテナントSaaS企業が、DR体制の成熟度を評価し直しています。以下の課題があります：
+
+1. 各プロダクトチームが個別にRTO/RPOを設定しているが、組織全体としての整合性がない
+2. DRテストの実施状況やレジリエンス成熟度を、経営層が横断的に把握できていない
+3. アプリケーションの依存関係が複雑化し、手動でのDR設計評価が困難になっている
+4. 50以上のAWSアカウントに分散しており、アカウントごとにログインして評価するのは非効率
+5. SLO・マルチAZ/マルチリージョンDR要件・データ復旧要件を統一的なポリシーとして管理したい
+
+これらの課題を解決するために最も適切なアプローチはどれですか？`,
+    options: [
+      '次世代AWS Resilience Hubを導入し、AWS Organizationsと統合して委任管理者アカウントから組織全体のレジリエンスを一元評価する',
+      '各チームに個別のExcelテンプレートを配布し、四半期ごとに手動で報告させる',
+      'すべてのアカウントをシングルアカウントに統合し、複雑さそのものを排除する',
+      'RTO/RPOの設定をやめ、すべてのシステムでBackup and Restoreパターンに統一する'
+    ],
+    correct: 0,
+    explanation: `最も適切なのは「次世代AWS Resilience Hubを導入し、AWS Organizationsと統合して委任管理者アカウントから組織全体のレジリエンスを一元評価する」です。
+
+理由：
+1. **依存関係の自動発見**: 次世代Resilience Hubは依存関係discovery機能により、複雑化したアプリケーション構成を自動的に評価できる
+2. **モジュール式レジリエンスポリシー**: SLO・マルチAZ/マルチリージョンDR要件・データ復旧要件を組み合わせた統一ポリシーとして定義でき、組織全体で一貫したRTO/RPO基準を適用できる
+3. **生成AIによる障害モード分析**: Well-Architectedベストプラクティスに基づいた評価を自動化できる
+4. **AWS Organizations統合**: 委任管理者アカウントから50以上のアカウントを個別ログインせずに横断評価でき、経営層への報告も一元化できる
+
+他の選択肢の問題点：
+- **Excelテンプレートの手動報告**: スケールせず、リアルタイム性もなく、経営層への可視化も限定的
+- **シングルアカウントへの統合**: マルチアカウント戦略の利点（分離、blast radius限定）を失い、根本課題（DR評価の仕組み化）を解決しない
+- **すべてBackup and Restoreパターンに統一**: RTO/RPO要件はワークロードごとに異なり、画一的なパターンでは事業要件を満たせないシステムが出てくる`
   },
 
   // 複数選択問題

@@ -147,14 +147,14 @@ const advancedIntegrationQuestions = [
     question:
       '大手ゲーム会社が、ゲームサービスの統合を実施しています。ゲームサーバー、プレイヤー管理、課金システム、分析システムの統合が必要です。リアルタイム通信、高可用性、グローバル展開が要件です。最適な統合アーキテクチャはどれですか？',
     options: [
-      'GameLift + API Gateway + Lambda + EventBridge + DynamoDB + Kinesis + SQS + SNSを使用する',
+      'EC2 Auto Scaling（ゲームサーバー）+ API Gateway + Lambda + EventBridge + DynamoDB + Kinesis + SQS + SNSを使用する',
       'EC2 + Application Load Balancer + RDS + ElastiCacheを使用する',
       'EKS + Kubernetes + Istio + Prometheus + Grafanaを使用する',
       'Lambda + API Gateway + DynamoDB + S3 + CloudFrontを使用する'
     ],
     correct: 0,
     explanation:
-      'ゲームサービス統合には、GameLift + API Gateway + Lambda + EventBridge + DynamoDB + Kinesis + SQS + SNSが最適です。GameLiftでゲームサーバー管理、EventBridgeでサービス統合、Kinesisでリアルタイム分析を実現できます。'
+      'ゲームサービス統合には、EC2 Auto Scaling（ゲームサーバー）+ API Gateway + Lambda + EventBridge + DynamoDB + Kinesis + SQS + SNSが最適です。EC2 Auto Scalingでゲームサーバー管理、EventBridgeでサービス統合、Kinesisでリアルタイム分析を実現できます（実運用ではAmazon GameLiftも有力ですが、SAP-C02試験の範囲外です）。'
   },
   {
     id: 'adv-int-009',

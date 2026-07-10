@@ -33,13 +33,13 @@ const allAdvancedQuestions = [
     category: 'コンピューティング',
     question: 'グローバル展開するゲーム会社が、リアルタイム対戦ゲームのバックエンドシステムをAWSで構築しています。このシステムには以下の要件があります：\n\n- 世界中のプレイヤー間でのリアルタイム通信（レイテンシ50ms以下）\n- 同時接続プレイヤー数：100万人以上\n- ゲームセッション中の接続断は許容されない\n- 地域間でのゲームデータ同期が必要\n- チート対策のためのサーバーサイド検証が必須\n- ゲームイベント時には通常の5倍のトラフィックが発生\n- コスト効率を重視（特にアイドル時間のコスト削減）\n\nこれらの要件を満たすために、最も適切なアーキテクチャ設計はどれですか？',
     options: [
-      'Amazon GameLift + AWS Global Accelerator + ElastiCache Global Datastore + Lambda@Edgeを使用し、地理的に分散されたゲームサーバーアーキテクチャを構築する',
+      'EC2 Auto Scaling（専用ゲームサーバーフリート）+ AWS Global Accelerator + ElastiCache Global Datastore + Network Load Balancerを使用し、地理的に分散されたゲームサーバーアーキテクチャを構築する',
       'EC2 Spot Instances + Application Load Balancer + RDS Aurora Global Database + CloudFrontを使用し、コスト効率を重視したアーキテクチャを構築する',
       'AWS Fargate + API Gateway + DynamoDB Global Tables + CloudFormation StackSetsを使用し、サーバーレスベースのマルチリージョンアーキテクチャを構築する',
       'Amazon EKS + Istio Service Mesh + Amazon MQ + Route 53 Health Checksを使用し、マイクロサービスベースのアーキテクチャを構築する'
     ],
     correct: 0,
-    explanation: '正解は「Amazon GameLift + AWS Global Accelerator + ElastiCache Global Datastore + Lambda@Edgeを使用し、地理的に分散されたゲームサーバーアーキテクチャを構築する」です。\n\nこの選択肢が最適な理由：\n\n**要件への対応：**\n1. **低レイテンシ**: Global Acceleratorによる最適化されたネットワーク経路\n2. **大規模同時接続**: GameLiftの自動スケーリングによる100万人対応\n3. **接続安定性**: GameLiftの専用ゲームサーバー管理\n4. **データ同期**: ElastiCache Global Datastoreによる地域間同期\n5. **サーバーサイド検証**: GameLiftでの専用ゲームロジック実行\n6. **動的スケーリング**: イベント時の自動スケールアウト\n7. **コスト効率**: 使用量ベースの課金とSpot Instancesサポート\n\n**各コンポーネントの役割：**\n- **GameLift**: 専用ゲームサーバーの管理と自動スケーリング\n- **Global Accelerator**: 世界規模での低レイテンシ通信\n- **ElastiCache Global Datastore**: リアルタイムデータの地域間同期\n- **Lambda@Edge**: エッジでの軽量処理とチート検証\n\n**他の選択肢の問題点：**\n- **EC2 Spot Instances + Application Load Balancer + RDS Aurora Global Database + CloudFrontを使用し、コスト効率を重視したアーキテクチャを構築する**: Spot Instancesは接続断のリスクがあり、ゲーム用途に不適切\n- **AWS Fargate + API Gateway + DynamoDB Global Tables + CloudFormation StackSetsを使用し、サーバーレスベースのマルチリージョンアーキテクチャを構築する**: API Gatewayはリアルタイム通信に適さない、WebSocketサポートが限定的\n- **Amazon EKS + Istio Service Mesh + Amazon MQ + Route 53 Health Checksを使用し、マイクロサービスベースのアーキテクチャを構築する**: 複雑すぎる構成で、ゲーム特有の要件に最適化されていない\n\n**GameLiftの特別な利点：**\n- ゲーム専用の最適化\n- プレイヤーマッチメイキング\n- フリート管理の自動化\n- チート対策機能の内蔵'
+    explanation: '正解は「EC2 Auto Scaling（専用ゲームサーバーフリート）+ AWS Global Accelerator + ElastiCache Global Datastore + Network Load Balancerを使用し、地理的に分散されたゲームサーバーアーキテクチャを構築する」です。\n\n> **補足**: 実運用ではゲームサーバーのフリート管理に特化した Amazon GameLift が第一候補になりますが、GameLift は SAP-C02 試験の出題範囲外（公式試験ガイド Appendix で明示的に Out of scope とされているサービス）です。試験対策としては、EC2/コンテナと汎用サービスの組み合わせでゲームサーバーアーキテクチャを設計する考え方を押さえておきましょう。\n\nこの選択肢が最適な理由：\n\n**要件への対応：**\n1. **低レイテンシ**: Global Acceleratorによる最適化されたネットワーク経路とAnycast IP\n2. **大規模同時接続**: EC2 Auto Scalingとカスタムメトリクス（接続数）による100万人対応\n3. **接続安定性**: NLBによるステートフルなTCP/UDPコネクション維持、専用ホストでのセッション管理\n4. **データ同期**: ElastiCache Global Datastoreによる地域間同期\n5. **サーバーサイド検証**: 専用ゲームサーバー（EC2）上でのゲームロジック実行によるチート対策\n6. **動的スケーリング**: ターゲット追跡スケーリングによるイベント時の自動スケールアウト\n7. **コスト効率**: Auto Scalingによる需要追従とSpot Instancesの併用\n\n**各コンポーネントの役割：**\n- **EC2 Auto Scaling**: 専用ゲームサーバーフリートの起動・終了・自動スケーリング\n- **Global Accelerator**: 世界規模での低レイテンシ通信、Anycast IPによる最適経路選択\n- **ElastiCache Global Datastore**: リアルタイムデータの地域間同期\n- **Network Load Balancer**: 低レイテンシ・高スループットなTCP/UDPロードバランシング\n\n**他の選択肢の問題点：**\n- **EC2 Spot Instances + Application Load Balancer + RDS Aurora Global Database + CloudFrontを使用し、コスト効率を重視したアーキテクチャを構築する**: Spot Instancesは接続断のリスクがあり、ゲーム用途に不適切\n- **AWS Fargate + API Gateway + DynamoDB Global Tables + CloudFormation StackSetsを使用し、サーバーレスベースのマルチリージョンアーキテクチャを構築する**: API Gatewayはリアルタイム通信に適さない、WebSocketサポートが限定的\n- **Amazon EKS + Istio Service Mesh + Amazon MQ + Route 53 Health Checksを使用し、マイクロサービスベースのアーキテクチャを構築する**: 複雑すぎる構成で、ゲーム特有の要件に最適化されていない'
   },
   {
     id: 'adv-comp-004',
@@ -59,13 +59,13 @@ const allAdvancedQuestions = [
     category: 'コンピューティング',
     question: 'グローバル展開するゲーム会社が、リアルタイムマルチプレイヤーゲームのインフラを構築しています。以下の要件があります：\n\n1. 世界中のプレイヤー間でのレイテンシを最小化（50ms以下）\n2. 同時接続プレイヤー数：100万人以上\n3. ゲームセッション中の接続断は許容されない\n4. 地域ごとの法規制に対応（データローカライゼーション）\n5. DDoS攻撃からの保護が必要\n6. ゲームデータの整合性保証\n\nこの要件を満たすために、最も適切なアーキテクチャはどれですか？',
     options: [
-      'Amazon GameLift + Global Accelerator + Route 53 + CloudFront + WAFを使用し、専用ゲームインフラを構築する',
+      'EC2 Auto Scaling（専用ゲームサーバー）+ Global Accelerator + Route 53 + CloudFront + Shield Advanced + WAFを使用し、専用ゲームインフラを構築する',
       'EC2 Auto Scaling + Application Load Balancer + ElastiCache + RDS Multi-AZを使用し、従来のWebアプリケーション構成を採用する',
       'AWS Lambda + API Gateway + DynamoDB Global Tables + CloudFrontを使用し、サーバーレス構成を採用する',
       'ECS Fargate + Network Load Balancer + Redis Cluster + Aurora Global Databaseを使用し、コンテナベース構成を採用する'
     ],
     correct: 0,
-    explanation: 'リアルタイムマルチプレイヤーゲームには、Amazon GameLift + Global Accelerator + Route 53 + CloudFront + WAFの組み合わせが最適です。\n\n理由：\n1. **GameLift**: ゲーム専用のマネージドサービスで、セッション管理と自動スケーリングを提供\n2. **Global Accelerator**: Anycastネットワークにより世界中で低レイテンシを実現\n3. **Route 53**: 地理的ルーティングでデータローカライゼーションに対応\n4. **CloudFront**: 静的コンテンツの配信とDDoS保護\n5. **WAF**: アプリケーションレイヤーでの攻撃防御\n\n他の選択肢の問題点：\n- **EC2 Auto Scaling + Application Load Balancer + ElastiCache + RDS Multi-AZを使用し、従来のWebアプリケーション構成を採用する**: ゲーム特有の要件（セッション管理、リアルタイム通信）に最適化されていない\n- **AWS Lambda + API Gateway + DynamoDB Global Tables + CloudFrontを使用し、サーバーレス構成を採用する**: Lambdaの実行時間制限により長時間セッションに不適切\n- **ECS Fargate + Network Load Balancer + Redis Cluster + Aurora Global Databaseを使用し、コンテナベース構成を採用する**: ゲーム専用機能が不足し、レイテンシ最適化が困難'
+    explanation: 'リアルタイムマルチプレイヤーゲームには、EC2 Auto Scaling（専用ゲームサーバー）+ Global Accelerator + Route 53 + CloudFront + Shield Advanced + WAFの組み合わせが最適です。\n\n> **補足**: Amazon GameLift はゲームサーバーのセッション管理・マッチメイキングに特化した実運用上の第一候補ですが、SAP-C02の公式試験ガイドでは明示的に Out of scope とされているため、本問では汎用サービスの組み合わせを正解としています。\n\n理由：\n1. **EC2 Auto Scaling**: 専用ゲームサーバーフリートをカスタムメトリクス（同時接続数など）で自動スケーリング\n2. **Global Accelerator**: Anycastネットワークにより世界中で低レイテンシを実現、NLBと連携してTCP/UDPトラフィックを最適経路にルーティング\n3. **Route 53**: 地理的ルーティングでデータローカライゼーションに対応\n4. **CloudFront**: 静的コンテンツの配信とエッジでのキャッシュ\n5. **Shield Advanced + WAF**: ネットワーク層・アプリケーション層双方でのDDoS/攻撃防御\n\n他の選択肢の問題点：\n- **EC2 Auto Scaling + Application Load Balancer + ElastiCache + RDS Multi-AZを使用し、従来のWebアプリケーション構成を採用する**: ゲーム特有の要件（セッション管理、リアルタイム通信）に最適化されていない\n- **AWS Lambda + API Gateway + DynamoDB Global Tables + CloudFrontを使用し、サーバーレス構成を採用する**: Lambdaの実行時間制限により長時間セッションに不適切\n- **ECS Fargate + Network Load Balancer + Redis Cluster + Aurora Global Databaseを使用し、コンテナベース構成を採用する**: ゲーム専用機能が不足し、レイテンシ最適化が困難'
   },
   {
     id: 'adv-comp-006',
@@ -133,12 +133,25 @@ const allAdvancedQuestions = [
     explanation: '航空会社の予約システムには、ECS Fargate + Application Load Balancer + Aurora Global Database + ElastiCache + API Gateway + Step Functionsの組み合わせが最適です。\n\n理由：\n1. **ECS Fargate**: サーバーレスコンテナで高いスケーラビリティと運用効率\n2. **Aurora Global Database**: グローバル展開とRTO/RPO要件を満たす高可用性\n3. **ElastiCache**: 座席在庫の高速アクセスと整合性管理\n4. **API Gateway**: 複数チャネルの統一インターフェース\n5. **Step Functions**: 複雑な予約フローのオーケストレーション\n\n他の選択肢の問題点：\n- **Lambda + API Gateway + DynamoDB Global Tables + SQS + EventBridge + S3を使用し、サーバーレスマイクロサービスを構築する**: Lambdaの実行時間制限により複雑な予約処理に不適切\n- **EC2 Auto Scaling + Network Load Balancer + RDS Multi-AZ + Redis Cluster + CloudFrontを使用し、従来型の3層アーキテクチャを構築する**: 3層アーキテクチャはマイクロサービス要件を満たさない\n- **EKS + Istio + Aurora Serverless + Kafka + GraphQL + CloudWatchを使用し、Kubernetesベースマイクロサービスを構築する**: EKSは運用複雑性が高く、航空業界の安定性要件に不適切'
   },
   {
+    id: 'adv-comp-011',
+    category: 'コンピューティング',
+    question: '中堅SaaS企業が、複数のKubernetesワークロードをEKSで運用していますが、以下の課題を抱えています：\n\n1. ノードのプロビジョニング・パッチ適用・セキュリティ更新に専任チームの工数がかかっている\n2. Karpenterを自前で構築・運用しているが設定変更のたびに検証工数が発生する\n3. Kubernetes標準APIとの互換性は維持したい（他クラウドへの移植性を残したい）\n4. 長時間実行される月次バッチ処理（数時間〜1日）があり、Lambdaの15分制限に収まらない\n5. コスト効率を保ちながら運用負荷を最小化したい\n\nこの課題を解決するために最も適切な組み合わせはどれですか？',
+    options: [
+      'EKS Auto Modeでノード管理を委譲し、長時間バッチはAWS BatchまたはFargateで実行する',
+      '全ワークロードをLambdaに移行し、実行時間制限は複数関数への分割で回避する',
+      'EC2 Dedicated Hostsに移行し、Kubernetesを廃止して独自オーケストレーターを構築する',
+      'EKS Anywhereをオンプレミスに構築し、AWSへの依存を完全に排除する'
+    ],
+    correct: 0,
+    explanation: '最も適切なのは「EKS Auto Modeでノード管理を委譲し、長時間バッチはAWS BatchまたはFargateで実行する」です。\n\n理由：\n1. **EKS Auto Mode**: Karpenterベースの仕組みでノードのプロビジョニング・スケーリング・パッチ適用・セキュリティ更新をAWSが自動管理し、EC2 Managed Instancesとして稼働する。自前のKarpenter運用や検証工数を削減しつつ、Kubernetes標準APIとの互換性は維持できる\n2. **AWS Batch**: 数時間〜数日かかる長時間バッチ処理に対応でき、ジョブキューと動的スケーリングでコスト効率を確保できる\n3. **運用負荷の最小化**: ノード管理をAWSに委譲することで専任チームの工数を大幅に削減\n\n他の選択肢の問題点：\n- **全ワークロードをLambdaに移行し、実行時間制限は複数関数への分割で回避する**: 複雑な状態管理が必要なバッチ処理を無理に分割すると設計が複雑化し保守性が低下する\n- **EC2 Dedicated Hostsに移行し、Kubernetesを廃止して独自オーケストレーターを構築する**: Kubernetes標準APIとの互換性要件に反し、開発コストも増大する\n- **EKS Anywhereをオンプレミスに構築し、AWSへの依存を完全に排除する**: 運用負荷がむしろ増加し、要件（運用負荷の最小化）に反する'
+  },
+  {
     id: 'adv-comp-multi-001',
     category: 'コンピューティング',
     question: 'グローバル展開するゲーミング会社が、リアルタイム対戦ゲームのバックエンドシステムを構築しています。以下の要件があります：\n\n**要件：**\n- 世界中のプレイヤー間で50ms以下のレイテンシを実現\n- 同時接続数：100万人以上\n- リアルタイムデータ同期が必要\n- 地域間でのゲームマッチング機能\n- 高可用性（99.99%以上）\n- コスト効率的な運用\n\nこのアーキテクチャを実現するために必要なAWSサービスを**3つ**選択してください。',
     options: [
       'AWS Global Accelerator - 世界規模でのネットワーク最適化とレイテンシ削減',
-      'Amazon GameLift - リアルタイムマルチプレイヤーゲームセッション管理',
+      'Amazon EC2 Auto Scaling - 専用ゲームサーバーフリートの自動スケーリング',
       'AWS Lambda@Edge - エッジロケーションでのゲームロジック処理',
       'Amazon ElastiCache for Redis Global Datastore - グローバルなリアルタイムデータ同期',
       'Amazon EC2 Dedicated Hosts - 専用ハードウェアでの高性能処理',
@@ -150,7 +163,7 @@ const allAdvancedQuestions = [
       3
     ],
     multipleChoice: true,
-    explanation: '正解は以下の3つです：\n\n**1. AWS Global Accelerator**\n- Anycastネットワークにより最適なエンドポイントへのルーティング\n- AWSバックボーンネットワークを活用した低レイテンシ通信\n- 自動フェイルオーバーによる高可用性\n\n**2. Amazon GameLift**\n- リアルタイムマルチプレイヤーゲーム専用のマネージドサービス\n- 自動スケーリングとマッチメイキング機能\n- 世界中のリージョンでのゲームセッション管理\n\n**3. Amazon ElastiCache for Redis Global Datastore**\n- 複数リージョン間でのリアルタイムデータレプリケーション\n- 1秒未満のレプリケーション遅延\n- プレイヤー状態やゲーム状態の同期に最適\n\n**他の選択肢について：**\n- **Lambda@Edge**: ゲームロジックには実行時間制限があり不適切\n- **EC2 Dedicated Hosts**: コスト効率が悪く、要件に対してオーバースペック\n- **AWS Wavelength**: 5G環境に限定され、グローバル展開には不適切'
+    explanation: '正解は以下の3つです（実運用ではAmazon GameLiftも有力候補ですが、SAP-C02の試験範囲外のため本問では扱いません）：\n\n**1. AWS Global Accelerator**\n- Anycastネットワークにより最適なエンドポイントへのルーティング\n- AWSバックボーンネットワークを活用した低レイテンシ通信\n- 自動フェイルオーバーによる高可用性\n\n**2. Amazon EC2 Auto Scaling**\n- 専用ゲームサーバーフリートを同時接続数などのカスタムメトリクスで自動スケーリング\n- 需要変動に応じたコスト効率的なキャパシティ管理\n- Network Load Balancerと組み合わせて低レイテンシなセッション維持を実現\n\n**3. Amazon ElastiCache for Redis Global Datastore**\n- 複数リージョン間でのリアルタイムデータレプリケーション\n- 1秒未満のレプリケーション遅延\n- プレイヤー状態やゲーム状態の同期に最適\n\n**他の選択肢について：**\n- **Lambda@Edge**: ゲームロジックには実行時間制限があり不適切\n- **EC2 Dedicated Hosts**: コスト効率が悪く、要件に対してオーバースペック\n- **AWS Wavelength**: 5G環境に限定され、グローバル展開には不適切'
   },
   {
     id: 'adv-comp-multi-002',
@@ -320,6 +333,19 @@ const allAdvancedQuestions = [
     ],
     correct: 0,
     explanation: '石油・ガス探査データには、FSx for Lustre + S3 + S3 Intelligent-Tiering + Glacier Deep Archive + Cross-Region Replication + AWS ParallelClusterの組み合わせが最適です。\n\n理由：\n1. **FSx for Lustre**: 高性能並列ファイルシステムでHPC処理に最適\n2. **S3**: 探査データの永続ストレージと高い耐久性\n3. **S3 Intelligent-Tiering**: アクセスパターンに応じた自動階層化\n4. **Glacier Deep Archive**: 50年以上の長期保存に最適なコスト\n5. **Cross-Region Replication**: 地理的分散による災害復旧\n6. **ParallelCluster**: 地質解析のHPC環境\n\n他の選択肢の問題点：\n- **EFS + S3 Standard + Glacier + DataSync + Direct Connect + AWS Backupを使用し、ファイルベース探査データストレージを構築する**: EFSはHPCワークロードの性能要件を満たせない\n- **EBS Provisioned IOPS + Instance Store + S3 One Zone-IA + Tape Gateway + CloudWatchを使用し、従来型探査データストレージを構築する**: One Zone-IAは地理的分散要件を満たさない\n- **S3 + DynamoDB + Lambda + Step Functions + Athena + QuickSightを使用し、サーバーレス探査データストレージを構築する**: サーバーレスはHPC処理に不適切'
+  },
+  {
+    id: 'adv-storage-011',
+    category: 'ストレージ',
+    question: '広告テック企業が、機械学習モデルの学習データレイクをAWSに構築しています。以下の要件があります：\n\n1. 数十億件規模の小さなJSON/Parquetオブジェクト（数KB〜数MB）を扱う\n2. 学習ジョブからのランダムアクセスで1桁ミリ秒のレイテンシが必要\n3. Apache Icebergテーブル形式でのスキーマ進化・タイムトラベルクエリに対応したい\n4. 独自でIcebergのコンパクション・メタデータ管理を運用する工数は避けたい\n5. 組織全体のストレージ利用状況をプレフィックス単位で可視化したい\n6. コストを継続的に最適化したい\n\nこの要件を満たすために最も適切な組み合わせはどれですか？',
+    options: [
+      'S3 Tables（学習データレイク）+ S3 Express One Zone（低レイテンシアクセス）+ S3 Storage Lens（Expanded prefixes）を使用する',
+      'S3 Standard + 独自運用のApache Icebergクラスター + EMRでのコンパクションジョブを使用する',
+      'EFS + Icebergメタデータ用DynamoDB + EFS Intelligent-Tieringを使用する',
+      'S3 Glacier Instant Retrieval + Athenaのみでクエリする'
+    ],
+    correct: 0,
+    explanation: '最も適切なのは「S3 Tables（学習データレイク）+ S3 Express One Zone（低レイテンシアクセス）+ S3 Storage Lens（Expanded prefixes）を使用する」です。\n\n理由：\n1. **S3 Tables**: Apache Icebergをネイティブサポートするテーブル型バケットで、自動コンパクションとスナップショット管理を内蔵するため、独自運用の工数を回避しつつスキーマ進化・タイムトラベルクエリに対応できる\n2. **S3 Express One Zone**: 単一AZ・1桁ミリ秒レイテンシを実現するストレージクラスで、2025年4月の値下げにより小さいオブジェクトの高頻度ランダムアクセスにコスト効率よく対応できる\n3. **S3 Storage Lens（Expanded prefixes）**: 数十億プレフィックス規模の分析に対応し、小さいオブジェクトの検出などパフォーマンス面の可視化も可能\n\n他の選択肢の問題点：\n- **独自運用のApache Icebergクラスター + EMRでのコンパクションジョブ**: コンパクション・メタデータ管理の運用工数がかかり要件に反する\n- **EFS + Icebergメタデータ用DynamoDB**: EFSは大規模データレイクのコスト効率でS3に劣り、Iceberg運用も複雑化する\n- **S3 Glacier Instant Retrieval**: アーカイブ向けクラスであり、1桁ミリ秒のランダムアクセス要件には不適切'
   },
   {
     id: 'adv-storage-multi-001',
@@ -511,6 +537,19 @@ const allAdvancedQuestions = [
     explanation: '保険会社の請求処理システムには、Aurora Global Database + DynamoDB + Neptune + Timestream + Macie + CloudTrail + SageMakerの組み合わせが最適です。\n\n理由：\n1. **Aurora Global Database**: 保険契約データの高可用性とグローバル同期\n2. **DynamoDB**: 災害時の大量請求処理（100倍スケール）\n3. **Neptune**: 不正請求検知のための関係分析\n4. **Timestream**: 保険数理計算の時系列データ管理\n5. **Macie**: 顧客情報の自動分類と保護\n6. **CloudTrail**: 規制要件に必要な完全な監査証跡\n7. **SageMaker**: 不正検知とリスク分析の機械学習\n\n他の選択肢の問題点：\n- **RDS Oracle + Data Guard + GoldenGate + Exadata + APEX + OEMを使用し、Oracle統合保険データベースを構築する**: Oracleは高コストで、クラウドネイティブな拡張性に限界\n- **DocumentDB + Atlas Search + EMR + Redshift + QuickSight + AWS Configを使用し、NoSQL保険データベースを構築する**: DocumentDBは保険業界の厳格なデータ整合性要件に不十分\n- **PostgreSQL + PostGIS + pgpool + Patroni + Barman + Zabbixを使用し、オープンソース保険データベースを構築する**: オープンソースは保険業界の規制要件対応が困難'
   },
   {
+    id: 'adv-db-011',
+    category: 'データベース',
+    question: 'グローバル決済プラットフォーム企業が、複数リージョンにまたがる残高管理システムを刷新しています。以下の要件があります：\n\n1. 東京・フランクフルト・バージニアの3リージョンから同時に残高を更新する必要がある\n2. 二重引き落とし・二重加算を絶対に許容できない（強整合性が必須）\n3. インフラ運用チームを増員せずにほぼ無制限のスケールに対応したい\n4. PostgreSQL互換のドライバ・SQL構文を維持し、開発者の学習コストを抑えたい\n5. 単一障害点のない高可用性アーキテクチャ（99.99%以上）が必要\n\nこの要件を満たすために最も適切なデータベースはどれですか？',
+    options: [
+      'Amazon Aurora DSQL',
+      'Amazon Aurora Global Database（Aurora PostgreSQL互換）',
+      'Amazon DynamoDB Global Tables',
+      'Amazon RDS for PostgreSQL Multi-AZ DBクラスターをリージョンごとに構築し、アプリケーション層で同期する'
+    ],
+    correct: 0,
+    explanation: '最も適切なのは「Amazon Aurora DSQL」です。\n\n理由：\n1. **マルチリージョン強整合性**: Aurora DSQLはActive-Active構成でマルチリージョンの強整合性書き込みをネイティブにサポートし、二重引き落とし・二重加算のリスクを排除できる\n2. **運用負荷ゼロに近いスケーリング**: サーバーレスでインフラ管理が不要、ほぼ無制限にスケール可能\n3. **PostgreSQL互換**: 既存のPostgreSQLドライバ・SQL構文をそのまま利用でき、開発者の学習コストを抑えられる\n4. **高可用性**: 単一リージョンで99.99%、マルチリージョンで99.999%の可用性を実現する単一障害点のないアーキテクチャ\n\n他の選択肢の問題点：\n- **Aurora Global Database（Aurora PostgreSQL互換）**: 書き込みが単一リージョンに集約され、他リージョンは結果整合性の読み取りレプリカとなるため、複数リージョン同時書き込みの強整合性要件を満たせない\n- **DynamoDB Global Tables**: 標準構成は結果整合性が基本で、「二重引き落としを絶対に許容できない」という強整合性要件と相性が悪い\n- **RDS for PostgreSQL Multi-AZ DBクラスターをリージョンごとに構築し、アプリケーション層で同期する**: 独自の同期ロジックの開発・運用負荷が非常に高く、強整合性の保証も困難'
+  },
+  {
     id: 'adv-db-multi-001',
     category: 'データベース',
     question: 'グローバル展開するソーシャルメディア企業が、ユーザー行動分析システムを構築しています。以下の要件があります：\n\n**要件：**\n- 全世界10億人のユーザーデータ管理\n- リアルタイムレコメンデーション機能\n- ユーザー行動ログの高速書き込み（1秒間に100万件）\n- 複雑なグラフクエリによる関係性分析\n- 地域別データ主権要件への対応\n- 99.99%の可用性\n\nこのシステムに必要なAWSデータベースサービスを**3つ**選択してください。',
@@ -665,13 +704,13 @@ const allAdvancedQuestions = [
     category: 'ネットワーキング',
     question: '大手ゲーム会社が、リアルタイムマルチプレイヤーゲームのネットワーク最適化を行っています。以下の要件があります：\n\n1. 世界中のプレイヤー間での低レイテンシ通信（50ms以下）\n2. 同時接続プレイヤー数：100万人以上\n3. ゲームセッション中の接続断防止\n4. DDoS攻撃からのゲームサーバー保護\n5. 地域別のゲームサーバー配置\n6. 動的なトラフィック負荷分散\n7. ネットワーク品質の監視と最適化\n\nこの要件を満たすために、最も適切なゲーミングネットワークアーキテクチャはどれですか？',
     options: [
-      'Global Accelerator + GameLift + Network Load Balancer + Route 53 + Shield + CloudWatch + VPC Flow Logsを使用し、ゲーミング特化ネットワークを構築する',
+      'Global Accelerator + EC2 Auto Scaling（ゲームサーバーフリート）+ Network Load Balancer + Route 53 + Shield + CloudWatch + VPC Flow Logsを使用し、ゲーミング特化ネットワークを構築する',
       'CloudFront + Application Load Balancer + Auto Scaling + ElastiCache + WAF + GuardDutyを使用し、Webベースゲームネットワークを構築する',
       'Direct Connect + Transit Gateway + PrivateLink + VPC Endpoints + NAT Gateway + Internet Gatewayを使用し、専用線ゲームネットワークを構築する',
       'API Gateway + Lambda + DynamoDB + Kinesis + SQS + Step Functionsを使用し、サーバーレスゲームネットワークを構築する'
     ],
     correct: 0,
-    explanation: 'リアルタイムマルチプレイヤーゲームには、Global Accelerator + GameLift + Network Load Balancer + Route 53 + Shield + CloudWatch + VPC Flow Logsの組み合わせが最適です。\n\n理由：\n1. **Global Accelerator**: Anycastネットワークで世界中から50ms以下のレイテンシ\n2. **GameLift**: ゲーム専用のマネージドサービスで100万同時接続対応\n3. **Network Load Balancer**: 低レイテンシでの高性能負荷分散\n4. **Route 53**: 地理的ルーティングによる最適サーバー選択\n5. **Shield**: DDoS攻撃からのゲームサーバー保護\n6. **CloudWatch**: ネットワーク品質のリアルタイム監視\n7. **VPC Flow Logs**: 接続品質の詳細分析\n\n他の選択肢の問題点：\n- **CloudFront + Application Load Balancer + Auto Scaling + ElastiCache + WAF + GuardDuty**を使用し、Webベースゲームネットワークを構築する: CloudFrontはリアルタイムゲーム通信に不適切\n- **Direct Connect + Transit Gateway + PrivateLink + VPC Endpoints + NAT Gateway + Internet Gateway**を使用し、専用線ゲームネットワークを構築する: 専用線は世界中のプレイヤーアクセスに不適切\n- **API Gateway + Lambda + DynamoDB + Kinesis + SQS + Step Functions**を使用し、サーバーレスゲームネットワークを構築する: サーバーレスは低レイテンシゲーム通信に不適切'
+    explanation: 'リアルタイムマルチプレイヤーゲームには、Global Accelerator + EC2 Auto Scaling（ゲームサーバーフリート）+ Network Load Balancer + Route 53 + Shield + CloudWatch + VPC Flow Logsの組み合わせが最適です（実運用ではAmazon GameLiftも有力候補ですが、SAP-C02試験の範囲外です）。\n\n理由：\n1. **Global Accelerator**: Anycastネットワークで世界中から50ms以下のレイテンシ\n2. **EC2 Auto Scaling**: 同時接続数などのカスタムメトリクスで100万同時接続に対応するゲームサーバーフリート管理\n3. **Network Load Balancer**: 低レイテンシでの高性能負荷分散\n4. **Route 53**: 地理的ルーティングによる最適サーバー選択\n5. **Shield**: DDoS攻撃からのゲームサーバー保護\n6. **CloudWatch**: ネットワーク品質のリアルタイム監視\n7. **VPC Flow Logs**: 接続品質の詳細分析\n\n他の選択肢の問題点：\n- **CloudFront + Application Load Balancer + Auto Scaling + ElastiCache + WAF + GuardDuty**を使用し、Webベースゲームネットワークを構築する: CloudFrontはリアルタイムゲーム通信に不適切\n- **Direct Connect + Transit Gateway + PrivateLink + VPC Endpoints + NAT Gateway + Internet Gateway**を使用し、専用線ゲームネットワークを構築する: 専用線は世界中のプレイヤーアクセスに不適切\n- **API Gateway + Lambda + DynamoDB + Kinesis + SQS + Step Functions**を使用し、サーバーレスゲームネットワークを構築する: サーバーレスは低レイテンシゲーム通信に不適切'
   },
   {
     id: 'adv-net-009',
@@ -698,6 +737,19 @@ const allAdvancedQuestions = [
     ],
     correct: 1,
     explanation: 'スマートグリッドシステムには、CloudWAN + Site-to-Site VPN + Transit Gateway + Route 53 + CloudWatch + AWS Config + Macieの組み合わせが最適です。\n\n理由：\n1. **CloudWAN**: 地理的に分散した電力設備の統合ネットワーク管理\n2. **Site-to-Site VPN**: 発電所・変電所間のセキュアな接続\n3. **Transit Gateway**: 複雑な電力網の効率的なルーティング\n4. **Route 53**: 電力設備間でのDNS解決と負荷分散\n5. **CloudWatch**: リアルタイム電力需給監視\n6. **AWS Config**: エネルギー業界規制への準拠監視\n7. **Macie**: 重要インフラ情報の保護\n\n他の選択肢の問題点：\n- **AWS Wavelength + 5G + IoT Core + Greengrass + PrivateLink + Direct Connect + GuardDuty**を使用し、エッジコンピューティングベーススマートグリッドを構築する: Wavelengthは5G前提で、既存電力インフラには不適切\n- **Direct Connect + Virtual Private Gateway + BGP + VPC Peering + NAT Gateway + Internet Gateway**を使用し、専用線ベーススマートグリッドを構築する: 専用線は大規模電力網の管理に複雑\n- **Global Accelerator + CloudFront + Application Load Balancer + Auto Scaling + ElastiCache + WAF**を使用し、クラウドベーススマートグリッドを構築する: インターネットベースは重要インフラの安全性要件に不適切'
+  },
+  {
+    id: 'adv-net-011',
+    category: 'ネットワーキング',
+    question: '急成長中のSaaS企業が、社内向け管理コンソールと、20以上のマイクロサービスAPIの通信基盤を刷新しています。以下の要件があります：\n\n1. 社内従業員は、VPNクライアントを配布せずに社内管理コンソールへ安全にアクセスしたい\n2. マイクロサービス間の通信は複数VPC・複数AWSアカウントにまたがっており、サービス単位での認証・認可・可観測性を統一したい\n3. 顧客向けWebアプリのオリジン（ALB）は、インターネットに一切公開せずCDN配信したい\n4. Transit GatewayやVPC Peeringの複雑なルーティング設定を極力減らしたい\n5. 運用チームの人数を増やさずに実現したい\n\nこれらの要件を満たす最も適切な組み合わせはどれですか？',
+    options: [
+      'AWS Verified Access（社内アクセス）+ Amazon VPC Lattice（サービス間通信）+ Amazon CloudFront VPC Origins（顧客向けWeb配信）を使用する',
+      'AWS Site-to-Site VPN（社内アクセス）+ AWS Transit Gateway（サービス間通信）+ CloudFront + Origin Access Control（顧客向けWeb配信）を使用する',
+      'AWS Client VPN（社内アクセス）+ VPC Peering全接続（サービス間通信）+ ALBをパブリックサブネットに配置（顧客向けWeb配信）を使用する',
+      'Amazon Cognito（社内アクセス）+ API Gateway直接連携（サービス間通信）+ S3静的ホスティング（顧客向けWeb配信）を使用する'
+    ],
+    correct: 0,
+    explanation: '最も適切なのは「AWS Verified Access（社内アクセス）+ Amazon VPC Lattice（サービス間通信）+ Amazon CloudFront VPC Origins（顧客向けWeb配信）を使用する」です。\n\n理由：\n1. **AWS Verified Access**: ゼロトラストモデルに基づき、VPNクライアント配布なしで社内アプリケーションへの安全なアクセスを実現。IAM Identity Centerと連携したデバイス・IDポリシー評価が可能\n2. **Amazon VPC Lattice**: VPC・アカウント境界を越えてサービス間通信を統一管理するアプリケーションネットワーキングサービスで、Transit GatewayやVPC Peeringのような複雑なルーティング設定なしにサービス単位の認証・認可・可観測性を実現\n3. **CloudFront VPC Origins**: プライベートサブネット内のALBを直接オリジンに指定でき、インターネットに一切公開せずグローバル配信が可能\n\n他の選択肢の問題点：\n- **Site-to-Site VPN + Transit Gateway + Origin Access Control**: VPNは拠点間接続向けで従業員個人へのゼロトラストアクセスには不向き、Transit Gatewayはルーティング設定が複雑になりやすい\n- **Client VPN + VPC Peering全接続 + ALBをパブリックサブネットに配置**: VPCクライアント配布が必要になり要件に反し、全接続VPC Peeringはメッシュ状で管理が煩雑、ALBの公開はセキュリティ要件に反する\n- **Cognito + API Gateway直接連携 + S3静的ホスティング**: Cognitoは主にエンドユーザー認証向けであり社内コンソールのゼロトラストアクセスやサービス間通信基盤としては要件を満たさない'
   },
   {
     id: 'adv-net-multi-001',
@@ -889,6 +941,19 @@ const allAdvancedQuestions = [
     explanation: '防衛関連企業の軍事システムには、AWS Secret Region + CloudHSM + Nitro Enclaves + GuardDuty + Macie + CloudTrail + Config + Security Hub + Dedicated Hosts + PrivateLinkの組み合わせが最適です。\n\n理由：\n1. **AWS Secret Region**: 軍事専用の最高機密クラウド環境\n2. **CloudHSM**: 軍事暗号化標準の鍵管理\n3. **Nitro Enclaves**: 機密処理の完全分離実行環境\n4. **GuardDuty**: 高度なサイバー攻撃検知\n5. **Macie**: 軍事機密情報の自動分類と保護\n6. **CloudTrail**: 軍事規格要件の完全な監査証跡\n7. **Dedicated Hosts**: 物理的分離による最高レベルセキュリティ\n\n他の選択肢の問題点：\n- **GovCloud + KMS + Certificate Manager + IAM + WAF + Shield + Inspector + Systems Manager**を使用し、政府標準セキュリティを構築する: GovCloudは軍事最高機密レベルには不十分\n- **Air-Gapped Network + Hardware Security Module + Multi-Level Security + Trusted Computing + PKI + SIEM**を使用し、完全分離セキュリティを構築する: 完全分離は運用性とコスト面で課題\n- **Dedicated Hosts + VPC + Security Groups + NACLs + CloudWatch + VPC Flow Logs + AWS Backup**を使用し、専用環境セキュリティを構築する: 専用環境のみでは軍事特有の高度な脅威対策に不十分'
   },
   {
+    id: 'adv-sec-011',
+    category: 'セキュリティ',
+    question: '中堅ECサイト運営会社が、セキュリティ運用チームの体制を見直しています。以下の課題があります：\n\n1. 現在、IAM資格情報の不審利用・S3の異常アクセス・EKSの侵害兆候のアラートがそれぞれ個別に発報され、担当者が手動で相関分析している\n2. 多段階にわたる高度な攻撃（例：認証情報窃取→S3データ持ち出し）を見逃すインシデントが発生した\n3. 複数のセキュリティサービス（GuardDuty、Macie、Inspector）の結果が分散しており、組織全体のリスクの優先順位付けができていない\n4. 追加のエージェント導入や大きな追加コストは避けたい\n5. マイクロサービスAPI単位できめ細かい認可ロジックを実装したいが、認可ロジックがアプリケーションコードに散在している\n\nこれらの課題を解決するために最も適切な組み合わせはどれですか？',
+    options: [
+      'GuardDuty Extended Threat Detection（多段階攻撃検知）+ Security Hub CSPM（統合リスク可視化）+ Amazon Verified Permissions（きめ細かい認可の外部化）を使用する',
+      'サードパーティSIEMを新規導入し、全ログを転送して独自の相関分析ルールを構築する',
+      'GuardDutyを解約し、Amazon Inspectorの脆弱性スキャン強化のみで対応する',
+      'IAMポリシーをすべて拒否リストに変更し、CloudTrailログを毎日手動でレビューする'
+    ],
+    correct: 0,
+    explanation: '最も適切なのは「GuardDuty Extended Threat Detection（多段階攻撃検知）+ Security Hub CSPM（統合リスク可視化）+ Amazon Verified Permissions（きめ細かい認可の外部化）を使用する」です。\n\n理由：\n1. **GuardDuty Extended Threat Detection**: IAM資格情報の不審利用、S3の異常アクセス、EKSクラスタの侵害兆候など複数のデータソースを自動的に相関分析し、多段階攻撃を単一の重大度の高いFindingとして検知する。GuardDutyを有効化するだけで追加コストなく利用でき、追加エージェントも不要\n2. **Security Hub CSPM**: GuardDuty・Macie・Inspector等複数サービスの結果を集約し、リスクの優先順位付けと「Exposure」ダッシュボードによる可視化を提供、組織全体のリスクを一元把握できる\n3. **Amazon Verified Permissions**: Cedarポリシー言語を使ったきめ細かい認可をアプリケーションに組み込むことで、認可ロジックをコードから分離・一元管理できる\n\n他の選択肢の問題点：\n- **サードパーティSIEMを新規導入**: 追加コストと導入・運用の工数が大きく、要件（追加コストを避けたい）に反する\n- **GuardDutyを解約しInspectorのみで対応**: Inspectorは脆弱性スキャンが主目的であり、IAM/S3/EKSを横断した多段階攻撃の検知はできない\n- **IAMポリシーを拒否リストに変更し手動レビュー**: 拒否リスト方式は最小権限の原則に反し抜け漏れが生じやすく、手動レビューはスケールしない'
+  },
+  {
     id: 'adv-sec-multi-001',
     category: 'セキュリティ',
     question: '大手金融機関が、PCI DSS準拠のクレジットカード決済システムを構築しています。以下の要件があります：\n\n**要件：**\n- PCI DSS Level 1準拠\n- カード情報の完全暗号化\n- アクセスログの改ざん防止\n- 定期的な脆弱性スキャン\n- 侵入検知・防御システム\n- 最小権限アクセス制御\n\nこのセキュリティアーキテクチャに必要なAWSサービスを**3つ**選択してください。',
@@ -1043,13 +1108,13 @@ const allAdvancedQuestions = [
     category: '監視・ログ',
     question: '大手ゲーム会社が、オンラインゲームの監視システムを構築しています。以下の要件があります：\n\n1. プレイヤー体験の監視\n2. ゲームサーバーの負荷監視\n3. チート行為の検知\n4. ゲーム内経済の監視\n5. プレイヤー行動分析\n6. サーバー障害の即座復旧\n7. ゲームバランス調整のデータ分析\n\nこの要件を満たすために、最も適切なゲーム業界向け監視アーキテクチャはどれですか？',
     options: [
-      'CloudWatch + X-Ray + Kinesis + OpenSearch + QuickSight + SageMaker + Lambda + SNS + GameLift Metricsを使用し、ゲーム特化監視を構築する',
+      'CloudWatch（カスタムメトリクス）+ X-Ray + Kinesis + OpenSearch + QuickSight + SageMaker + Lambda + SNSを使用し、ゲーム特化監視を構築する',
       'CloudWatch Logs + CloudWatch Metrics + CloudWatch Alarms + S3 + Athena + EMRを使用し、従来型ゲーム監視を構築する',
       'DataDog + New Relic + Splunk + Grafana + Prometheus + InfluxDBを使用し、サードパーティゲーム監視を構築する',
       'DynamoDB + Lambda + API Gateway + S3 + CloudFront + Route 53を使用し、サーバーレスゲーム監視を構築する'
     ],
     correct: 0,
-    explanation: 'ゲーム会社のオンライン監視には、CloudWatch + X-Ray + Kinesis + OpenSearch + QuickSight + SageMaker + Lambda + SNS + GameLift Metricsの組み合わせが最適です。\n\n理由：\n1. **CloudWatch**: ゲームインフラの統合監視\n2. **X-Ray**: ゲームサービスの分散トレーシング\n3. **Kinesis**: プレイヤー行動ログのリアルタイム処理\n4. **OpenSearch**: ゲームログの高速検索と分析\n5. **QuickSight**: ゲームバランス分析ダッシュボード\n6. **SageMaker**: チート検知の機械学習\n7. **GameLift Metrics**: ゲーム専用の監視メトリクス\n\n他の選択肢の問題点：\n- **CloudWatch Logs + CloudWatch Metrics + CloudWatch Alarms + S3 + Athena + EMRを使用し、従来型ゲーム監視を構築する**: 従来型アプローチはゲーム特有の監視要件に不十分\n- **DataDog + New Relic + Splunk + Grafana + Prometheus + InfluxDBを使用し、サードパーティゲーム監視を構築する**: サードパーティ組み合わせは統合管理が複雑\n- **DynamoDB + Lambda + API Gateway + S3 + CloudFront + Route 53を使用し、サーバーレスゲーム監視を構築する**: サーバーレスのみでは大規模ゲーム監視に不適切'
+    explanation: 'ゲーム会社のオンライン監視には、CloudWatch（ゲームサーバーからのカスタムメトリクス）+ X-Ray + Kinesis + OpenSearch + QuickSight + SageMaker + Lambda + SNSの組み合わせが最適です。\n\n理由：\n1. **CloudWatch**: ゲームインフラの統合監視、ゲームサーバーが発行するカスタムメトリクス（同時接続数、ティックレート等）の収集\n2. **X-Ray**: ゲームサービスの分散トレーシング\n3. **Kinesis**: プレイヤー行動ログのリアルタイム処理\n4. **OpenSearch**: ゲームログの高速検索と分析\n5. **QuickSight**: ゲームバランス分析ダッシュボード\n6. **SageMaker**: チート検知の機械学習\n\n> **補足**: Amazon GameLiftを利用する場合はGameLift Metricsも活用できますが、GameLift自体はSAP-C02の試験範囲外（公式試験ガイドでOut of scopeと明記）です。試験対策としては、CloudWatchのカスタムメトリクスで自前のゲームサーバーを監視するアプローチを押さえておきましょう。\n\n他の選択肢の問題点：\n- **CloudWatch Logs + CloudWatch Metrics + CloudWatch Alarms + S3 + Athena + EMRを使用し、従来型ゲーム監視を構築する**: 従来型アプローチはゲーム特有の監視要件に不十分\n- **DataDog + New Relic + Splunk + Grafana + Prometheus + InfluxDBを使用し、サードパーティゲーム監視を構築する**: サードパーティ組み合わせは統合管理が複雑\n- **DynamoDB + Lambda + API Gateway + S3 + CloudFront + Route 53を使用し、サーバーレスゲーム監視を構築する**: サーバーレスのみでは大規模ゲーム監視に不適切'
   },
   {
     id: 'adv-mon-009',
@@ -1076,6 +1141,19 @@ const allAdvancedQuestions = [
     ],
     correct: 0,
     explanation: 'エネルギー会社のスマートグリッド監視には、IoT Core + Kinesis + Timestream + CloudWatch + QuickSight + SageMaker + GuardDuty + Lambda + SNS + OpenSearchの組み合わせが最適です。\n\n理由：\n1. **IoT Core**: 電力設備のIoTデバイス統合管理\n2. **Kinesis**: 電力データのリアルタイムストリーミング\n3. **Timestream**: 電力需給データの時系列管理\n4. **CloudWatch**: 電力インフラの統合監視\n5. **QuickSight**: 電力品質と効率分析\n6. **SageMaker**: 停電予兆検知と需要予測\n7. **GuardDuty**: 重要インフラへのサイバー攻撃検知\n\n他の選択肢の問題点：\n- **CloudWatch Logs + CloudWatch Metrics + CloudWatch Alarms + S3 + Athena + Glueを使用し、従来型エネルギー監視を構築する**: 従来型アプローチはスマートグリッドの複雑な監視要件に不十分\n- **OSIsoft PI + Wonderware + GE Predix + Schneider EcoStruxure + Siemens MindSphereを使用し、産業用エネルギー監視を構築する**: 産業用システムは高コストでクラウド統合が困難\n- **InfluxDB + Grafana + Telegraf + Kapacitor + Chronograf + Prometheusを使用し、時系列特化エネルギー監視を構築する**: 時系列特化のみではエネルギー業界の包括的監視に不十分'
+  },
+  {
+    id: 'adv-mon-011',
+    category: '監視・ログ',
+    question: '急成長中のフィンテック企業が、マイクロサービス基盤の可観測性を強化しています。以下の課題があります：\n\n1. 20以上のマイクロサービスの依存関係が把握できておらず、障害発生時の影響範囲特定に時間がかかる\n2. サービス間のトポロジー図を手作業で維持しているが、更新が追いつかない\n3. RDSとAuroraのパフォーマンス問題を、アプリケーションのどのコード部分が原因か特定するのに時間がかかる\n4. 複数アカウントに分散したデータベースを一元的に監視したい\n5. ビジネス要件（可用性99.9%、レイテンシ200ms以下）を技術メトリクスと直接紐付けて追跡したい\n6. RDS Performance Insightsの新規機能追加が2025年11月で終了することを知り、移行を検討している\n\nこれらの課題を解決するために最も適切な組み合わせはどれですか？',
+    options: [
+      'CloudWatch Application Signals（自動トポロジー検出・SLO監視）+ CloudWatch Database Insights（クロスアカウントDB監視）を使用する',
+      'X-Rayのみを導入し、トレースデータを手動で分析する',
+      'サードパーティAPMツールを個別契約し、各チームがバラバラに導入する',
+      'CloudWatch Logs Insightsのクエリを増やし、ログの手動相関分析を継続する'
+    ],
+    correct: 0,
+    explanation: '最も適切なのは「CloudWatch Application Signals（自動トポロジー検出・SLO監視）+ CloudWatch Database Insights（クロスアカウントDB監視）を使用する」です。\n\n理由：\n1. **CloudWatch Application Signals**: インストルメンテーション（コード変更）なしでアプリケーショントポロジを自動検出・可視化するアプリケーションマップ機能を持ち、SLO(Service Level Objective)の定義・監視をネイティブサポートするため、ビジネス要件と技術メトリクスを直接紐付けられる\n2. **CloudWatch Database Insights**: RDS Performance Insightsの後継サービスで、フリート単位の監視、ロック分析、実行計画のキャプチャを統合。クロスアカウント・クロスリージョンでの集中監視に対応し、Application Signalsと連携してアプリケーションコードのどの部分がDB負荷を生んでいるかを相関分析できる\n\n他の選択肢の問題点：\n- **X-Rayのみを導入し手動分析する**: X-Rayは分散トレーシングには有効だが、トポロジーの自動可視化やSLO管理、DB性能の統合分析はカバーできない\n- **サードパーティAPMツールを個別契約**: チームごとにバラバラな導入は統合的な可観測性を損ない、運用コストも増大する\n- **CloudWatch Logs Insightsのクエリを増やす**: 手動相関分析はスケールせず、根本的な課題（トポロジー把握・DB性能の相関分析）を解決しない'
   },
   {
     id: 'adv-mon-multi-001',
@@ -1395,13 +1473,13 @@ const allAdvancedQuestions = [
     category: 'アーキテクチャ',
     question: '大手ゲーム会社が、次世代クラウドゲーミングプラットフォームを構築しています。以下の要件があります：\n\n1. 世界中からの低レイテンシアクセス（20ms以下）\n2. 同時プレイヤー数：1000万人以上\n3. ゲームストリーミングとクラウドレンダリング\n4. プレイヤーデータの同期と整合性\n5. チート対策とセキュリティ\n6. 動的スケーリングとコスト最適化\n7. ゲーム分析とプレイヤー行動予測\n\nこの要件を満たすために、最も適切なクラウドゲーミングアーキテクチャはどれですか？',
     options: [
-      'GameLift + Global Accelerator + EC2 GPU Instances + ElastiCache + DynamoDB Global Tables + Kinesis + SageMaker + CloudFront + Lambda@Edgeを使用し、クラウドゲーミング特化アーキテクチャを構築する',
+      'EC2 Auto Scaling（GPUインスタンスの専用セッションホスト管理）+ Global Accelerator + EC2 GPU Instances + ElastiCache + DynamoDB Global Tables + Kinesis + SageMaker + CloudFront + Lambda@Edgeを使用し、クラウドゲーミング特化アーキテクチャを構築する',
       'ECS + Application Load Balancer + RDS + ElastiCache + S3 + CloudFront + Lambda + API Gatewayを使用し、コンテナベースゲーミングアーキテクチャを構築する',
       'Lambda + API Gateway + DynamoDB + S3 + CloudFront + Step Functions + SQS + SNSを使用し、サーバーレスゲーミングアーキテクチャを構築する',
       'Kubernetes + Docker + NVIDIA GPU + Redis + PostgreSQL + Kafka + Prometheus + Grafanaを使用し、オープンソースゲーミングアーキテクチャを構築する'
     ],
     correct: 0,
-    explanation: 'ゲーム会社のクラウドゲーミングプラットフォームには、GameLift + Global Accelerator + EC2 GPU Instances + ElastiCache + DynamoDB Global Tables + Kinesis + SageMaker + CloudFront + Lambda@Edgeの組み合わせが最適です。\n\n理由：\n1. **GameLift**: ゲーム専用のマネージドサービス\n2. **Global Accelerator**: 20ms以下の低レイテンシ実現\n3. **EC2 GPU Instances**: クラウドレンダリング処理\n4. **ElastiCache**: 高速データアクセス\n5. **DynamoDB Global Tables**: プレイヤーデータの同期\n6. **Kinesis**: リアルタイムゲーム分析\n7. **SageMaker**: プレイヤー行動予測\n8. **CloudFront + Lambda@Edge**: エッジでの最適化\n\n他の選択肢の問題点：\n- **ECS + Application Load Balancer + RDS + ElastiCache + S3 + CloudFront + Lambda + API Gatewayを使用し、コンテナベースゲーミングアーキテクチャを構築する**: ECSはゲーム特化機能が不足\n- **Lambda + API Gateway + DynamoDB + S3 + CloudFront + Step Functions + SQS + SNSを使用し、サーバーレスゲーミングアーキテクチャを構築する**: サーバーレスは低レイテンシゲーミングに不適切\n- **Kubernetes + Docker + NVIDIA GPU + Redis + PostgreSQL + Kafka + Prometheus + Grafanaを使用し、オープンソースゲーミングアーキテクチャを構築する**: オープンソースは1000万人規模のスケーラビリティに限界'
+    explanation: 'ゲーム会社のクラウドゲーミングプラットフォームには、EC2 Auto Scaling（GPUインスタンスの専用セッションホスト管理）+ Global Accelerator + EC2 GPU Instances + ElastiCache + DynamoDB Global Tables + Kinesis + SageMaker + CloudFront + Lambda@Edgeの組み合わせが最適です。\n\n> **補足**: Amazon GameLift はマルチプレイヤーゲームのセッション管理に特化したサービスですが、SAP-C02の公式試験ガイドでは明示的に Out of scope とされています。試験対策としては、EC2 Auto Scalingで専用ホストのフリートを管理する汎用的なアプローチを理解しておきましょう。\n\n理由：\n1. **EC2 Auto Scaling + GPU Instances**: GPUレンダリング用インスタンスフリートを需要に応じて自動スケーリング\n2. **Global Accelerator**: 20ms以下の低レイテンシ実現\n3. **EC2 GPU Instances**: クラウドレンダリング処理\n4. **ElastiCache**: 高速データアクセス\n5. **DynamoDB Global Tables**: プレイヤーデータの同期\n6. **Kinesis**: リアルタイムゲーム分析\n7. **SageMaker**: プレイヤー行動予測\n8. **CloudFront + Lambda@Edge**: エッジでの最適化\n\n他の選択肢の問題点：\n- **ECS + Application Load Balancer + RDS + ElastiCache + S3 + CloudFront + Lambda + API Gatewayを使用し、コンテナベースゲーミングアーキテクチャを構築する**: ECSはゲーム特化機能が不足\n- **Lambda + API Gateway + DynamoDB + S3 + CloudFront + Step Functions + SQS + SNSを使用し、サーバーレスゲーミングアーキテクチャを構築する**: サーバーレスは低レイテンシゲーミングに不適切\n- **Kubernetes + Docker + NVIDIA GPU + Redis + PostgreSQL + Kafka + Prometheus + Grafanaを使用し、オープンソースゲーミングアーキテクチャを構築する**: オープンソースは1000万人規模のスケーラビリティに限界'
   },
   {
     id: 'adv-arch-007',
@@ -1454,6 +1532,19 @@ const allAdvancedQuestions = [
     ],
     correct: 0,
     explanation: '政府機関のデジタル政府プラットフォームには、AWS GovCloud + Control Tower + Organizations + SSO + CloudHSM + GuardDuty + Macie + Config + CloudTrail + Security Hub + Transit Gateway + Direct Connectの組み合わせが最適です。\n\n理由：\n1. **AWS GovCloud**: 政府専用の分離されたクラウド環境\n2. **Control Tower**: 複数省庁の統合ガバナンス\n3. **Organizations**: アカウント管理と統制\n4. **SSO**: 統一認証基盤\n5. **CloudHSM**: 最高機密レベルの暗号化\n6. **GuardDuty + Macie**: 高度な脅威検知\n7. **Config + CloudTrail**: 完全な監査証跡\n8. **Security Hub**: 統合セキュリティ管理\n9. **Transit Gateway**: 省庁間ネットワーク統合\n\n他の選択肢の問題点：\n- **Multi-Account + IAM + KMS + VPC + CloudFront + Route 53 + RDS + Lambda + API Gatewayを使用し、標準政府アーキテクチャを構築する**: 標準環境は政府の最高機密要件に不十分\n- **Kubernetes + Docker + Istio + Vault + Consul + Prometheus + Grafana + ELK Stackを使用し、オープンソース政府アーキテクチャを構築する**: オープンソースは政府の規制要件対応が困難\n- **Hybrid Cloud + VMware + OpenStack + Kubernetes + Red Hat + SUSE + Ubuntuを使用し、マルチベンダー政府アーキテクチャを構築する**: マルチベンダーは統合管理とセキュリティに課題'
+  },
+  {
+    id: 'adv-arch-011',
+    category: 'アーキテクチャ',
+    question: '急成長中のフィンテック企業が、事業部門ごとに20以上のAWSアカウントを持つマルチアカウント環境を運用しています。以下の課題があります：\n\n1. 新規アカウント作成のたびに、セキュリティ基準（暗号化、ロギング等）の設定が手作業で漏れることがある\n2. 各アカウントのコンプライアンス状況を経営層が横断的に把握できていない\n3. Well-Architected Frameworkの6つの柱に基づいた評価を、事業部門ごとにバラバラの基準で実施している\n4. アカウント発行のガバナンスプロセスに時間がかかりすぎている\n5. 新しいAWSサービス（Aurora DSQL、VPC Lattice等）を採用する際、どの柱の課題を解決するのか整理できていない\n\nこれらの課題を解決するために最も適切なアプローチはどれですか？',
+    options: [
+      'AWS Control TowerでランディングゾーンとAccount Factoryを標準化し、AWS Well-Architected Toolで統一基準の評価を組織全体に適用する',
+      '各事業部門に完全な裁量を与え、アカウント管理を分散化する',
+      'すべてのワークロードを単一アカウントに統合し、アカウント管理自体を廃止する',
+      '新しいAWSサービスの採用を凍結し、既存構成のまま運用を継続する'
+    ],
+    correct: 0,
+    explanation: '最も適切なのは「AWS Control TowerでランディングゾーンとAccount Factoryを標準化し、AWS Well-Architected Toolで統一基準の評価を組織全体に適用する」です。\n\n理由：\n1. **AWS Control Tower**: ランディングゾーンの標準化とAccount Factoryにより、新規アカウント作成時のセキュリティ基準（暗号化、ロギング等）を予防的・発見的ガードレールとして自動適用でき、手作業の漏れを防止する\n2. **統合ダッシュボード**: Control Towerのダッシュボードで複数アカウントのコンプライアンス状況を経営層が横断的に把握できる\n3. **AWS Well-Architected Tool**: 6つの柱（運用上の優秀性、セキュリティ、信頼性、パフォーマンス効率、コスト最適化、持続可能性）に基づく統一基準での評価を組織全体に適用でき、新サービス採用時も「どの柱の課題を解決するか」という観点で整理できる\n\n他の選択肢の問題点：\n- **各事業部門に完全な裁量を与える**: ガバナンスの一貫性がさらに損なわれ、課題を悪化させる\n- **単一アカウントへの統合**: マルチアカウント戦略による分離・blast radius限定の利点を失い、Domain 1で問われる「マルチアカウント環境の設計」という設計思想にも反する\n- **新サービスの採用凍結**: 根本課題（評価の仕組み化）を解決せず、技術的な機会損失を生む'
   },
   {
     id: 'adv-arch-multi-001',
@@ -1597,13 +1688,13 @@ const allAdvancedQuestions = [
     category: 'コスト最適化',
     question: '大手ゲーム会社が、グローバル展開するオンラインゲームのコスト最適化を実施しています。以下の課題があります：\n\n1. 世界5リージョンでの同時運用\n2. プレイヤー数の地域差・時間差\n3. ゲームアップデート時の大量配信\n4. プレイヤーデータの高速アクセス要求\n5. 新ゲームリリース時の負荷急増\n6. 開発・テスト環境の非効率利用\n7. 競合他社との開発スピード競争\n\n月間コスト5000万円を35%削減する戦略はどれですか？',
     options: [
-      'GameLift Fleet Scaling + Spot Instances + CloudFront + S3 Transfer Acceleration + Reserved Instances + Auto Scaling + Scheduled Scaling + Multi-Region Optimization + Cost Allocation Tags + Savings Plansを組み合わせたゲーム特化コスト最適化を実施する',
+      'EC2 Auto Scaling（ゲームサーバーフリート）+ Spot Instances + CloudFront + S3 Transfer Acceleration + Reserved Instances + Scheduled Scaling + Multi-Region Optimization + Cost Allocation Tags + Savings Plansを組み合わせたゲーム特化コスト最適化を実施する',
       'すべてのリージョンを1つに統合してインフラを簡素化する',
       'プレイヤー数の少ない地域のサービスを停止する',
       'ゲーム品質を下げてリソース使用量を削減する'
     ],
     correct: 0,
-    explanation: 'ゲーム会社のグローバル展開コスト最適化には、GameLift Fleet Scaling + Spot Instances + CloudFront + S3 Transfer Acceleration + Reserved Instances + Auto Scaling + Scheduled Scaling + Multi-Region Optimization + Cost Allocation Tags + Savings Plansの組み合わせが最適です。\n\nゲーム業界特化の最適化：\n\n**ゲームサーバー最適化:**\n- GameLift Fleet Scaling: プレイヤー数に応じた動的スケーリング\n- Spot Instances: 開発・テスト環境で90%削減\n- Auto Scaling: 地域別・時間別の負荷変動対応\n- 削減効果: 50%\n\n**コンテンツ配信最適化:**\n- CloudFront: ゲームアップデートの効率的配信\n- S3 Transfer Acceleration: グローバル高速アップロード\n- Multi-Region Optimization: 地域別配信最適化\n- 削減効果: 40%\n\n**データアクセス最適化:**\n- ElastiCache Reserved Nodes: プレイヤーデータ高速アクセス\n- DynamoDB On-Demand: 負荷変動に応じた課金\n- 削減効果: 30%\n\n**開発効率化:**\n- Scheduled Scaling: 開発時間外の自動停止\n- Reserved Instances: 本番環境の基本負荷\n- Savings Plans: 予測可能ワークロード割引\n- 削減効果: 60%\n\n**運用最適化:**\n- Cost Allocation Tags: ゲームタイトル別コスト管理\n- 地域別収益性分析とリソース配分最適化\n\n**月間削減効果:**\n- 5000万円 → 3200万円（36%削減）\n- グローバル展開維持\n- 開発スピード向上\n\n他の選択肢の問題点：\n- **すべてのリージョンを1つに統合してインフラを簡素化する**: リージョン統合はレイテンシ悪化でプレイヤー体験低下\n- **プレイヤー数の少ない地域のサービスを停止する**: 地域サービス停止は成長機会の損失\n- **ゲーム品質を下げてリソース使用量を削減する**: 品質低下は競合他社に対する競争力低下'
+    explanation: 'ゲーム会社のグローバル展開コスト最適化には、EC2 Auto Scaling（ゲームサーバーフリート）+ Spot Instances + CloudFront + S3 Transfer Acceleration + Reserved Instances + Scheduled Scaling + Multi-Region Optimization + Cost Allocation Tags + Savings Plansの組み合わせが最適です。\n\n> **補足**: 実運用ではAmazon GameLiftのFleet管理機能も有力候補ですが、GameLiftはSAP-C02試験の範囲外（公式試験ガイドでOut of scopeと明記）のため、本問ではEC2 Auto Scalingベースの汎用的な最適化戦略を正解としています。\n\nゲーム業界特化の最適化：\n\n**ゲームサーバー最適化:**\n- EC2 Auto Scaling: プレイヤー数に応じたゲームサーバーフリートの動的スケーリング\n- Spot Instances: 開発・テスト環境で90%削減\n- Auto Scaling: 地域別・時間別の負荷変動対応\n- 削減効果: 50%\n\n**コンテンツ配信最適化:**\n- CloudFront: ゲームアップデートの効率的配信\n- S3 Transfer Acceleration: グローバル高速アップロード\n- Multi-Region Optimization: 地域別配信最適化\n- 削減効果: 40%\n\n**データアクセス最適化:**\n- ElastiCache Reserved Nodes: プレイヤーデータ高速アクセス\n- DynamoDB On-Demand: 負荷変動に応じた課金\n- 削減効果: 30%\n\n**開発効率化:**\n- Scheduled Scaling: 開発時間外の自動停止\n- Reserved Instances: 本番環境の基本負荷\n- Savings Plans: 予測可能ワークロード割引\n- 削減効果: 60%\n\n**運用最適化:**\n- Cost Allocation Tags: ゲームタイトル別コスト管理\n- 地域別収益性分析とリソース配分最適化\n\n**月間削減効果:**\n- 5000万円 → 3200万円（36%削減）\n- グローバル展開維持\n- 開発スピード向上\n\n他の選択肢の問題点：\n- **すべてのリージョンを1つに統合してインフラを簡素化する**: リージョン統合はレイテンシ悪化でプレイヤー体験低下\n- **プレイヤー数の少ない地域のサービスを停止する**: 地域サービス停止は成長機会の損失\n- **ゲーム品質を下げてリソース使用量を削減する**: 品質低下は競合他社に対する競争力低下'
   },
   {
     id: 'adv-cost-008',
@@ -1643,6 +1734,19 @@ const allAdvancedQuestions = [
     ],
     correct: 0,
     explanation: '航空会社のコスト最適化には、Reserved Instances + Savings Plans + Multi-AZ維持 + Aurora Global Database + S3 Intelligent-Tiering + SageMaker Savings Plans + Spot Instances（非本番） + Scheduled Scaling + Cost Allocation Tags + Compliance監視の組み合わせが最適です。\n\n航空業界の安全性・規制準拠を維持した最適化：\n\n**予約システム最適化（安全性維持）:**\n- Reserved Instances: 24時間稼働で72%割引\n- Multi-AZ維持: 高可用性要件完全準拠\n- Aurora Global Database: 災害復旧とコスト効率の両立\n- 削減効果: 30%（安全性100%維持）\n\n**データ分析最適化:**\n- SageMaker Savings Plans: 乗客分析ワークロード割引\n- S3 Intelligent-Tiering: 乗客データの自動階層化\n- 削減効果: 40%\n\n**メンテナンス予測最適化:**\n- Spot Instances: 非本番環境での機械学習訓練\n- Scheduled Scaling: メンテナンス時間に応じた処理\n- 削減効果: 50%（予測精度維持）\n\n**燃料効率システム最適化:**\n- Lambda: イベント駆動による効率的処理\n- Kinesis Auto Scaling: フライトデータ量に応じた調整\n- 削減効果: 35%\n\n**規制準拠維持:**\n- Cost Allocation Tags: 路線別・部門別コスト管理\n- Compliance監視: 航空規制要件の継続確認\n- 監査証跡完全保持\n\n**緊急対応システム:**\n- Reserved Capacity: 災害時対応リソース確保\n- 高可用性構成維持\n\n**年間削減効果:**\n- 12億円 → 9億円（25%削減）\n- 航空安全性100%維持\n- 規制要件完全準拠\n- 災害対応能力保持\n\n他の選択肢の問題点：\n- **予約システムの冗長性を削減してコストを下げる**: 冗長性削減は航空安全に直結する重大リスク\n- **メンテナンス予測の精度を下げて計算コストを削減する**: メンテナンス予測精度低下は機体安全性に影響\n- **一部の路線データ分析を停止してリソースを削減する**: 路線分析停止は収益最適化機会の損失'
+  },
+  {
+    id: 'adv-cost-011',
+    category: 'コスト最適化',
+    question: '中堅SaaS企業が、複数のデータベースサービス（RDS for PostgreSQL、Aurora MySQL、DynamoDB、ElastiCache for Redis、DocumentDB）を長期運用しています。以下の状況があります：\n\n1. すべてのデータベースが今後1年以上の継続利用が確定している\n2. 事業成長に応じてインスタンスタイプやリージョンを柔軟に変更する余地を残しておきたい\n3. 各データベースサービスごとに個別のReserved Instances/Reserved Nodesを購入すると管理が煩雑\n4. EC2やLambda、Fargateのコンピュートリソースにも別途コミット割引を検討している\n5. コスト削減効果を最大化しつつ、購入管理の手間を最小限にしたい\n\nこの状況で最も適切なコスト最適化の組み合わせはどれですか？',
+    options: [
+      'データベース群にはAWS Database Savings Plans、コンピュート群にはCompute Savings Plansをそれぞれ契約する',
+      'すべてのサービスに対して、サービスごとに個別のReserved Instances/Reserved Nodesを購入する',
+      'すべてEC2 Instance Savings Plansで統一し、マネージドサービスは対象外として運用する',
+      'コミット購入は行わず、すべてオンデマンドのままCost Explorerで監視を続ける'
+    ],
+    correct: 0,
+    explanation: '最も適切なのは「データベース群にはAWS Database Savings Plans、コンピュート群にはCompute Savings Plansをそれぞれ契約する」です。\n\n理由：\n1. **AWS Database Savings Plans**: RDS、Aurora、DynamoDB、ElastiCache、DocumentDBなど複数のマネージドデータベースサービスを横断して適用でき、特定のインスタンスタイプやリージョンに縛られずに1年コミットで最大35%の割引を受けられる。1つの契約で複数DBサービスをまとめて管理できるため購入管理の手間も少ない\n2. **Compute Savings Plans**: EC2、Fargate、Lambdaを横断して適用できる別枠の購入オプションで、データベースとは独立して最適化できる\n3. **柔軟性の両立**: どちらのSavings Plansもインスタンスタイプやリージョンを問わず柔軟に変更できる\n\n他の選択肢の問題点：\n- **サービスごとに個別のReserved Instances/Reserved Nodesを購入する**: 柔軟性の要件に反し、購入管理も煩雑になる\n- **EC2 Instance Savings Plansで統一しマネージドサービスを対象外とする**: EC2 Instance Savings Plansはインスタンスファミリー固定のプランでありデータベースサービスには適用されず、削減機会を大きく逃す\n- **コミット購入を行わずオンデマンドのまま運用する**: 1年以上の継続利用が確定しているにもかかわらずコミット割引による削減機会を逃す'
   },
   {
     id: 'adv-cost-multi-001',
@@ -1760,13 +1864,13 @@ const allAdvancedQuestions = [
     category: '災害復旧',
     question: '大手ゲーム会社が、オンラインゲームの災害復旧戦略を策定しています。以下の要件があります：\n\n1. プレイヤーセッションの継続（RTO: 1分）\n2. ゲームデータの完全保護（RPO: 30秒）\n3. 世界中のプレイヤーへの影響最小化\n4. ゲームサーバーの自動復旧\n5. プレイヤーデータの整合性保証\n6. リアルタイムマッチメイキング継続\n7. 同時接続100万人での災害対応\n\nこの要件を満たす最適なゲーム災害復旧アーキテクチャはどれですか？',
     options: [
-      'GameLift + DynamoDB Global Tables + ElastiCache Global Datastore + Route 53 + Global Accelerator + Kinesis + Lambda + Step Functions + CloudWatch + Systems Managerを使用し、ゲーム特化災害復旧システムを構築する',
+      'EC2 Auto Scaling（マルチリージョン・ゲームサーバーフリート）+ DynamoDB Global Tables + ElastiCache Global Datastore + Route 53 + Global Accelerator + Kinesis + Lambda + Step Functions + CloudWatch + Systems Managerを使用し、ゲーム特化災害復旧システムを構築する',
       'EC2 Auto Scaling + RDS Multi-AZ + ElastiCache + Route 53 + CloudWatchを使用し、従来型ゲーム災害復旧システムを構築する',
       'EKS + Kubernetes + Istio + Redis + PostgreSQL + Prometheusを使用し、コンテナベースゲーム災害復旧システムを構築する',
       'Lambda + API Gateway + DynamoDB + S3 + CloudFront + SQSを使用し、サーバーレスゲーム災害復旧システムを構築する'
     ],
     correct: 0,
-    explanation: 'ゲーム会社のオンライン災害復旧には、GameLift + DynamoDB Global Tables + ElastiCache Global Datastore + Route 53 + Global Accelerator + Kinesis + Lambda + Step Functions + CloudWatch + Systems Managerの組み合わせが最適です。\n\n理由：\n1. **GameLift**: ゲームサーバーの自動フェイルオーバーと復旧\n2. **DynamoDB Global Tables**: プレイヤーデータのグローバル同期\n3. **ElastiCache Global Datastore**: セッションデータの高速復旧\n4. **Route 53**: 1分以内のDNSフェイルオーバー\n5. **Global Accelerator**: プレイヤー接続の最適経路維持\n6. **Kinesis**: リアルタイムゲームイベント処理\n7. **Lambda + Step Functions**: 自動復旧ワークフロー\n8. **CloudWatch**: ゲームサーバー監視と自動対応\n9. **Systems Manager**: ゲームインフラの統合管理\n\nゲーム災害復旧性能：\n- RTO: 45秒-1分（プレイヤーセッション継続）\n- RPO: 15-30秒（ゲームデータ保護）\n- スケール: 100万人同時接続対応\n\n他の選択肢の問題点：\n- **EC2 Auto Scaling + RDS Multi-AZ + ElastiCache + Route 53 + CloudWatchを使用し、従来型ゲーム災害復旧システムを構築する**: Multi-AZは単一リージョン、グローバルゲームに不適切\n- **ECS + Docker + Kubernetes + Istio + Prometheus + Grafanaを使用し、コンテナベースゲーム災害復旧システムを構築する**: コンテナベースはゲーム特有の低レイテンシ要件に課題\n- **Lambda + API Gateway + DynamoDB + S3 + CloudFront + Step Functionsを使用し、サーバーレスゲーム災害復旧システムを構築する**: サーバーレスは大規模リアルタイムゲームの継続性に限界'
+    explanation: 'ゲーム会社のオンライン災害復旧には、EC2 Auto Scaling（マルチリージョン・ゲームサーバーフリート）+ DynamoDB Global Tables + ElastiCache Global Datastore + Route 53 + Global Accelerator + Kinesis + Lambda + Step Functions + CloudWatch + Systems Managerの組み合わせが最適です。\n\n> **補足**: Amazon GameLift はゲームサーバーの自動フェイルオーバーに特化した実運用上の有力な選択肢ですが、SAP-C02試験では明示的にOut of scopeとされているため、本問ではマルチリージョンのEC2 Auto Scalingによる自動復旧を正解としています。\n\n理由：\n1. **EC2 Auto Scaling（マルチリージョン）**: ヘルスチェック連動によるゲームサーバーの自動フェイルオーバーと復旧\n2. **DynamoDB Global Tables**: プレイヤーデータのグローバル同期\n3. **ElastiCache Global Datastore**: セッションデータの高速復旧\n4. **Route 53**: 1分以内のDNSフェイルオーバー\n5. **Global Accelerator**: プレイヤー接続の最適経路維持\n6. **Kinesis**: リアルタイムゲームイベント処理\n7. **Lambda + Step Functions**: 自動復旧ワークフロー\n8. **CloudWatch**: ゲームサーバー監視と自動対応\n9. **Systems Manager**: ゲームインフラの統合管理\n\nゲーム災害復旧性能：\n- RTO: 45秒-1分（プレイヤーセッション継続）\n- RPO: 15-30秒（ゲームデータ保護）\n- スケール: 100万人同時接続対応\n\n他の選択肢の問題点：\n- **EC2 Auto Scaling + RDS Multi-AZ + ElastiCache + Route 53 + CloudWatchを使用し、従来型ゲーム災害復旧システムを構築する**: Multi-AZは単一リージョン、グローバルゲームに不適切\n- **ECS + Docker + Kubernetes + Istio + Prometheus + Grafanaを使用し、コンテナベースゲーム災害復旧システムを構築する**: コンテナベースはゲーム特有の低レイテンシ要件に課題\n- **Lambda + API Gateway + DynamoDB + S3 + CloudFront + Step Functionsを使用し、サーバーレスゲーム災害復旧システムを構築する**: サーバーレスは大規模リアルタイムゲームの継続性に限界'
   },
   {
     id: 'adv-dr-006',
@@ -1832,6 +1936,19 @@ const allAdvancedQuestions = [
     ],
     correct: 0,
     explanation: '保険会社の保険金支払いシステム災害復旧には、Aurora Global Database + DynamoDB Global Tables + Route 53 + Auto Scaling + Lambda + Step Functions + Kinesis + SageMaker + S3 Cross-Region Replication + Macie + CloudTrail + Config + Systems Managerの組み合わせが最適です。\n\n理由：\n1. **Aurora Global Database**: 保険契約データのグローバル同期\n2. **DynamoDB Global Tables**: 保険金請求データの高速レプリケーション\n3. **Route 53**: 20分以内のシステムフェイルオーバー\n4. **Auto Scaling**: 災害時大量請求の自動スケーリング\n5. **Lambda + Step Functions**: 保険金支払いワークフローの自動復旧\n6. **Kinesis**: リアルタイム請求データ処理\n7. **SageMaker**: 不正請求検知システムの継続\n8. **S3 Cross-Region Replication**: 保険書類の地域間複製\n9. **Macie**: 顧客情報の自動保護\n10. **CloudTrail + Config**: 保険規制準拠の監査証跡\n11. **Systems Manager**: 保険インフラの統合管理\n\n保険災害復旧性能：\n- RTO: 15-20分（保険金支払い継続）\n- RPO: 3-5分（契約データ保護）\n- スケーラビリティ: 災害時大量請求対応\n\n他の選択肢の問題点：\n- **RDS Multi-AZ + ElastiCache + Route 53 + Auto Scaling + Lambda + CloudWatchを使用し、従来型保険災害復旧システムを構築する**: Multi-AZは単一リージョン、保険業界のグローバル要件に不適切\n- **DocumentDB + S3 + Route 53 + Lambda + API Gateway + CloudFrontを使用し、NoSQL保険災害復旧システムを構築する**: NoSQLは保険の複雑なデータ関係性管理に不適切\n- **Oracle RAC + Data Guard + GoldenGate + Exadata + ASMを使用し、Oracle統合保険災害復旧システムを構築する**: Oracle統合は高コストで、クラウドネイティブな拡張性に限界'
+  },
+  {
+    id: 'adv-dr-011',
+    category: '災害復旧',
+    question: '急成長中のマルチテナントSaaS企業が、DR体制の成熟度を評価し直しています。以下の課題があります：\n\n1. 各プロダクトチームが個別にRTO/RPOを設定しているが、組織全体としての整合性がない\n2. DRテストの実施状況やレジリエンス成熟度を、経営層が横断的に把握できていない\n3. アプリケーションの依存関係が複雑化し、手動でのDR設計評価が困難になっている\n4. 50以上のAWSアカウントに分散しており、アカウントごとにログインして評価するのは非効率\n5. SLO・マルチAZ/マルチリージョンDR要件・データ復旧要件を統一的なポリシーとして管理したい\n\nこれらの課題を解決するために最も適切なアプローチはどれですか？',
+    options: [
+      '次世代AWS Resilience Hubを導入し、AWS Organizationsと統合して委任管理者アカウントから組織全体のレジリエンスを一元評価する',
+      '各チームに個別のExcelテンプレートを配布し、四半期ごとに手動で報告させる',
+      'すべてのアカウントをシングルアカウントに統合し、複雑さそのものを排除する',
+      'RTO/RPOの設定をやめ、すべてのシステムでBackup and Restoreパターンに統一する'
+    ],
+    correct: 0,
+    explanation: '最も適切なのは「次世代AWS Resilience Hubを導入し、AWS Organizationsと統合して委任管理者アカウントから組織全体のレジリエンスを一元評価する」です。\n\n理由：\n1. **依存関係の自動発見**: 次世代Resilience Hubは依存関係discovery機能により、複雑化したアプリケーション構成を自動的に評価できる\n2. **モジュール式レジリエンスポリシー**: SLO・マルチAZ/マルチリージョンDR要件・データ復旧要件を組み合わせた統一ポリシーとして定義でき、組織全体で一貫したRTO/RPO基準を適用できる\n3. **生成AIによる障害モード分析**: Well-Architectedベストプラクティスに基づいた評価を自動化できる\n4. **AWS Organizations統合**: 委任管理者アカウントから50以上のアカウントを個別ログインせずに横断評価でき、経営層への報告も一元化できる\n\n他の選択肢の問題点：\n- **Excelテンプレートの手動報告**: スケールせず、リアルタイム性もなく、経営層への可視化も限定的\n- **シングルアカウントへの統合**: マルチアカウント戦略の利点（分離、blast radius限定）を失い、根本課題（DR評価の仕組み化）を解決しない\n- **すべてBackup and Restoreパターンに統一**: RTO/RPO要件はワークロードごとに異なり、画一的なパターンでは事業要件を満たせないシステムが出てくる'
   },
   {
     id: 'adv-dr-multi-001',
@@ -1988,13 +2105,13 @@ const allAdvancedQuestions = [
     category: 'アプリケーション統合',
     question: '大手ゲーム会社が、ゲームサービスの統合を実施しています。ゲームサーバー、プレイヤー管理、課金システム、分析システムの統合が必要です。リアルタイム通信、高可用性、グローバル展開が要件です。最適な統合アーキテクチャはどれですか？',
     options: [
-      'GameLift + API Gateway + Lambda + EventBridge + DynamoDB + Kinesis + SQS + SNSを使用する',
+      'EC2 Auto Scaling（ゲームサーバー）+ API Gateway + Lambda + EventBridge + DynamoDB + Kinesis + SQS + SNSを使用する',
       'EC2 + Application Load Balancer + RDS + ElastiCacheを使用する',
       'EKS + Kubernetes + Istio + Prometheus + Grafanaを使用する',
       'Lambda + API Gateway + DynamoDB + S3 + CloudFrontを使用する'
     ],
     correct: 0,
-    explanation: 'ゲームサービス統合には、GameLift + API Gateway + Lambda + EventBridge + DynamoDB + Kinesis + SQS + SNSが最適です。GameLiftでゲームサーバー管理、EventBridgeでサービス統合、Kinesisでリアルタイム分析を実現できます。'
+    explanation: 'ゲームサービス統合には、EC2 Auto Scaling（ゲームサーバー）+ API Gateway + Lambda + EventBridge + DynamoDB + Kinesis + SQS + SNSが最適です。EC2 Auto Scalingでゲームサーバー管理、EventBridgeでサービス統合、Kinesisでリアルタイム分析を実現できます（実運用ではAmazon GameLiftも有力ですが、SAP-C02試験の範囲外です）。'
   },
   {
     id: 'adv-int-009',
@@ -2340,13 +2457,13 @@ const allAdvancedQuestions = [
     category: '移行・統合',
     question: '大手ゲーム会社が、ゲームサーバーのクラウド移行を実施しています。リアルタイムマルチプレイヤー、グローバル展開、低レイテンシ、高可用性が要件です。最適な移行戦略はどれですか？',
     options: [
-      'GameLift + Global Accelerator + Migration Hub + Application Migration Service + CloudEndure + Professional Servicesを使用する',
+      'AWS Application Migration Service（AWS MGN）+ Global Accelerator + Migration Hub + EC2 Auto Scaling + ElastiCache Global Datastoreを使用する',
       'EC2 + Auto Scaling + Application Load Balancer + RDS + ElastiCacheを使用する',
       'Lambda + API Gateway + DynamoDB + S3 + CloudFrontを使用する',
       'EKS + Kubernetes + Istio + Prometheus + Grafanaを使用する'
     ],
     correct: 0,
-    explanation: 'ゲームサーバー移行には、GameLift + Global Accelerator + Migration Hub + Application Migration Service + CloudEndure + Professional Servicesが最適です。ゲーム特化機能、低レイテンシ、グローバル展開を実現できます。'
+    explanation: 'ゲームサーバー移行には、AWS Application Migration Service（AWS MGN、2026年に AWS Transform MGN へ改称）でリホストしつつ、Global Acceleratorで低レイテンシ通信、Migration Hubで移行進捗を一元管理、移行後はEC2 Auto Scalingでゲームサーバーフリートを自動スケーリングし、ElastiCache Global Datastoreでグローバルなセッション同期を行う構成が最適です（実運用ではAmazon GameLiftも有力候補ですが、SAP-C02試験の範囲外です）。'
   },
   {
     id: 'adv-mig-007',
@@ -2399,6 +2516,19 @@ const allAdvancedQuestions = [
     ],
     correct: 0,
     explanation: '政府システム移行には、GovCloud + Migration Hub + Database Migration Service + CloudHSM + CloudTrail + Config + GuardDuty + Professional Servicesが最適です。最高機密対応、完全監査、国家安全保障要件を実現できます。'
+  },
+  {
+    id: 'adv-mig-011',
+    category: '移行・統合',
+    question: '中堅小売企業が、オンプレミスVMware環境で稼働する200台以上の仮想マシンをAWSへ移行する計画を立てています。以下の要件があります：\n\n1. 移行期間中、アプリケーション改修やOS変更は一切行いたくない（最短でクラウドに移す）\n2. 既存のVMwareライセンス・運用ツール・監視体制をそのまま引き継ぎたい\n3. 移行後、段階的にクラウドネイティブサービスへの最適化（Replatform/Refactor）を検討したい\n4. 移行対象・移行アプローチの評価には7Rs（7つのR）のフレームワークを使いたい\n\n初期移行フェーズで採用すべき最も適切な戦略とサービスの組み合わせはどれですか？',
+    options: [
+      'Relocate戦略を採用し、VMware Cloud on AWSでハイパーバイザーレベルのまま移行する',
+      'Refactor戦略を採用し、全VMをコンテナ化してEKSに移行する',
+      'Repurchase戦略を採用し、SaaS版のERPに切り替える',
+      'Retire戦略を採用し、重要度の低いVMから順に廃止する'
+    ],
+    correct: 0,
+    explanation: '最も適切なのは「Relocate戦略を採用し、VMware Cloud on AWSでハイパーバイザーレベルのまま移行する」です。\n\n理由：\n1. **Relocate**: 7Rsのうち、ハイパーバイザーレベルでインフラをそのままAWSへ移行し、OS・アプリケーションに一切手を加えない戦略。「アプリケーション改修やOS変更は一切行いたくない」という要件に完全に合致する\n2. **VMware Cloud on AWS**: 既存のVMwareライセンス・運用ツール・監視体制をそのまま引き継げるため、要件2を満たす\n3. **段階的な最適化との親和性**: Relocateで最短移行した後、必要なワークロードから順にReplatform/Refactorへ段階的に移行するという要件3の計画にも適合する\n\n他の選択肢の問題点：\n- **Refactor戦略で全VMをコンテナ化してEKSに移行する**: 「アプリケーション改修は一切行いたくない」という初期フェーズの要件に反し、200台以上を一度にコンテナ化するのは非現実的\n- **Repurchase戦略でSaaS版ERPに切り替える**: 全VMがERPとは限らず、要件にない業務要件の変更を伴うため不適切\n- **Retire戦略で重要度の低いVMから廃止する**: 移行そのものではなく廃止判断であり、初期移行フェーズの要件（最短でクラウドに移す）に合致しない'
   },
   {
     id: 'adv-mig-multi-001',
@@ -2529,13 +2659,13 @@ const allAdvancedQuestions = [
     category: '運用・デプロイ',
     question: '大手ゲーム会社が、オンラインゲームの運用基盤を構築しています。プレイヤー体験監視、サーバー負荷管理、チート検知、リアルタイム対応が要件です。最適な運用アーキテクチャはどれですか？',
     options: [
-      'GameLift Monitoring + CloudWatch + X-Ray + Lambda + Kinesis + SageMaker + Step Functions + SNSを使用する',
+      'CloudWatch（カスタムメトリクス）+ X-Ray + Lambda + Kinesis + SageMaker + Step Functions + SNSを使用する',
       'Prometheus + Grafana + ELK Stack + Kafka + Spark + Alertmanagerを使用する',
       'New Relic + Datadog + Splunk + Machine Learning + PagerDutyを使用する',
       '手動監視 + プレイヤー報告 + GM対応を使用する'
     ],
     correct: 0,
-    explanation: 'ゲーム運用には、GameLift Monitoring + CloudWatch + X-Ray + Lambda + Kinesis + SageMaker + Step Functions + SNSが最適です。ゲーム特化監視、プレイヤー体験管理、チート検知、自動対応を実現できます。'
+    explanation: 'ゲーム運用には、CloudWatch（ゲームサーバーからのカスタムメトリクス）+ X-Ray + Lambda + Kinesis + SageMaker + Step Functions + SNSが最適です。プレイヤー体験管理、チート検知（SageMakerの異常検知）、自動対応（Step Functions）を実現できます（実運用ではAmazon GameLiftも有力候補ですが、SAP-C02試験の範囲外です）。'
   },
   {
     id: 'adv-ops-007',
@@ -2718,13 +2848,13 @@ const allAdvancedQuestions = [
     category: 'ユースケース',
     question: '大手ゲーム会社が、次世代クラウドゲーミングプラットフォームを構築しています。ストリーミングゲーム、マルチプレイヤー、AI NPC、ブロックチェーン統合が要件です。最適なソリューションアーキテクチャはどれですか？',
     options: [
-      'GameLift + Global Accelerator + EC2 GPU + Kinesis + DynamoDB + SageMaker + Managed Blockchain + Lambda + API Gatewayを使用する',
+      'EC2 GPU Instances（Auto Scaling） + Global Accelerator + Kinesis + DynamoDB + SageMaker + Managed Blockchain + Lambda + API Gatewayを使用する',
       'EC2 + Auto Scaling + Application Load Balancer + RDS + ElastiCache + S3を使用する',
       'Kubernetes + Docker + Unity + Unreal Engine + Redis + PostgreSQL + Prometheusを使用する',
       'Game Engines + Multiplayer Servers + CDN + Analytics + Payment + Social Featuresを使用する'
     ],
     correct: 0,
-    explanation: 'クラウドゲーミングには、GameLift + Global Accelerator + EC2 GPU + Kinesis + DynamoDB + SageMaker + Managed Blockchain + Lambda + API Gatewayが最適です。ゲーム特化機能、GPU処理、AI、ブロックチェーン統合を実現できます。'
+    explanation: 'クラウドゲーミングには、EC2 GPUインスタンス（Auto Scalingでレンダリング/ストリーミングセッションホストを管理）+ Global Accelerator + Kinesis + DynamoDB + SageMaker + Managed Blockchain + Lambda + API Gatewayが最適です。GPU処理、AI NPC、ブロックチェーン統合を実現できます（マルチプレイヤーのセッション管理にはAmazon GameLiftも有力候補ですが、SAP-C02試験の範囲外です）。'
   },
   {
     id: 'adv-uc-007',

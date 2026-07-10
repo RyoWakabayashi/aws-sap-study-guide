@@ -443,6 +443,38 @@ const advancedStorageQuestions = [
 - **EBS Provisioned IOPS + Instance Store + S3 One Zone-IA + Tape Gateway + CloudWatchを使用し、従来型探査データストレージを構築する**: One Zone-IAは地理的分散要件を満たさない
 - **S3 + DynamoDB + Lambda + Step Functions + Athena + QuickSightを使用し、サーバーレス探査データストレージを構築する**: サーバーレスはHPC処理に不適切`
   },
+  {
+    id: 'adv-storage-011',
+    category: 'ストレージ',
+    question: `広告テック企業が、機械学習モデルの学習データレイクをAWSに構築しています。以下の要件があります：
+
+1. 数十億件規模の小さなJSON/Parquetオブジェクト（数KB〜数MB）を扱う
+2. 学習ジョブからのランダムアクセスで1桁ミリ秒のレイテンシが必要
+3. Apache Icebergテーブル形式でのスキーマ進化・タイムトラベルクエリに対応したい
+4. 独自でIcebergのコンパクション・メタデータ管理を運用する工数は避けたい
+5. 組織全体のストレージ利用状況をプレフィックス単位で可視化したい
+6. コストを継続的に最適化したい
+
+この要件を満たすために最も適切な組み合わせはどれですか？`,
+    options: [
+      'S3 Tables（学習データレイク）+ S3 Express One Zone（低レイテンシアクセス）+ S3 Storage Lens（Expanded prefixes）を使用する',
+      'S3 Standard + 独自運用のApache Icebergクラスター + EMRでのコンパクションジョブを使用する',
+      'EFS + Icebergメタデータ用DynamoDB + EFS Intelligent-Tieringを使用する',
+      'S3 Glacier Instant Retrieval + Athenaのみでクエリする'
+    ],
+    correct: 0,
+    explanation: `最も適切なのは「S3 Tables（学習データレイク）+ S3 Express One Zone（低レイテンシアクセス）+ S3 Storage Lens（Expanded prefixes）を使用する」です。
+
+理由：
+1. **S3 Tables**: Apache Icebergをネイティブサポートするテーブル型バケットで、自動コンパクションとスナップショット管理を内蔵するため、独自運用の工数を回避しつつスキーマ進化・タイムトラベルクエリに対応できる
+2. **S3 Express One Zone**: 単一AZ・1桁ミリ秒レイテンシを実現するストレージクラスで、2025年4月の値下げにより小さいオブジェクトの高頻度ランダムアクセスにコスト効率よく対応できる
+3. **S3 Storage Lens（Expanded prefixes）**: 数十億プレフィックス規模の分析に対応し、小さいオブジェクトの検出などパフォーマンス面の可視化も可能
+
+他の選択肢の問題点：
+- **独自運用のApache Icebergクラスター + EMRでのコンパクションジョブ**: コンパクション・メタデータ管理の運用工数がかかり要件に反する
+- **EFS + Icebergメタデータ用DynamoDB**: EFSは大規模データレイクのコスト効率でS3に劣り、Iceberg運用も複雑化する
+- **S3 Glacier Instant Retrieval**: アーカイブ向けクラスであり、1桁ミリ秒のランダムアクセス要件には不適切`
+  },
 
   // 複数選択問題
   {

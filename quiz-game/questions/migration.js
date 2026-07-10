@@ -299,6 +299,48 @@ const migrationQuestions = [
     explanation:
       'Refactoring Toolkitは、レガシーアプリケーションの現代化とクラウド移行を支援します。'
   },
+  {
+    id: 'migration-26',
+    category: '移行・統合',
+    question: '2026年6月に、AWS Application Migration Service (MGN) が改称された新しい名称はどれですか？',
+    options: [
+      'AWS Migration Hub Pro',
+      'AWS Transform MGN',
+      'AWS CloudEndure Next',
+      'AWS Rehost Service'
+    ],
+    correct: 1,
+    explanation:
+      'AWS Application Migration Service (MGN) は2026年6月にAWS Transform MGNへ改称されました。MGNはAWS Transform（エージェント型の移行・モダナイゼーションサービス）を支えるレプリケーションエンジンという位置づけに再定義されています。試験ガイド上はまだ「AWS Application Migration Service」表記のため、両方の名称を押さえておく必要があります。'
+  },
+  {
+    id: 'migration-27',
+    category: '移行・統合',
+    question: '現行のSAP-C02試験ガイドが定める、移行戦略評価の基本フレームワーク「7つのR」に含まれない戦略はどれですか？',
+    options: [
+      'Relocate',
+      'Repurchase',
+      'Rebuild',
+      'Retain'
+    ],
+    correct: 2,
+    explanation:
+      '7つのR (7Rs) は、Rehost、Relocate、Replatform、Repurchase、Refactor/Re-architect、Retire、Retainの7つです。「Rebuild」という戦略は含まれません。'
+  },
+  {
+    id: 'migration-28',
+    category: '移行・統合',
+    question: 'ハイパーバイザーレベルでVMware環境をそのままAWSへ移行し、OS・アプリケーションに一切手を加えない「Relocate」戦略を実現する主なサービスはどれですか？',
+    options: [
+      'AWS Application Migration Service',
+      'VMware Cloud on AWS',
+      'AWS Database Migration Service',
+      'AWS Schema Conversion Tool'
+    ],
+    correct: 1,
+    explanation:
+      'VMware Cloud on AWSは、オンプレミスのVMware環境をAWS上のベアメタルインフラにそのまま再配置する「Relocate」戦略を実現するサービスです。既存のVMwareライセンス・運用ツールをそのまま引き継げるため、アプリケーション変更ゼロで最短の移行期間を実現できます。'
+  },
   // 複数選択問題
   {
     id: 'migration-multi-1',

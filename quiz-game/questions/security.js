@@ -400,6 +400,30 @@ const securityQuestions = [
     correct: 3,
     explanation: 'エンベロープ暗号化では、データキー、マスターキー、プレーンテキストキーを使用しますが、ルートキーという概念は使用されません。'
   },
+  {
+    id: 'security-51',
+    category: 'セキュリティ',
+    question: 'GuardDutyで、IAM認証情報の不審な利用からS3の異常アクセス、EKSクラスタの侵害兆候までを自動的に相関分析し、多段階攻撃を検知する機能はどれですか？',
+    options: ['GuardDuty Malware Protection', 'GuardDuty Extended Threat Detection', 'GuardDuty S3 Protection', 'GuardDuty Runtime Monitoring'],
+    correct: 1,
+    explanation: 'GuardDuty Extended Threat Detectionは、複数のデータソースを横断的に相関分析し、単発のアラートでは見えない「多段階攻撃(Attack Sequence)」を検知する機能です。GuardDutyを有効化するだけで追加コストなしに自動的に有効になります。'
+  },
+  {
+    id: 'security-52',
+    category: 'セキュリティ',
+    question: '複数のセキュリティサービスの結果を集約し、リスクの優先順位付けと「Exposure」ダッシュボードによる可視化を提供する、刷新されたSecurity Hubの機能はどれですか？',
+    options: ['Security Hub Standards', 'Security Hub CSPM', 'Security Hub Insights', 'Security Hub Custom Actions'],
+    correct: 1,
+    explanation: 'Security Hub CSPM (Cloud Security Posture Management) は、GuardDuty・Macie・Inspector等複数サービスの結果を集約し、リスクの優先順位付けと「Exposure」ダッシュボードによる可視化を提供する刷新版のSecurity Hub機能です。'
+  },
+  {
+    id: 'security-53',
+    category: 'セキュリティ',
+    question: 'Cedarポリシー言語を使ってアプリケーションにきめ細かい認可(fine-grained authorization)を組み込むサービスはどれですか？',
+    options: ['AWS IAM Identity Center', 'Amazon Verified Permissions', 'AWS Directory Service', 'Amazon Cognito'],
+    correct: 1,
+    explanation: 'Amazon Verified Permissionsは、Cedarポリシー言語を使ったきめ細かい認可をアプリケーションに組み込むサービスです。マイクロサービスやAPI単位での認可ロジックの外部化に利用されます。'
+  },
   // 複数選択問題
   {
     id: 'security-multi-1',

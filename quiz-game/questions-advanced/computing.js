@@ -105,41 +105,37 @@ const advancedComputingQuestions = [
 
 これらの要件を満たすために、最も適切なアーキテクチャ設計はどれですか？`,
     options: [
-      'Amazon GameLift + AWS Global Accelerator + ElastiCache Global Datastore + Lambda@Edgeを使用し、地理的に分散されたゲームサーバーアーキテクチャを構築する',
+      'EC2 Auto Scaling（専用ゲームサーバーフリート）+ AWS Global Accelerator + ElastiCache Global Datastore + Network Load Balancerを使用し、地理的に分散されたゲームサーバーアーキテクチャを構築する',
       'EC2 Spot Instances + Application Load Balancer + RDS Aurora Global Database + CloudFrontを使用し、コスト効率を重視したアーキテクチャを構築する',
       'AWS Fargate + API Gateway + DynamoDB Global Tables + CloudFormation StackSetsを使用し、サーバーレスベースのマルチリージョンアーキテクチャを構築する',
       'Amazon EKS + Istio Service Mesh + Amazon MQ + Route 53 Health Checksを使用し、マイクロサービスベースのアーキテクチャを構築する'
     ],
     correct: 0,
-    explanation: `正解は「Amazon GameLift + AWS Global Accelerator + ElastiCache Global Datastore + Lambda@Edgeを使用し、地理的に分散されたゲームサーバーアーキテクチャを構築する」です。
+    explanation: `正解は「EC2 Auto Scaling（専用ゲームサーバーフリート）+ AWS Global Accelerator + ElastiCache Global Datastore + Network Load Balancerを使用し、地理的に分散されたゲームサーバーアーキテクチャを構築する」です。
+
+> **補足**: 実運用ではゲームサーバーのフリート管理に特化した Amazon GameLift が第一候補になりますが、GameLift は SAP-C02 試験の出題範囲外（公式試験ガイド Appendix で明示的に Out of scope とされているサービス）です。試験対策としては、EC2/コンテナと汎用サービスの組み合わせでゲームサーバーアーキテクチャを設計する考え方を押さえておきましょう。
 
 この選択肢が最適な理由：
 
 **要件への対応：**
-1. **低レイテンシ**: Global Acceleratorによる最適化されたネットワーク経路
-2. **大規模同時接続**: GameLiftの自動スケーリングによる100万人対応
-3. **接続安定性**: GameLiftの専用ゲームサーバー管理
+1. **低レイテンシ**: Global Acceleratorによる最適化されたネットワーク経路とAnycast IP
+2. **大規模同時接続**: EC2 Auto Scalingとカスタムメトリクス（接続数）による100万人対応
+3. **接続安定性**: NLBによるステートフルなTCP/UDPコネクション維持、専用ホストでのセッション管理
 4. **データ同期**: ElastiCache Global Datastoreによる地域間同期
-5. **サーバーサイド検証**: GameLiftでの専用ゲームロジック実行
-6. **動的スケーリング**: イベント時の自動スケールアウト
-7. **コスト効率**: 使用量ベースの課金とSpot Instancesサポート
+5. **サーバーサイド検証**: 専用ゲームサーバー（EC2）上でのゲームロジック実行によるチート対策
+6. **動的スケーリング**: ターゲット追跡スケーリングによるイベント時の自動スケールアウト
+7. **コスト効率**: Auto Scalingによる需要追従とSpot Instancesの併用
 
 **各コンポーネントの役割：**
-- **GameLift**: 専用ゲームサーバーの管理と自動スケーリング
-- **Global Accelerator**: 世界規模での低レイテンシ通信
+- **EC2 Auto Scaling**: 専用ゲームサーバーフリートの起動・終了・自動スケーリング
+- **Global Accelerator**: 世界規模での低レイテンシ通信、Anycast IPによる最適経路選択
 - **ElastiCache Global Datastore**: リアルタイムデータの地域間同期
-- **Lambda@Edge**: エッジでの軽量処理とチート検証
+- **Network Load Balancer**: 低レイテンシ・高スループットなTCP/UDPロードバランシング
 
 **他の選択肢の問題点：**
 - **EC2 Spot Instances + Application Load Balancer + RDS Aurora Global Database + CloudFrontを使用し、コスト効率を重視したアーキテクチャを構築する**: Spot Instancesは接続断のリスクがあり、ゲーム用途に不適切
 - **AWS Fargate + API Gateway + DynamoDB Global Tables + CloudFormation StackSetsを使用し、サーバーレスベースのマルチリージョンアーキテクチャを構築する**: API Gatewayはリアルタイム通信に適さない、WebSocketサポートが限定的
-- **Amazon EKS + Istio Service Mesh + Amazon MQ + Route 53 Health Checksを使用し、マイクロサービスベースのアーキテクチャを構築する**: 複雑すぎる構成で、ゲーム特有の要件に最適化されていない
-
-**GameLiftの特別な利点：**
-- ゲーム専用の最適化
-- プレイヤーマッチメイキング
-- フリート管理の自動化
-- チート対策機能の内蔵`
+- **Amazon EKS + Istio Service Mesh + Amazon MQ + Route 53 Health Checksを使用し、マイクロサービスベースのアーキテクチャを構築する**: 複雑すぎる構成で、ゲーム特有の要件に最適化されていない`
   },
   {
     id: 'adv-comp-004',
@@ -187,20 +183,22 @@ const advancedComputingQuestions = [
 
 この要件を満たすために、最も適切なアーキテクチャはどれですか？`,
     options: [
-      'Amazon GameLift + Global Accelerator + Route 53 + CloudFront + WAFを使用し、専用ゲームインフラを構築する',
+      'EC2 Auto Scaling（専用ゲームサーバー）+ Global Accelerator + Route 53 + CloudFront + Shield Advanced + WAFを使用し、専用ゲームインフラを構築する',
       'EC2 Auto Scaling + Application Load Balancer + ElastiCache + RDS Multi-AZを使用し、従来のWebアプリケーション構成を採用する',
       'AWS Lambda + API Gateway + DynamoDB Global Tables + CloudFrontを使用し、サーバーレス構成を採用する',
       'ECS Fargate + Network Load Balancer + Redis Cluster + Aurora Global Databaseを使用し、コンテナベース構成を採用する'
     ],
     correct: 0,
-    explanation: `リアルタイムマルチプレイヤーゲームには、Amazon GameLift + Global Accelerator + Route 53 + CloudFront + WAFの組み合わせが最適です。
+    explanation: `リアルタイムマルチプレイヤーゲームには、EC2 Auto Scaling（専用ゲームサーバー）+ Global Accelerator + Route 53 + CloudFront + Shield Advanced + WAFの組み合わせが最適です。
+
+> **補足**: Amazon GameLift はゲームサーバーのセッション管理・マッチメイキングに特化した実運用上の第一候補ですが、SAP-C02の公式試験ガイドでは明示的に Out of scope とされているため、本問では汎用サービスの組み合わせを正解としています。
 
 理由：
-1. **GameLift**: ゲーム専用のマネージドサービスで、セッション管理と自動スケーリングを提供
-2. **Global Accelerator**: Anycastネットワークにより世界中で低レイテンシを実現
+1. **EC2 Auto Scaling**: 専用ゲームサーバーフリートをカスタムメトリクス（同時接続数など）で自動スケーリング
+2. **Global Accelerator**: Anycastネットワークにより世界中で低レイテンシを実現、NLBと連携してTCP/UDPトラフィックを最適経路にルーティング
 3. **Route 53**: 地理的ルーティングでデータローカライゼーションに対応
-4. **CloudFront**: 静的コンテンツの配信とDDoS保護
-5. **WAF**: アプリケーションレイヤーでの攻撃防御
+4. **CloudFront**: 静的コンテンツの配信とエッジでのキャッシュ
+5. **Shield Advanced + WAF**: ネットワーク層・アプリケーション層双方でのDDoS/攻撃防御
 
 他の選択肢の問題点：
 - **EC2 Auto Scaling + Application Load Balancer + ElastiCache + RDS Multi-AZを使用し、従来のWebアプリケーション構成を採用する**: ゲーム特有の要件（セッション管理、リアルタイム通信）に最適化されていない
@@ -379,6 +377,37 @@ const advancedComputingQuestions = [
 - **EC2 Auto Scaling + Network Load Balancer + RDS Multi-AZ + Redis Cluster + CloudFrontを使用し、従来型の3層アーキテクチャを構築する**: 3層アーキテクチャはマイクロサービス要件を満たさない
 - **EKS + Istio + Aurora Serverless + Kafka + GraphQL + CloudWatchを使用し、Kubernetesベースマイクロサービスを構築する**: EKSは運用複雑性が高く、航空業界の安定性要件に不適切`
   },
+  {
+    id: 'adv-comp-011',
+    category: 'コンピューティング',
+    question: `中堅SaaS企業が、複数のKubernetesワークロードをEKSで運用していますが、以下の課題を抱えています：
+
+1. ノードのプロビジョニング・パッチ適用・セキュリティ更新に専任チームの工数がかかっている
+2. Karpenterを自前で構築・運用しているが設定変更のたびに検証工数が発生する
+3. Kubernetes標準APIとの互換性は維持したい（他クラウドへの移植性を残したい）
+4. 長時間実行される月次バッチ処理（数時間〜1日）があり、Lambdaの15分制限に収まらない
+5. コスト効率を保ちながら運用負荷を最小化したい
+
+この課題を解決するために最も適切な組み合わせはどれですか？`,
+    options: [
+      'EKS Auto Modeでノード管理を委譲し、長時間バッチはAWS BatchまたはFargateで実行する',
+      '全ワークロードをLambdaに移行し、実行時間制限は複数関数への分割で回避する',
+      'EC2 Dedicated Hostsに移行し、Kubernetesを廃止して独自オーケストレーターを構築する',
+      'EKS Anywhereをオンプレミスに構築し、AWSへの依存を完全に排除する'
+    ],
+    correct: 0,
+    explanation: `最も適切なのは「EKS Auto Modeでノード管理を委譲し、長時間バッチはAWS BatchまたはFargateで実行する」です。
+
+理由：
+1. **EKS Auto Mode**: Karpenterベースの仕組みでノードのプロビジョニング・スケーリング・パッチ適用・セキュリティ更新をAWSが自動管理し、EC2 Managed Instancesとして稼働する。自前のKarpenter運用や検証工数を削減しつつ、Kubernetes標準APIとの互換性は維持できる
+2. **AWS Batch**: 数時間〜数日かかる長時間バッチ処理に対応でき、ジョブキューと動的スケーリングでコスト効率を確保できる
+3. **運用負荷の最小化**: ノード管理をAWSに委譲することで専任チームの工数を大幅に削減
+
+他の選択肢の問題点：
+- **全ワークロードをLambdaに移行し、実行時間制限は複数関数への分割で回避する**: 複雑な状態管理が必要なバッチ処理を無理に分割すると設計が複雑化し保守性が低下する
+- **EC2 Dedicated Hostsに移行し、Kubernetesを廃止して独自オーケストレーターを構築する**: Kubernetes標準APIとの互換性要件に反し、開発コストも増大する
+- **EKS Anywhereをオンプレミスに構築し、AWSへの依存を完全に排除する**: 運用負荷がむしろ増加し、要件（運用負荷の最小化）に反する`
+  },
 
   // 複数選択問題
   {
@@ -397,7 +426,7 @@ const advancedComputingQuestions = [
 このアーキテクチャを実現するために必要なAWSサービスを**3つ**選択してください。`,
     options: [
       'AWS Global Accelerator - 世界規模でのネットワーク最適化とレイテンシ削減',
-      'Amazon GameLift - リアルタイムマルチプレイヤーゲームセッション管理',
+      'Amazon EC2 Auto Scaling - 専用ゲームサーバーフリートの自動スケーリング',
       'AWS Lambda@Edge - エッジロケーションでのゲームロジック処理',
       'Amazon ElastiCache for Redis Global Datastore - グローバルなリアルタイムデータ同期',
       'Amazon EC2 Dedicated Hosts - 専用ハードウェアでの高性能処理',
@@ -405,17 +434,17 @@ const advancedComputingQuestions = [
     ],
     correct: [0, 1, 3],
     multipleChoice: true,
-    explanation: `正解は以下の3つです：
+    explanation: `正解は以下の3つです（実運用ではAmazon GameLiftも有力候補ですが、SAP-C02の試験範囲外のため本問では扱いません）：
 
 **1. AWS Global Accelerator**
 - Anycastネットワークにより最適なエンドポイントへのルーティング
 - AWSバックボーンネットワークを活用した低レイテンシ通信
 - 自動フェイルオーバーによる高可用性
 
-**2. Amazon GameLift**
-- リアルタイムマルチプレイヤーゲーム専用のマネージドサービス
-- 自動スケーリングとマッチメイキング機能
-- 世界中のリージョンでのゲームセッション管理
+**2. Amazon EC2 Auto Scaling**
+- 専用ゲームサーバーフリートを同時接続数などのカスタムメトリクスで自動スケーリング
+- 需要変動に応じたコスト効率的なキャパシティ管理
+- Network Load Balancerと組み合わせて低レイテンシなセッション維持を実現
 
 **3. Amazon ElastiCache for Redis Global Datastore**
 - 複数リージョン間でのリアルタイムデータレプリケーション

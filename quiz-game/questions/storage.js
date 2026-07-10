@@ -254,6 +254,30 @@ const storageQuestions = [
     correct: 0,
     explanation: 'S3 SelectはSQL式を使用してオブジェクトの内容から特定のデータを取得できます。'
   },
+  {
+    id: 'storage-31',
+    category: 'ストレージ',
+    question: 'Apache Icebergをネイティブサポートし、分析ワークロード向けに自動コンパクション・スナップショット管理を内蔵するS3の機能はどれですか？',
+    options: ['S3 Object Lambda', 'S3 Tables', 'S3 Batch Operations', 'S3 Access Points'],
+    correct: 1,
+    explanation: 'S3 Tablesは、Apache Iceberg形式をネイティブサポートするテーブル型バケットです。自動コンパクションやスナップショット管理を内蔵し、独自にIcebergテーブルを運用するより高速・低コストで分析ワークロードに対応できます。'
+  },
+  {
+    id: 'storage-32',
+    category: 'ストレージ',
+    question: '2025年4月の値下げにより、GETリクエスト料金が最大85%削減されたS3ストレージクラスはどれですか？',
+    options: ['S3 Standard', 'S3 Intelligent-Tiering', 'S3 Express One Zone', 'S3 Glacier Instant Retrieval'],
+    correct: 2,
+    explanation: 'S3 Express One Zoneは2025年4月の価格改定で、ストレージ料金31%減、PUTリクエスト料金55%減、GETリクエスト料金85%減という大幅な値下げが行われ、単一AZ・1桁ミリ秒レイテンシの高性能ユースケースでますます採用しやすくなりました。'
+  },
+  {
+    id: 'storage-33',
+    category: 'ストレージ',
+    question: 'S3 Storage Lensの近年のアップデートに含まれない機能はどれですか？',
+    options: ['パフォーマンスメトリクス（小さいオブジェクトの検出等）', '数十億プレフィックス規模の分析', 'S3 Tablesへの直接エクスポート', 'DynamoDBテーブルの自動作成'],
+    correct: 3,
+    explanation: 'S3 Storage Lensは、パフォーマンスメトリクス、数十億プレフィックス規模の分析（Expanded prefixes metrics）、S3 Tablesへの直接エクスポートに対応するよう強化されましたが、DynamoDBテーブルの自動作成機能はありません。'
+  },
   // 複数選択問題
   {
     id: 'storage-multi-1',

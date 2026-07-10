@@ -200,6 +200,30 @@ const disasterRecoveryQuestions = [
     correct: 3,
     explanation: '効果的な災害復旧テストには、定期的な実行、詳細な文書化、可能な限りの自動化がすべて重要です。'
   },
+  {
+    id: 'disaster-recovery-26',
+    category: '災害復旧',
+    question: '次世代AWS Resilience Hubで新たに導入された、SLOやマルチAZ/マルチリージョンDR要件、データ復旧要件を組み合わせて定義できる仕組みはどれですか？',
+    options: ['モジュール式レジリエンスポリシー', 'カオスエンジニアリングテンプレート', 'RTO自動計算エンジン', 'バックアップボールトロック'],
+    correct: 0,
+    explanation: '次世代AWS Resilience Hubでは、SLO・マルチAZ/マルチリージョンDR要件・データ復旧要件などを組み合わせた「モジュール式レジリエンスポリシー」を定義でき、依存関係の自動発見や生成AIによる障害モード分析も統合されています。'
+  },
+  {
+    id: 'disaster-recovery-27',
+    category: '災害復旧',
+    question: 'Aurora Global Databaseと比較して、Amazon Aurora DSQLが優れている点はどれですか？',
+    options: ['ストレージコストが常に安い', 'マルチリージョンでの強整合性書き込みをネイティブにサポート', 'MySQLとの完全互換性', 'バックアップが不要'],
+    correct: 1,
+    explanation: 'Aurora Global Databaseは書き込みが単一リージョンに集約され、他リージョンは結果整合性の読み取りレプリカとなりますが、Aurora DSQLはActive-Active構成でマルチリージョンの強整合性書き込みをネイティブにサポートし、RPO=0(データ損失ゼロ)をシンプルに実現できます。'
+  },
+  {
+    id: 'disaster-recovery-28',
+    category: '災害復旧',
+    question: 'AWS Resilience HubがAWS Organizationsと統合することで可能になることはどれですか？',
+    options: ['請求の一元化', '委任管理者アカウントからの組織全体のレジリエンス評価', 'IAMポリシーの自動生成', 'VPCピアリングの自動設定'],
+    correct: 1,
+    explanation: '次世代AWS Resilience HubはAWS Organizationsと統合し、委任管理者アカウントから複数アカウントのDR成熟度・レジリエンス状況を一元的に評価できるようになり、大規模組織でのDR統制がしやすくなりました。'
+  },
   // 複数選択問題
   {
     id: 'disaster-recovery-multi-1',

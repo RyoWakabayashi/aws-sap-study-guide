@@ -1,6 +1,6 @@
 // AWS Solution Architect Professional 試験対策クイズ問題データ
 // 自動生成ファイル - 手動編集しないでください
-// 生成日時: 2025-07-10T00:38:46.792Z
+// 生成日時: 2026-07-10T13:37:49.750Z
 
 // 全問題データ
 const allQuestions = [
@@ -393,6 +393,45 @@ const allQuestions = [
     ],
     correct: 1,
     explanation: 'Horizontal Pod Autoscaler（HPA）は、メトリクスに基づいてPodの数を自動的にスケールします。'
+  },
+  {
+    id: 'computing-31',
+    category: 'コンピューティング',
+    question: 'EKSクラスターのノードのプロビジョニング・スケーリング・パッチ適用をAWSが自動管理する機能はどれですか？',
+    options: [
+      'EKS Fargate Profile',
+      'EKS Auto Mode',
+      'Cluster Autoscaler',
+      'Managed Node Groups'
+    ],
+    correct: 1,
+    explanation: 'EKS Auto Modeは、Karpenterベースの仕組みでノードのプロビジョニング、スケーリング、パッチ適用、セキュリティ更新をAWSが自動的に管理する機能です。EC2 Managed Instancesとして稼働し、K8s標準APIを維持しながら運用負荷を大幅に軽減します。'
+  },
+  {
+    id: 'computing-32',
+    category: 'コンピューティング',
+    question: '最大1年間のワークフローを、アイドル時間の課金なしで実行できるLambdaの新機能はどれですか？',
+    options: [
+      'Lambda SnapStart',
+      'Lambda Provisioned Concurrency',
+      'Lambda Durable Functions',
+      'Lambda Function URLs'
+    ],
+    correct: 2,
+    explanation: 'Lambda Durable Functionsは、複数ステップにまたがる処理を、アイドル時間の課金なしで最長1年間かけて信頼性高く実行できる機能です。従来Step Functionsが担っていた長時間ワークフローの一部をLambda単体で実現できます。'
+  },
+  {
+    id: 'computing-33',
+    category: 'コンピューティング',
+    question: 'Graviton4と比較したGraviton5の主な特徴として正しいものはどれですか？',
+    options: [
+      'x86アーキテクチャへの回帰',
+      'エージェント型AIワークロード向けに最大25%性能向上',
+      'GPU機能の統合',
+      'ストレージ最適化に特化'
+    ],
+    correct: 1,
+    explanation: 'Graviton5は2025年のre:Inventで発表され、エージェント型AIワークロードを見据えてGraviton4比で最大25%の性能向上を実現しています。Gravitonシリーズは引き続きArmベースのプロセッサです。'
   },
   {
     id: 'computing-multi-1',
@@ -980,6 +1019,45 @@ const allQuestions = [
     explanation: 'S3 SelectはSQL式を使用してオブジェクトの内容から特定のデータを取得できます。'
   },
   {
+    id: 'storage-31',
+    category: 'ストレージ',
+    question: 'Apache Icebergをネイティブサポートし、分析ワークロード向けに自動コンパクション・スナップショット管理を内蔵するS3の機能はどれですか？',
+    options: [
+      'S3 Object Lambda',
+      'S3 Tables',
+      'S3 Batch Operations',
+      'S3 Access Points'
+    ],
+    correct: 1,
+    explanation: 'S3 Tablesは、Apache Iceberg形式をネイティブサポートするテーブル型バケットです。自動コンパクションやスナップショット管理を内蔵し、独自にIcebergテーブルを運用するより高速・低コストで分析ワークロードに対応できます。'
+  },
+  {
+    id: 'storage-32',
+    category: 'ストレージ',
+    question: '2025年4月の値下げにより、GETリクエスト料金が最大85%削減されたS3ストレージクラスはどれですか？',
+    options: [
+      'S3 Standard',
+      'S3 Intelligent-Tiering',
+      'S3 Express One Zone',
+      'S3 Glacier Instant Retrieval'
+    ],
+    correct: 2,
+    explanation: 'S3 Express One Zoneは2025年4月の価格改定で、ストレージ料金31%減、PUTリクエスト料金55%減、GETリクエスト料金85%減という大幅な値下げが行われ、単一AZ・1桁ミリ秒レイテンシの高性能ユースケースでますます採用しやすくなりました。'
+  },
+  {
+    id: 'storage-33',
+    category: 'ストレージ',
+    question: 'S3 Storage Lensの近年のアップデートに含まれない機能はどれですか？',
+    options: [
+      'パフォーマンスメトリクス（小さいオブジェクトの検出等）',
+      '数十億プレフィックス規模の分析',
+      'S3 Tablesへの直接エクスポート',
+      'DynamoDBテーブルの自動作成'
+    ],
+    correct: 3,
+    explanation: 'S3 Storage Lensは、パフォーマンスメトリクス、数十億プレフィックス規模の分析（Expanded prefixes metrics）、S3 Tablesへの直接エクスポートに対応するよう強化されましたが、DynamoDBテーブルの自動作成機能はありません。'
+  },
+  {
     id: 'storage-multi-1',
     category: 'ストレージ',
     question: 'S3のストレージクラスで、データの取得に料金が発生するものを3つ選択してください。',
@@ -1565,6 +1643,45 @@ const allQuestions = [
     explanation: 'DynamoDBの条件式では、等価、不等価、BETWEEN演算子は使用できますが、REGEX演算子は使用できません。'
   },
   {
+    id: 'database-31',
+    category: 'データベース',
+    question: '複数リージョンでActive-Active構成による強整合性の書き込みをネイティブにサポートする、2025年5月にGAとなったサーバーレス分散SQLデータベースはどれですか？',
+    options: [
+      'Amazon Aurora Global Database',
+      'Amazon Aurora DSQL',
+      'Amazon DynamoDB Global Tables',
+      'Amazon RDS Multi-AZ DBクラスター'
+    ],
+    correct: 1,
+    explanation: 'Amazon Aurora DSQLは、Active-Active構成でマルチリージョンの強整合性書き込みをネイティブにサポートするサーバーレス分散SQLデータベースです。Aurora Global Databaseは書き込みが単一リージョンに集約されるため、複数リージョン同時書き込みの強整合性要件は満たせません。'
+  },
+  {
+    id: 'database-32',
+    category: 'データベース',
+    question: '2025年12月に発表された、RDS・Aurora・DynamoDB・ElastiCache・DocumentDBなど複数のマネージドデータベースを横断して1年コミットで最大35%の割引が受けられる購入オプションはどれですか？',
+    options: [
+      'Compute Savings Plans',
+      'Database Savings Plans',
+      'Reserved Instances',
+      'EC2 Instance Savings Plans'
+    ],
+    correct: 1,
+    explanation: 'Database Savings Plansは、RDS、Aurora、DynamoDB、ElastiCache、DocumentDBなど主要なマネージドデータベースサービスを横断して適用でき、特定のインスタンスタイプやリージョンに縛られずに最大35%の割引を受けられる新しい購入オプションです。'
+  },
+  {
+    id: 'database-33',
+    category: 'データベース',
+    question: '容量管理が不要で、スパイクの多いワークロードに適合するRedis/Memcached互換のキャッシュサービスはどれですか？',
+    options: [
+      'ElastiCache Serverless',
+      'DynamoDB Accelerator (DAX)',
+      'MemoryDB for Redis',
+      'Aurora Serverless v2'
+    ],
+    correct: 0,
+    explanation: 'ElastiCache Serverlessは、Redis/Memcached互換のサーバーレスキャッシュサービスで、容量管理が不要でスパイクの多いワークロードに柔軟に対応できます。'
+  },
+  {
     id: 'database-multi-1',
     category: 'データベース',
     question: 'Amazon RDSでサポートされているデータベースエンジンを3つ選択してください。',
@@ -2148,6 +2265,45 @@ const allQuestions = [
     ],
     correct: 1,
     explanation: 'VPC Latticeは、マイクロサービス間の安全で効率的な通信を実現するアプリケーションネットワーキングサービスです。'
+  },
+  {
+    id: 'networking-31',
+    category: 'ネットワーキング',
+    question: 'VPC Latticeで、IP/DNS/ARNで指定した単一リソースを公開でき、VPC Endpoint(PrivateLink)やTransit Gatewayに代わる低コストな選択肢となる機能はどれですか？',
+    options: [
+      'Service Network',
+      'Resource Gateway',
+      'Target Group',
+      'Listener Rule'
+    ],
+    correct: 1,
+    explanation: 'Resource Gatewayは、IP/DNS/ARNで指定した単一リソース（データベースなどのTCPリソースを含む）をVPC Latticeに公開できる機能で、VPC EndpointやTransit Gatewayに代わる、より低コストな選択肢として利用できます。'
+  },
+  {
+    id: 'networking-32',
+    category: 'ネットワーキング',
+    question: 'VPNを使わずにゼロトラストモデルで社内アプリケーションへの安全なアクセスを実現するマネージドサービスはどれですか？',
+    options: [
+      'AWS Client VPN',
+      'AWS Verified Access',
+      'AWS Site-to-Site VPN',
+      'AWS Direct Connect'
+    ],
+    correct: 1,
+    explanation: 'AWS Verified Accessは、ゼロトラストモデルに基づき、VPNなしで社内アプリケーションへの安全なアクセスを実現するマネージドサービスです。IAM Identity CenterやIDプロバイダと連携したデバイス・ID双方のポリシー評価に基づいてアクセスを制御します。'
+  },
+  {
+    id: 'networking-33',
+    category: 'ネットワーキング',
+    question: 'プライベートサブネット内のALB/NLB/EC2をオリジンとして直接指定でき、オリジンをインターネットに公開せずにグローバル配信を実現できるCloudFrontの機能はどれですか？',
+    options: [
+      'Origin Access Control (OAC)',
+      'Origin Shield',
+      'CloudFront VPC Origins',
+      'Field-Level Encryption'
+    ],
+    correct: 2,
+    explanation: 'CloudFront VPC Originsは、プライベートサブネット内のALB、NLB、EC2インスタンスをそのままCloudFrontのオリジンとして指定でき、オリジンをインターネットに一切公開せずにグローバル配信ができる機能です。2025年11月にクロスアカウント対応も追加されました。'
   },
   {
     id: 'networking-multi-1',
@@ -2995,6 +3151,45 @@ const allQuestions = [
     explanation: 'エンベロープ暗号化では、データキー、マスターキー、プレーンテキストキーを使用しますが、ルートキーという概念は使用されません。'
   },
   {
+    id: 'security-51',
+    category: 'セキュリティ',
+    question: 'GuardDutyで、IAM認証情報の不審な利用からS3の異常アクセス、EKSクラスタの侵害兆候までを自動的に相関分析し、多段階攻撃を検知する機能はどれですか？',
+    options: [
+      'GuardDuty Malware Protection',
+      'GuardDuty Extended Threat Detection',
+      'GuardDuty S3 Protection',
+      'GuardDuty Runtime Monitoring'
+    ],
+    correct: 1,
+    explanation: 'GuardDuty Extended Threat Detectionは、複数のデータソースを横断的に相関分析し、単発のアラートでは見えない「多段階攻撃(Attack Sequence)」を検知する機能です。GuardDutyを有効化するだけで追加コストなしに自動的に有効になります。'
+  },
+  {
+    id: 'security-52',
+    category: 'セキュリティ',
+    question: '複数のセキュリティサービスの結果を集約し、リスクの優先順位付けと「Exposure」ダッシュボードによる可視化を提供する、刷新されたSecurity Hubの機能はどれですか？',
+    options: [
+      'Security Hub Standards',
+      'Security Hub CSPM',
+      'Security Hub Insights',
+      'Security Hub Custom Actions'
+    ],
+    correct: 1,
+    explanation: 'Security Hub CSPM (Cloud Security Posture Management) は、GuardDuty・Macie・Inspector等複数サービスの結果を集約し、リスクの優先順位付けと「Exposure」ダッシュボードによる可視化を提供する刷新版のSecurity Hub機能です。'
+  },
+  {
+    id: 'security-53',
+    category: 'セキュリティ',
+    question: 'Cedarポリシー言語を使ってアプリケーションにきめ細かい認可(fine-grained authorization)を組み込むサービスはどれですか？',
+    options: [
+      'AWS IAM Identity Center',
+      'Amazon Verified Permissions',
+      'AWS Directory Service',
+      'Amazon Cognito'
+    ],
+    correct: 1,
+    explanation: 'Amazon Verified Permissionsは、Cedarポリシー言語を使ったきめ細かい認可をアプリケーションに組み込むサービスです。マイクロサービスやAPI単位での認可ロジックの外部化に利用されます。'
+  },
+  {
     id: 'security-multi-1',
     category: 'セキュリティ',
     question: 'AWS IAMのベストプラクティスとして正しいものを3つ選択してください。',
@@ -3515,6 +3710,45 @@ const allQuestions = [
     explanation: 'Managed Service for Prometheusは、フルマネージド、高可用性、セキュアなPrometheusサービスを提供します。'
   },
   {
+    id: 'monitoring-26',
+    category: '監視・ログ',
+    question: 'RDS Performance Insightsの後継として位置付けられ、フリート単位の監視やロック分析、実行計画のキャプチャを統合したサービスはどれですか？',
+    options: [
+      'CloudWatch Application Signals',
+      'CloudWatch Database Insights',
+      'CloudWatch Synthetics',
+      'CloudWatch Contributor Insights'
+    ],
+    correct: 1,
+    explanation: 'CloudWatch Database Insightsは、RDS Performance Insightsの後継として位置付けられ、フリート単位の監視、ロック分析、実行計画のキャプチャ、オンデマンドのパフォーマンス分析を統合したサービスです。クロスアカウント・クロスリージョンでの集中監視にも対応しています。'
+  },
+  {
+    id: 'monitoring-27',
+    category: '監視・ログ',
+    question: 'コード変更（インストルメンテーション）なしでアプリケーショントポロジを自動検出・可視化し、SLOの定義・監視をネイティブサポートするCloudWatchの機能はどれですか？',
+    options: [
+      'CloudWatch Application Signals',
+      'CloudWatch Logs Insights',
+      'CloudWatch Anomaly Detection',
+      'CloudWatch ServiceLens'
+    ],
+    correct: 0,
+    explanation: 'CloudWatch Application Signalsは、インストルメンテーションなしでアプリケーショントポロジを自動検出・可視化するアプリケーションマップ機能を持ち、SLO(Service Level Objective)の定義・監視をネイティブサポートします。'
+  },
+  {
+    id: 'monitoring-28',
+    category: '監視・ログ',
+    question: 'VPC Flow Logsよりも高頻度・低レイテンシでネットワーク性能問題（パケットロス等）を検知できる新しい監視機能はどれですか？',
+    options: [
+      'Network Flow Monitor',
+      'VPC Traffic Mirroring',
+      'Reachability Analyzer',
+      'Network Access Analyzer'
+    ],
+    correct: 0,
+    explanation: 'Network Flow Monitorは、VPC Flow Logsよりも高頻度・低レイテンシでネットワーク性能問題（パケットロスなど）を検知できる新しい監視機能です。'
+  },
+  {
     id: 'monitoring-multi-1',
     category: '監視・ログ',
     question: 'Amazon CloudWatchで監視できるメトリクスタイプを3つ選択してください。',
@@ -4033,6 +4267,45 @@ const allQuestions = [
     ],
     correct: 0,
     explanation: 'Refactoring Toolkitは、レガシーアプリケーションの現代化とクラウド移行を支援します。'
+  },
+  {
+    id: 'migration-26',
+    category: '移行・統合',
+    question: '2026年6月に、AWS Application Migration Service (MGN) が改称された新しい名称はどれですか？',
+    options: [
+      'AWS Migration Hub Pro',
+      'AWS Transform MGN',
+      'AWS CloudEndure Next',
+      'AWS Rehost Service'
+    ],
+    correct: 1,
+    explanation: 'AWS Application Migration Service (MGN) は2026年6月にAWS Transform MGNへ改称されました。MGNはAWS Transform（エージェント型の移行・モダナイゼーションサービス）を支えるレプリケーションエンジンという位置づけに再定義されています。試験ガイド上はまだ「AWS Application Migration Service」表記のため、両方の名称を押さえておく必要があります。'
+  },
+  {
+    id: 'migration-27',
+    category: '移行・統合',
+    question: '現行のSAP-C02試験ガイドが定める、移行戦略評価の基本フレームワーク「7つのR」に含まれない戦略はどれですか？',
+    options: [
+      'Relocate',
+      'Repurchase',
+      'Rebuild',
+      'Retain'
+    ],
+    correct: 2,
+    explanation: '7つのR (7Rs) は、Rehost、Relocate、Replatform、Repurchase、Refactor/Re-architect、Retire、Retainの7つです。「Rebuild」という戦略は含まれません。'
+  },
+  {
+    id: 'migration-28',
+    category: '移行・統合',
+    question: 'ハイパーバイザーレベルでVMware環境をそのままAWSへ移行し、OS・アプリケーションに一切手を加えない「Relocate」戦略を実現する主なサービスはどれですか？',
+    options: [
+      'AWS Application Migration Service',
+      'VMware Cloud on AWS',
+      'AWS Database Migration Service',
+      'AWS Schema Conversion Tool'
+    ],
+    correct: 1,
+    explanation: 'VMware Cloud on AWSは、オンプレミスのVMware環境をAWS上のベアメタルインフラにそのまま再配置する「Relocate」戦略を実現するサービスです。既存のVMwareライセンス・運用ツールをそのまま引き継げるため、アプリケーション変更ゼロで最短の移行期間を実現できます。'
   },
   {
     id: 'migration-multi-1',
@@ -6440,6 +6713,45 @@ const allQuestions = [
     explanation: '効果的な災害復旧テストには、定期的な実行、詳細な文書化、可能な限りの自動化がすべて重要です。'
   },
   {
+    id: 'disaster-recovery-26',
+    category: '災害復旧',
+    question: '次世代AWS Resilience Hubで新たに導入された、SLOやマルチAZ/マルチリージョンDR要件、データ復旧要件を組み合わせて定義できる仕組みはどれですか？',
+    options: [
+      'モジュール式レジリエンスポリシー',
+      'カオスエンジニアリングテンプレート',
+      'RTO自動計算エンジン',
+      'バックアップボールトロック'
+    ],
+    correct: 0,
+    explanation: '次世代AWS Resilience Hubでは、SLO・マルチAZ/マルチリージョンDR要件・データ復旧要件などを組み合わせた「モジュール式レジリエンスポリシー」を定義でき、依存関係の自動発見や生成AIによる障害モード分析も統合されています。'
+  },
+  {
+    id: 'disaster-recovery-27',
+    category: '災害復旧',
+    question: 'Aurora Global Databaseと比較して、Amazon Aurora DSQLが優れている点はどれですか？',
+    options: [
+      'ストレージコストが常に安い',
+      'マルチリージョンでの強整合性書き込みをネイティブにサポート',
+      'MySQLとの完全互換性',
+      'バックアップが不要'
+    ],
+    correct: 1,
+    explanation: 'Aurora Global Databaseは書き込みが単一リージョンに集約され、他リージョンは結果整合性の読み取りレプリカとなりますが、Aurora DSQLはActive-Active構成でマルチリージョンの強整合性書き込みをネイティブにサポートし、RPO=0(データ損失ゼロ)をシンプルに実現できます。'
+  },
+  {
+    id: 'disaster-recovery-28',
+    category: '災害復旧',
+    question: 'AWS Resilience HubがAWS Organizationsと統合することで可能になることはどれですか？',
+    options: [
+      '請求の一元化',
+      '委任管理者アカウントからの組織全体のレジリエンス評価',
+      'IAMポリシーの自動生成',
+      'VPCピアリングの自動設定'
+    ],
+    correct: 1,
+    explanation: '次世代AWS Resilience HubはAWS Organizationsと統合し、委任管理者アカウントから複数アカウントのDR成熟度・レジリエンス状況を一元的に評価できるようになり、大規模組織でのDR統制がしやすくなりました。'
+  },
+  {
     id: 'disaster-recovery-multi-1',
     category: '災害復旧',
     question: 'AWS災害復旧戦略の4つのパターンを3つ選択してください。',
@@ -6960,6 +7272,45 @@ const allQuestions = [
     explanation: '効果的なタグベースコスト配分には、一貫したタグ付け、階層化された構造、自動化されたタグ付けが重要です。'
   },
   {
+    id: 'cost-optimization-26',
+    category: 'コスト最適化',
+    question: '2025年12月に発表された、RDS・Aurora・DynamoDB・ElastiCache・DocumentDBを横断して1年コミットで最大35%割引を受けられる購入オプションはどれですか？',
+    options: [
+      'Compute Savings Plans',
+      'Database Savings Plans',
+      'EC2 Reserved Instances',
+      'Spot Instances'
+    ],
+    correct: 1,
+    explanation: 'Database Savings Plansは、複数のマネージドデータベースサービスを横断し、特定のインスタンスタイプやリージョンに縛られずに最大35%の割引を受けられる購入オプションです。EC2/Fargate/LambdaはCompute Savings Plansが対象になります。'
+  },
+  {
+    id: 'cost-optimization-27',
+    category: 'コスト最適化',
+    question: 'Cost Optimization Hubで導入された、(1 − 潜在的な節約額 ÷ 最適化可能な総支出) × 100% で算出される指標はどれですか？',
+    options: [
+      'Cost Efficiency Metric',
+      'Savings Plans Utilization',
+      'Coverage Ratio',
+      'Reserved Instance Utilization'
+    ],
+    correct: 0,
+    explanation: 'Cost Efficiency Metricは、(1 − 潜在的な節約額 ÷ 最適化可能な総支出) × 100% という計算式で算出され、90日間の履歴に基づいて組織のコスト効率を定量的に追跡できる指標です。'
+  },
+  {
+    id: 'cost-optimization-28',
+    category: 'コスト最適化',
+    question: 'Cost Optimization Hubで2025年に追加された、Savings PlansやReserved Instancesの推奨事項をカスタマイズできる機能はどれですか？',
+    options: [
+      '期間・支払いオプションの好みの事前設定',
+      '自動購入の即時実行',
+      'サードパーティクラウドとの比較',
+      'リアルタイム為替換算'
+    ],
+    correct: 0,
+    explanation: 'Cost Optimization Hubは、Savings PlansやReserved Instancesの「期間・支払いオプションの好み」を事前設定し、その条件に基づくレコメンデーションを受け取れるように強化されました。'
+  },
+  {
     id: 'cost-optimization-multi-1',
     category: 'コスト最適化',
     question: 'EC2のコスト最適化手法として正しいものを3つ選択してください。',
@@ -7478,6 +7829,45 @@ const allQuestions = [
     ],
     correct: 3,
     explanation: 'Observabilityの3つの柱は、メトリクス、ログ、トレースです。アラートは監視の手段ですが、柱ではありません。'
+  },
+  {
+    id: 'architecture-26',
+    category: 'アーキテクチャ',
+    question: '次世代AWS Resilience Hubで導入された、System・Journey・Serviceから成るモデリング手法において、「重要なユーザー導線」を表す概念はどれですか？',
+    options: [
+      'System',
+      'Journey',
+      'Service',
+      'Policy'
+    ],
+    correct: 1,
+    explanation: '次世代Resilience Hubのビジネス視点モデリングでは、System＝ビジネスアプリケーション、Journey＝重要なユーザー導線、Service＝AWSリソース・コード・可観測性から成るデプロイ単位、という3つの概念で技術要素とビジネス影響を直接紐付けます。'
+  },
+  {
+    id: 'architecture-27',
+    category: 'アーキテクチャ',
+    question: '現行のSAP-C02試験ガイドが定める4つのドメインの出題比率として正しい組み合わせはどれですか？',
+    options: [
+      '組織の複雑さ26% / 新規ソリューション29% / 継続的改善25% / 移行20%',
+      '組織の複雑さ12.5% / 新規ソリューション31% / 移行25% / コスト12.5% / 継続的改善19%',
+      '組織の複雑さ30% / 新規ソリューション30% / 継続的改善20% / 移行20%',
+      '組織の複雑さ25% / 新規ソリューション25% / 継続的改善25% / 移行25%'
+    ],
+    correct: 0,
+    explanation: 'SAP-C02試験は、Domain 1: 組織の複雑さに対応するソリューション設計(26%)、Domain 2: 新しいソリューションの設計(29%)、Domain 3: 既存ソリューションの継続的改善(25%)、Domain 4: ワークロードの移行とモダナイゼーションの加速(20%)の4ドメインで構成されます。5ドメイン構成は旧バージョンの情報のため注意が必要です。'
+  },
+  {
+    id: 'architecture-28',
+    category: 'アーキテクチャ',
+    question: 'AWS Organizationsを使った多くのマルチアカウント環境で、ランディングゾーンの標準化とガードレールによる自動コンプライアンス強制を提供するサービスはどれですか？',
+    options: [
+      'AWS Service Catalog',
+      'AWS Control Tower',
+      'AWS Config',
+      'AWS License Manager'
+    ],
+    correct: 1,
+    explanation: 'AWS Control Towerは、AWS Organizationsを基盤としたマルチアカウント環境の標準化されたランディングゾーンを構築し、予防的・発見的ガードレールによる自動コンプライアンス強制を提供するサービスです。'
   },
   {
     id: 'architecture-multi-1',
@@ -9045,19 +9435,19 @@ const allQuestions = [
 
 // カテゴリ別統計
 const questionStats = {
-  コンピューティング: 40,
-  ストレージ: 40,
-  データベース: 40,
-  ネットワーキング: 40,
-  セキュリティ: 60,
-  監視・ログ: 35,
-  移行・統合: 35,
+  コンピューティング: 43,
+  ストレージ: 43,
+  データベース: 43,
+  ネットワーキング: 43,
+  セキュリティ: 63,
+  監視・ログ: 38,
+  移行・統合: 38,
   分析・機械学習: 60,
   アプリケーション統合: 35,
   管理・ガバナンス: 35,
-  災害復旧: 35,
-  コスト最適化: 35,
-  アーキテクチャ: 35,
+  災害復旧: 38,
+  コスト最適化: 38,
+  アーキテクチャ: 38,
   ユースケース: 60,
   運用・デプロイ: 35
 }

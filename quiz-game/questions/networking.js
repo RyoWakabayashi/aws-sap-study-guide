@@ -240,6 +240,30 @@ const networkingQuestions = [
     correct: 1,
     explanation: 'VPC Latticeは、マイクロサービス間の安全で効率的な通信を実現するアプリケーションネットワーキングサービスです。'
   },
+  {
+    id: 'networking-31',
+    category: 'ネットワーキング',
+    question: 'VPC Latticeで、IP/DNS/ARNで指定した単一リソースを公開でき、VPC Endpoint(PrivateLink)やTransit Gatewayに代わる低コストな選択肢となる機能はどれですか？',
+    options: ['Service Network', 'Resource Gateway', 'Target Group', 'Listener Rule'],
+    correct: 1,
+    explanation: 'Resource Gatewayは、IP/DNS/ARNで指定した単一リソース（データベースなどのTCPリソースを含む）をVPC Latticeに公開できる機能で、VPC EndpointやTransit Gatewayに代わる、より低コストな選択肢として利用できます。'
+  },
+  {
+    id: 'networking-32',
+    category: 'ネットワーキング',
+    question: 'VPNを使わずにゼロトラストモデルで社内アプリケーションへの安全なアクセスを実現するマネージドサービスはどれですか？',
+    options: ['AWS Client VPN', 'AWS Verified Access', 'AWS Site-to-Site VPN', 'AWS Direct Connect'],
+    correct: 1,
+    explanation: 'AWS Verified Accessは、ゼロトラストモデルに基づき、VPNなしで社内アプリケーションへの安全なアクセスを実現するマネージドサービスです。IAM Identity CenterやIDプロバイダと連携したデバイス・ID双方のポリシー評価に基づいてアクセスを制御します。'
+  },
+  {
+    id: 'networking-33',
+    category: 'ネットワーキング',
+    question: 'プライベートサブネット内のALB/NLB/EC2をオリジンとして直接指定でき、オリジンをインターネットに公開せずにグローバル配信を実現できるCloudFrontの機能はどれですか？',
+    options: ['Origin Access Control (OAC)', 'Origin Shield', 'CloudFront VPC Origins', 'Field-Level Encryption'],
+    correct: 2,
+    explanation: 'CloudFront VPC Originsは、プライベートサブネット内のALB、NLB、EC2インスタンスをそのままCloudFrontのオリジンとして指定でき、オリジンをインターネットに一切公開せずにグローバル配信ができる機能です。2025年11月にクロスアカウント対応も追加されました。'
+  },
   // 複数選択問題
   {
     id: 'networking-multi-1',

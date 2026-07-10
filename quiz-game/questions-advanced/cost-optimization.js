@@ -320,18 +320,20 @@ HIPAA準拠を維持した最適化：
 
 月間コスト5000万円を35%削減する戦略はどれですか？`,
     options: [
-      'GameLift Fleet Scaling + Spot Instances + CloudFront + S3 Transfer Acceleration + Reserved Instances + Auto Scaling + Scheduled Scaling + Multi-Region Optimization + Cost Allocation Tags + Savings Plansを組み合わせたゲーム特化コスト最適化を実施する',
+      'EC2 Auto Scaling（ゲームサーバーフリート）+ Spot Instances + CloudFront + S3 Transfer Acceleration + Reserved Instances + Scheduled Scaling + Multi-Region Optimization + Cost Allocation Tags + Savings Plansを組み合わせたゲーム特化コスト最適化を実施する',
       'すべてのリージョンを1つに統合してインフラを簡素化する',
       'プレイヤー数の少ない地域のサービスを停止する',
       'ゲーム品質を下げてリソース使用量を削減する'
     ],
     correct: 0,
-    explanation: `ゲーム会社のグローバル展開コスト最適化には、GameLift Fleet Scaling + Spot Instances + CloudFront + S3 Transfer Acceleration + Reserved Instances + Auto Scaling + Scheduled Scaling + Multi-Region Optimization + Cost Allocation Tags + Savings Plansの組み合わせが最適です。
+    explanation: `ゲーム会社のグローバル展開コスト最適化には、EC2 Auto Scaling（ゲームサーバーフリート）+ Spot Instances + CloudFront + S3 Transfer Acceleration + Reserved Instances + Scheduled Scaling + Multi-Region Optimization + Cost Allocation Tags + Savings Plansの組み合わせが最適です。
+
+> **補足**: 実運用ではAmazon GameLiftのFleet管理機能も有力候補ですが、GameLiftはSAP-C02試験の範囲外（公式試験ガイドでOut of scopeと明記）のため、本問ではEC2 Auto Scalingベースの汎用的な最適化戦略を正解としています。
 
 ゲーム業界特化の最適化：
 
 **ゲームサーバー最適化:**
-- GameLift Fleet Scaling: プレイヤー数に応じた動的スケーリング
+- EC2 Auto Scaling: プレイヤー数に応じたゲームサーバーフリートの動的スケーリング
 - Spot Instances: 開発・テスト環境で90%削減
 - Auto Scaling: 地域別・時間別の負荷変動対応
 - 削減効果: 50%
@@ -563,6 +565,37 @@ HIPAA準拠を維持した最適化：
 - **予約システムの冗長性を削減してコストを下げる**: 冗長性削減は航空安全に直結する重大リスク
 - **メンテナンス予測の精度を下げて計算コストを削減する**: メンテナンス予測精度低下は機体安全性に影響
 - **一部の路線データ分析を停止してリソースを削減する**: 路線分析停止は収益最適化機会の損失`
+  },
+  {
+    id: 'adv-cost-011',
+    category: 'コスト最適化',
+    question: `中堅SaaS企業が、複数のデータベースサービス（RDS for PostgreSQL、Aurora MySQL、DynamoDB、ElastiCache for Redis、DocumentDB）を長期運用しています。以下の状況があります：
+
+1. すべてのデータベースが今後1年以上の継続利用が確定している
+2. 事業成長に応じてインスタンスタイプやリージョンを柔軟に変更する余地を残しておきたい
+3. 各データベースサービスごとに個別のReserved Instances/Reserved Nodesを購入すると管理が煩雑
+4. EC2やLambda、Fargateのコンピュートリソースにも別途コミット割引を検討している
+5. コスト削減効果を最大化しつつ、購入管理の手間を最小限にしたい
+
+この状況で最も適切なコスト最適化の組み合わせはどれですか？`,
+    options: [
+      'データベース群にはAWS Database Savings Plans、コンピュート群にはCompute Savings Plansをそれぞれ契約する',
+      'すべてのサービスに対して、サービスごとに個別のReserved Instances/Reserved Nodesを購入する',
+      'すべてEC2 Instance Savings Plansで統一し、マネージドサービスは対象外として運用する',
+      'コミット購入は行わず、すべてオンデマンドのままCost Explorerで監視を続ける'
+    ],
+    correct: 0,
+    explanation: `最も適切なのは「データベース群にはAWS Database Savings Plans、コンピュート群にはCompute Savings Plansをそれぞれ契約する」です。
+
+理由：
+1. **AWS Database Savings Plans**: RDS、Aurora、DynamoDB、ElastiCache、DocumentDBなど複数のマネージドデータベースサービスを横断して適用でき、特定のインスタンスタイプやリージョンに縛られずに1年コミットで最大35%の割引を受けられる。1つの契約で複数DBサービスをまとめて管理できるため購入管理の手間も少ない
+2. **Compute Savings Plans**: EC2、Fargate、Lambdaを横断して適用できる別枠の購入オプションで、データベースとは独立して最適化できる
+3. **柔軟性の両立**: どちらのSavings Plansもインスタンスタイプやリージョンを問わず柔軟に変更できる
+
+他の選択肢の問題点：
+- **サービスごとに個別のReserved Instances/Reserved Nodesを購入する**: 柔軟性の要件に反し、購入管理も煩雑になる
+- **EC2 Instance Savings Plansで統一しマネージドサービスを対象外とする**: EC2 Instance Savings Plansはインスタンスファミリー固定のプランでありデータベースサービスには適用されず、削減機会を大きく逃す
+- **コミット購入を行わずオンデマンドのまま運用する**: 1年以上の継続利用が確定しているにもかかわらずコミット割引による削減機会を逃す`
   },
 
   // 複数選択問題

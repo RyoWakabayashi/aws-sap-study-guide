@@ -200,6 +200,30 @@ const monitoringQuestions = [
     correct: 3,
     explanation: 'Managed Service for Prometheusは、フルマネージド、高可用性、セキュアなPrometheusサービスを提供します。'
   },
+  {
+    id: 'monitoring-26',
+    category: '監視・ログ',
+    question: 'RDS Performance Insightsの後継として位置付けられ、フリート単位の監視やロック分析、実行計画のキャプチャを統合したサービスはどれですか？',
+    options: ['CloudWatch Application Signals', 'CloudWatch Database Insights', 'CloudWatch Synthetics', 'CloudWatch Contributor Insights'],
+    correct: 1,
+    explanation: 'CloudWatch Database Insightsは、RDS Performance Insightsの後継として位置付けられ、フリート単位の監視、ロック分析、実行計画のキャプチャ、オンデマンドのパフォーマンス分析を統合したサービスです。クロスアカウント・クロスリージョンでの集中監視にも対応しています。'
+  },
+  {
+    id: 'monitoring-27',
+    category: '監視・ログ',
+    question: 'コード変更（インストルメンテーション）なしでアプリケーショントポロジを自動検出・可視化し、SLOの定義・監視をネイティブサポートするCloudWatchの機能はどれですか？',
+    options: ['CloudWatch Application Signals', 'CloudWatch Logs Insights', 'CloudWatch Anomaly Detection', 'CloudWatch ServiceLens'],
+    correct: 0,
+    explanation: 'CloudWatch Application Signalsは、インストルメンテーションなしでアプリケーショントポロジを自動検出・可視化するアプリケーションマップ機能を持ち、SLO(Service Level Objective)の定義・監視をネイティブサポートします。'
+  },
+  {
+    id: 'monitoring-28',
+    category: '監視・ログ',
+    question: 'VPC Flow Logsよりも高頻度・低レイテンシでネットワーク性能問題（パケットロス等）を検知できる新しい監視機能はどれですか？',
+    options: ['Network Flow Monitor', 'VPC Traffic Mirroring', 'Reachability Analyzer', 'Network Access Analyzer'],
+    correct: 0,
+    explanation: 'Network Flow Monitorは、VPC Flow Logsよりも高頻度・低レイテンシでネットワーク性能問題（パケットロスなど）を検知できる新しい監視機能です。'
+  },
   // 複数選択問題
   {
     id: 'monitoring-multi-1',

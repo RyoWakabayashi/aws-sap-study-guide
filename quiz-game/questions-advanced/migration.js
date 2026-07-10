@@ -82,14 +82,14 @@ const advancedMigrationQuestions = [
     question:
       '大手ゲーム会社が、ゲームサーバーのクラウド移行を実施しています。リアルタイムマルチプレイヤー、グローバル展開、低レイテンシ、高可用性が要件です。最適な移行戦略はどれですか？',
     options: [
-      'GameLift + Global Accelerator + Migration Hub + Application Migration Service + CloudEndure + Professional Servicesを使用する',
+      'AWS Application Migration Service（AWS MGN）+ Global Accelerator + Migration Hub + EC2 Auto Scaling + ElastiCache Global Datastoreを使用する',
       'EC2 + Auto Scaling + Application Load Balancer + RDS + ElastiCacheを使用する',
       'Lambda + API Gateway + DynamoDB + S3 + CloudFrontを使用する',
       'EKS + Kubernetes + Istio + Prometheus + Grafanaを使用する'
     ],
     correct: 0,
     explanation:
-      'ゲームサーバー移行には、GameLift + Global Accelerator + Migration Hub + Application Migration Service + CloudEndure + Professional Servicesが最適です。ゲーム特化機能、低レイテンシ、グローバル展開を実現できます。'
+      'ゲームサーバー移行には、AWS Application Migration Service（AWS MGN、2026年に AWS Transform MGN へ改称）でリホストしつつ、Global Acceleratorで低レイテンシ通信、Migration Hubで移行進捗を一元管理、移行後はEC2 Auto Scalingでゲームサーバーフリートを自動スケーリングし、ElastiCache Global Datastoreでグローバルなセッション同期を行う構成が最適です（実運用ではAmazon GameLiftも有力候補ですが、SAP-C02試験の範囲外です）。'
   },
   {
     id: 'adv-mig-007',
@@ -150,6 +150,36 @@ const advancedMigrationQuestions = [
     correct: 0,
     explanation:
       '政府システム移行には、GovCloud + Migration Hub + Database Migration Service + CloudHSM + CloudTrail + Config + GuardDuty + Professional Servicesが最適です。最高機密対応、完全監査、国家安全保障要件を実現できます。'
+  },
+  {
+    id: 'adv-mig-011',
+    category: '移行・統合',
+    question: `中堅小売企業が、オンプレミスVMware環境で稼働する200台以上の仮想マシンをAWSへ移行する計画を立てています。以下の要件があります：
+
+1. 移行期間中、アプリケーション改修やOS変更は一切行いたくない（最短でクラウドに移す）
+2. 既存のVMwareライセンス・運用ツール・監視体制をそのまま引き継ぎたい
+3. 移行後、段階的にクラウドネイティブサービスへの最適化（Replatform/Refactor）を検討したい
+4. 移行対象・移行アプローチの評価には7Rs（7つのR）のフレームワークを使いたい
+
+初期移行フェーズで採用すべき最も適切な戦略とサービスの組み合わせはどれですか？`,
+    options: [
+      'Relocate戦略を採用し、VMware Cloud on AWSでハイパーバイザーレベルのまま移行する',
+      'Refactor戦略を採用し、全VMをコンテナ化してEKSに移行する',
+      'Repurchase戦略を採用し、SaaS版のERPに切り替える',
+      'Retire戦略を採用し、重要度の低いVMから順に廃止する'
+    ],
+    correct: 0,
+    explanation: `最も適切なのは「Relocate戦略を採用し、VMware Cloud on AWSでハイパーバイザーレベルのまま移行する」です。
+
+理由：
+1. **Relocate**: 7Rsのうち、ハイパーバイザーレベルでインフラをそのままAWSへ移行し、OS・アプリケーションに一切手を加えない戦略。「アプリケーション改修やOS変更は一切行いたくない」という要件に完全に合致する
+2. **VMware Cloud on AWS**: 既存のVMwareライセンス・運用ツール・監視体制をそのまま引き継げるため、要件2を満たす
+3. **段階的な最適化との親和性**: Relocateで最短移行した後、必要なワークロードから順にReplatform/Refactorへ段階的に移行するという要件3の計画にも適合する
+
+他の選択肢の問題点：
+- **Refactor戦略で全VMをコンテナ化してEKSに移行する**: 「アプリケーション改修は一切行いたくない」という初期フェーズの要件に反し、200台以上を一度にコンテナ化するのは非現実的
+- **Repurchase戦略でSaaS版ERPに切り替える**: 全VMがERPとは限らず、要件にない業務要件の変更を伴うため不適切
+- **Retire戦略で重要度の低いVMから廃止する**: 移行そのものではなく廃止判断であり、初期移行フェーズの要件（最短でクラウドに移す）に合致しない`
   },
 
   // 複数選択問題

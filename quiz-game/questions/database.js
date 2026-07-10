@@ -240,6 +240,30 @@ const databaseQuestions = [
     correct: 3,
     explanation: 'DynamoDBの条件式では、等価、不等価、BETWEEN演算子は使用できますが、REGEX演算子は使用できません。'
   },
+  {
+    id: 'database-31',
+    category: 'データベース',
+    question: '複数リージョンでActive-Active構成による強整合性の書き込みをネイティブにサポートする、2025年5月にGAとなったサーバーレス分散SQLデータベースはどれですか？',
+    options: ['Amazon Aurora Global Database', 'Amazon Aurora DSQL', 'Amazon DynamoDB Global Tables', 'Amazon RDS Multi-AZ DBクラスター'],
+    correct: 1,
+    explanation: 'Amazon Aurora DSQLは、Active-Active構成でマルチリージョンの強整合性書き込みをネイティブにサポートするサーバーレス分散SQLデータベースです。Aurora Global Databaseは書き込みが単一リージョンに集約されるため、複数リージョン同時書き込みの強整合性要件は満たせません。'
+  },
+  {
+    id: 'database-32',
+    category: 'データベース',
+    question: '2025年12月に発表された、RDS・Aurora・DynamoDB・ElastiCache・DocumentDBなど複数のマネージドデータベースを横断して1年コミットで最大35%の割引が受けられる購入オプションはどれですか？',
+    options: ['Compute Savings Plans', 'Database Savings Plans', 'Reserved Instances', 'EC2 Instance Savings Plans'],
+    correct: 1,
+    explanation: 'Database Savings Plansは、RDS、Aurora、DynamoDB、ElastiCache、DocumentDBなど主要なマネージドデータベースサービスを横断して適用でき、特定のインスタンスタイプやリージョンに縛られずに最大35%の割引を受けられる新しい購入オプションです。'
+  },
+  {
+    id: 'database-33',
+    category: 'データベース',
+    question: '容量管理が不要で、スパイクの多いワークロードに適合するRedis/Memcached互換のキャッシュサービスはどれですか？',
+    options: ['ElastiCache Serverless', 'DynamoDB Accelerator (DAX)', 'MemoryDB for Redis', 'Aurora Serverless v2'],
+    correct: 0,
+    explanation: 'ElastiCache Serverlessは、Redis/Memcached互換のサーバーレスキャッシュサービスで、容量管理が不要でスパイクの多いワークロードに柔軟に対応できます。'
+  },
   // 複数選択問題
   {
     id: 'database-multi-1',
