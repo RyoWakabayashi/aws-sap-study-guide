@@ -16,6 +16,7 @@
     "build-check": "node scripts/build-check.js",
     "load-questions": "node scripts/load-questions.js",
     "load-advanced-questions": "node scripts/load-advanced-questions.js",
+    "export-flashcards": "node scripts/export-flashcards.js",
     "prebuild": "npm run load-questions && npm run load-advanced-questions && npm run lint:fix",
     "pretest": "npm run load-questions && npm run load-advanced-questions && npm run lint:fix",
     "precommit": "npm run load-questions && npm run load-advanced-questions && npm run lint && npm test",

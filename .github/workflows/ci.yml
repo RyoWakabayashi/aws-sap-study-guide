@@ -12,6 +12,9 @@ on:
       - "quiz-game/**"
       - ".github/workflows/**"
 
+permissions:
+  contents: read
+
 jobs:
   lint-and-test:
     runs-on: ubuntu-latest
@@ -46,3 +49,49 @@ jobs:
       - name: Build check
         working-directory: quiz-game
         run: npm run build-check
+
+  # main ブランチへの push 時のみ、quiz-game をビルドして GitHub Pages にデプロイする。
+  # 事前に repo Settings > Pages > Build and deployment > Source を
+  # "GitHub Actions" に設定しておく必要がある（一度だけの手動設定）。
+  deploy-production:
+    needs: lint-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: quiz-game/package-lock.json
+
+      - name: Install dependencies
+        working-directory: quiz-game
+        run: npm ci
+
+      - name: Build quiz-game for production
+        working-directory: quiz-game
+        run: npm run build
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: quiz-game/dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

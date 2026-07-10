@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "quiz-game",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["http-server", "quiz-game", "-p", "8080", "-c-1"],
+      "port": 8080
+    }
+  ]
+}

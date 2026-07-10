@@ -5,6 +5,9 @@ node_modules/
 dist/
 build/
 
+# Generated flashcard exports (personal use, regenerate with `npm run export-flashcards`)
+quiz-game/export/
+
 # Logs
 *.log
 

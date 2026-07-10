@@ -28,8 +28,17 @@ class QuizGame {
     this.originalQuestions = [] // 元の問題データを保存
 
     // 難易度関連
-    this.currentDifficulty = 'basic' // 'basic' or 'advanced'
+    this.currentDifficulty = 'basic' // 'basic' | 'advanced' | 'exam' | 'diagnostic'
     this.currentQuestionSet = window.allQuestions || [] // 現在の問題セット
+
+    // 模擬試験・弱点診断モード関連
+    this.isExamMode = false // 'exam' または 'diagnostic' のとき true（全体タイマー・ドメイン別集計を使用）
+    this.EXAM_QUESTION_COUNT = 75
+    this.DIAGNOSTIC_QUESTION_COUNT = 20
+    this.EXAM_TIME_LIMIT_SECONDS = 180 * 60 // 180分
+    this.DIAGNOSTIC_TIME_LIMIT_PER_QUESTION = 45 // 弱点診断は1問45秒
+    this.examTimeRemaining = this.EXAM_TIME_LIMIT_SECONDS
+    this.examTimerInterval = null
 
     // グローバル変数の参照を保持（lintエラー回避）
     this.allQuestions = window.allQuestions || []
@@ -148,6 +157,15 @@ class QuizGame {
     // Timer elements
     this.timerText = document.getElementById('timer-text')
     this.timerProgress = document.getElementById('timer-progress')
+    this.timerElement = document.getElementById('timer')
+    this.examTimerElement = document.getElementById('exam-timer')
+    this.examTimerText = document.getElementById('exam-timer-text')
+
+    // 模擬試験モード関連の要素
+    this.examModeNotice = document.getElementById('exam-mode-notice')
+    this.categorySelectionSection = document.getElementById('category-selection')
+    this.questionCountSelectionSection = document.getElementById('question-count-selection')
+    this.domainBreakdown = document.getElementById('domain-breakdown')
 
     // Result elements
     this.finalScore = document.getElementById('final-score')
@@ -363,17 +381,26 @@ class QuizGame {
 
   updateDifficulty (difficulty) {
     this.currentDifficulty = difficulty
+    this.isExamMode = (difficulty === 'exam' || difficulty === 'diagnostic')
 
     // 問題セットを切り替え
     if (difficulty === 'advanced') {
       this.currentQuestionSet = this.allAdvancedQuestions
       this.timeLimit = 90 // 上級編は90秒
       console.log(`🎓 Switched to Advanced mode: ${this.currentQuestionSet.length} questions available`)
+    } else if (difficulty === 'exam' || difficulty === 'diagnostic') {
+      // 模擬試験・弱点診断モードは基礎編+上級編の全問題プールから出題
+      this.currentQuestionSet = [...this.allQuestions, ...this.allAdvancedQuestions]
+      this.timeLimit = difficulty === 'diagnostic' ? this.DIAGNOSTIC_TIME_LIMIT_PER_QUESTION : 999999
+      console.log(`📝 Switched to ${difficulty} mode: ${this.currentQuestionSet.length} questions available`)
     } else {
       this.currentQuestionSet = this.allQuestions
       this.timeLimit = 30 // 初級編は30秒
       console.log(`📚 Switched to Basic mode: ${this.currentQuestionSet.length} questions available`)
     }
+
+    // カテゴリ・問題数選択UIの表示切り替え（模擬試験・弱点診断モードでは自動選択されるため非表示）
+    this.updateModeSpecificUI()
 
     // カテゴリ選択を更新
     this.initializeCategorySelection()
@@ -382,6 +409,20 @@ class QuizGame {
     this.updateStats()
 
     console.log(`Difficulty updated to: ${difficulty}`)
+  }
+
+  updateModeSpecificUI () {
+    const showManualSelection = !this.isExamMode
+
+    if (this.categorySelectionSection) {
+      this.categorySelectionSection.style.display = showManualSelection ? '' : 'none'
+    }
+    if (this.questionCountSelectionSection) {
+      this.questionCountSelectionSection.style.display = showManualSelection ? '' : 'none'
+    }
+    if (this.examModeNotice) {
+      this.examModeNotice.style.display = this.isExamMode ? 'block' : 'none'
+    }
   }
 
   startIncorrectReview () {
@@ -470,8 +511,16 @@ class QuizGame {
 
     this.resetQuiz()
 
-    // カテゴリが選択されている場合は、そのカテゴリから問題を取得
-    if (this.selectedCategories.length > 0) {
+    if (this.isExamMode) {
+      // 模擬試験・弱点診断モード：4ドメイン比率に応じて自動選択
+      const targetCount = this.currentDifficulty === 'diagnostic'
+        ? this.DIAGNOSTIC_QUESTION_COUNT
+        : this.EXAM_QUESTION_COUNT
+      this.currentQuestions = this.generateDomainWeightedQuestions(targetCount)
+      this.totalQuestions = this.currentQuestions.length
+      console.log(`📝 Generated ${this.totalQuestions} domain-weighted questions for ${this.currentDifficulty} mode`)
+    } else if (this.selectedCategories.length > 0) {
+      // カテゴリが選択されている場合は、そのカテゴリから問題を取得
       this.currentQuestions = this.getRandomQuestionsByCategories(
         this.selectedCategories,
         this.totalQuestions
@@ -514,6 +563,11 @@ class QuizGame {
 
     this.showScreen('quiz-screen')
     this.displayQuestion()
+
+    // 模擬試験モード（180分固定タイマー）は、問題単位ではなく試験全体で1つのタイマーを開始する
+    if (this.currentDifficulty === 'exam') {
+      this.startExamTimer()
+    }
   }
 
   resetQuiz () {
@@ -521,6 +575,10 @@ class QuizGame {
     this.score = 0
     this.userAnswers = []
     this.nextBtn.style.display = 'none'
+
+    // 模擬試験タイマーのリセット
+    this.stopExamTimer()
+    this.examTimeRemaining = this.EXAM_TIME_LIMIT_SECONDS
 
     // Reset streak
     this.currentStreak = 0
@@ -634,6 +692,204 @@ class QuizGame {
     return shuffled.slice(0, count)
   }
 
+  // SAP-C02の4ドメイン比率（26/29/25/20%）に応じて targetCount 問を選出する
+  // domain-weights.js の CATEGORY_DOMAIN_WEIGHTS（カテゴリ→ドメイン重み）を用いた
+  // 参考区分によるサンプリング。各問題には _examDomain（1〜4）を付与する。
+  generateDomainWeightedQuestions (targetCount) {
+    const domainInfo = window.DOMAIN_INFO
+    const weights = window.CATEGORY_DOMAIN_WEIGHTS
+
+    if (!domainInfo || !weights) {
+      console.warn('⚠️ domain-weights.js が読み込まれていません。通常のランダム抽出にフォールバックします。')
+      return this.getRandomQuestions(targetCount)
+    }
+
+    // ドメインごとの目標問題数を算出し、端数調整で合計が targetCount になるようにする
+    const domainKeys = Object.keys(domainInfo).map(Number)
+    const rawCounts = domainKeys.map((domain) => ({
+      domain,
+      exact: domainInfo[domain].weight * targetCount
+    }))
+    const domainTargets = {}
+    let assigned = 0
+    rawCounts.forEach(({ domain, exact }) => {
+      domainTargets[domain] = Math.floor(exact)
+      assigned += domainTargets[domain]
+    })
+    const remainder = targetCount - assigned
+    const byRemainderDesc = [...rawCounts]
+      .sort((a, b) => (b.exact - Math.floor(b.exact)) - (a.exact - Math.floor(a.exact)))
+    for (let i = 0; i < remainder; i++) {
+      domainTargets[byRemainderDesc[i % byRemainderDesc.length].domain]++
+    }
+
+    const usedIds = new Set()
+    const examQuestions = []
+
+    domainKeys.forEach((domain) => {
+      const target = domainTargets[domain]
+
+      // このドメインに重みを持つカテゴリの問題を重み付きで収集
+      const weightedPool = []
+      this.currentQuestionSet.forEach((q) => {
+        if (usedIds.has(q.id)) return
+        const categoryWeights = weights[q.category]
+        const weight = categoryWeights ? (categoryWeights[domain] || 0) : 0
+        if (weight > 0) {
+          weightedPool.push({ question: q, weight })
+        }
+      })
+
+      // 重み付き簡易シャッフル（weight が高いほど選ばれやすくなる）
+      weightedPool.sort((a, b) => (Math.random() * b.weight) - (Math.random() * a.weight))
+
+      let picked = 0
+      for (const item of weightedPool) {
+        if (picked >= target) break
+        usedIds.add(item.question.id)
+        examQuestions.push({ ...item.question, _examDomain: domain })
+        picked++
+      }
+
+      if (picked < target) {
+        console.warn(`⚠️ Domain ${domain}: only ${picked}/${target} questions available`)
+      }
+    })
+
+    // 出題順をシャッフル
+    return examQuestions.sort(() => 0.5 - Math.random())
+  }
+
+  startExamTimer () {
+    this.stopExamTimer()
+    this.examTimeRemaining = this.EXAM_TIME_LIMIT_SECONDS
+    this.updateExamTimerDisplay()
+
+    this.examTimerInterval = setInterval(() => {
+      this.examTimeRemaining--
+      this.updateExamTimerDisplay()
+
+      if (this.examTimeRemaining <= 0) {
+        this.handleExamTimeUp()
+      }
+    }, 1000)
+  }
+
+  stopExamTimer () {
+    if (this.examTimerInterval) {
+      clearInterval(this.examTimerInterval)
+      this.examTimerInterval = null
+    }
+  }
+
+  updateExamTimerDisplay () {
+    if (!this.examTimerText) return
+
+    const clamped = Math.max(0, this.examTimeRemaining)
+    const minutes = Math.floor(clamped / 60)
+    const seconds = clamped % 60
+    this.examTimerText.textContent =
+      `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+
+    if (this.examTimerElement) {
+      this.examTimerElement.classList.toggle('danger', clamped <= 300) // 残り5分で警告表示
+    }
+  }
+
+  handleExamTimeUp () {
+    this.stopExamTimer()
+    console.log('⏰ Exam time is up. Submitting current progress.')
+    alert('制限時間（180分）が終了しました。ここまでの回答で採点します。')
+    this.showResults()
+  }
+
+  // 模擬試験・弱点診断モードの結果画面用：ドメインごとの正答数/出題数を集計
+  computeDomainBreakdown () {
+    const breakdown = {}
+
+    this.currentQuestions.forEach((q) => {
+      const domain = q._examDomain
+      if (!domain) return
+      if (!breakdown[domain]) {
+        breakdown[domain] = { correct: 0, total: 0 }
+      }
+      breakdown[domain].total++
+    })
+
+    this.userAnswers.forEach((answer) => {
+      const q = this.currentQuestions[answer.questionIndex]
+      if (!q || !q._examDomain || !answer.isCorrect) return
+      breakdown[q._examDomain].correct++
+    })
+
+    return breakdown
+  }
+
+  renderDomainBreakdown () {
+    if (!this.domainBreakdown) return
+
+    if (!this.isExamMode || !window.DOMAIN_INFO) {
+      this.domainBreakdown.style.display = 'none'
+      this.domainBreakdown.innerHTML = ''
+      return
+    }
+
+    const breakdown = this.computeDomainBreakdown()
+    const domainInfo = window.DOMAIN_INFO
+    const recommendedDocs = window.DOMAIN_RECOMMENDED_DOCS || {}
+
+    let weakestDomain = null
+    let weakestRate = Infinity
+
+    let listHtml = ''
+    Object.keys(domainInfo).forEach((domainKey) => {
+      const domain = Number(domainKey)
+      const info = domainInfo[domain]
+      const stat = breakdown[domain] || { correct: 0, total: 0 }
+      const rate = stat.total > 0 ? stat.correct / stat.total : 0
+      const percent = Math.round(rate * 100)
+
+      if (stat.total > 0 && rate < weakestRate) {
+        weakestRate = rate
+        weakestDomain = domain
+      }
+
+      listHtml += `
+        <li class="domain-breakdown-item">
+          <div class="domain-breakdown-header">
+            <span class="domain-breakdown-name">${info.shortName}</span>
+            <span class="domain-breakdown-score">${stat.correct} / ${stat.total}問 (${percent}%)</span>
+          </div>
+          <div class="domain-breakdown-bar">
+            <div class="domain-breakdown-bar-fill" style="width: ${percent}%"></div>
+          </div>
+        </li>
+      `
+    })
+
+    let recommendationHtml = ''
+    if (weakestDomain !== null && recommendedDocs[weakestDomain]) {
+      const docs = recommendedDocs[weakestDomain]
+      const docLinks = docs.map((d) => `<li><a href="${d.file}" target="_blank" rel="noopener">${d.title}</a></li>`).join('')
+      recommendationHtml = `
+        <div class="domain-breakdown-recommendation">
+          <strong>📌 重点的に復習するとよい分野: ${domainInfo[weakestDomain].shortName}</strong>
+          <ul>${docLinks}</ul>
+        </div>
+      `
+    }
+
+    this.domainBreakdown.innerHTML = `
+      <h3>ドメイン別正答率（参考区分）</h3>
+      <p class="domain-breakdown-note">
+        カテゴリ単位の重み付けによる参考区分です。AWS公式の採点区分とは異なります。
+      </p>
+      <ul class="domain-breakdown-list">${listHtml}</ul>
+      ${recommendationHtml}
+    `
+    this.domainBreakdown.style.display = 'block'
+  }
+
   displayQuestion () {
     const question = this.currentQuestions[this.currentQuestionIndex]
 
@@ -672,17 +928,31 @@ class QuizGame {
     // 難易度に応じてクラスを追加
     const quizScreen = document.getElementById('quiz-screen')
     if (quizScreen) {
-      if (this.currentDifficulty === 'advanced') {
-        quizScreen.classList.add('difficulty-advanced')
-      } else {
-        quizScreen.classList.remove('difficulty-advanced')
-      }
+      quizScreen.classList.toggle('difficulty-advanced', this.currentDifficulty === 'advanced')
+      quizScreen.classList.toggle('exam-mode', this.currentDifficulty === 'exam')
     } else {
       console.warn('Quiz screen element not found')
     }
 
+    // 模擬試験（全体タイマー）と通常モード（問題ごとのタイマー）で表示するタイマーUIを切り替え
+    if (this.timerElement && this.examTimerElement) {
+      if (this.currentDifficulty === 'exam') {
+        this.timerElement.style.display = 'none'
+        this.examTimerElement.style.display = 'flex'
+      } else {
+        this.timerElement.style.display = ''
+        this.examTimerElement.style.display = 'none'
+      }
+    }
+
+    // カテゴリバッジ（模擬試験・弱点診断モードではドメインも併記）
     if (this.categoryBadge) {
-      this.categoryBadge.textContent = question.category
+      const domainInfo = this.isExamMode && question._examDomain && window.DOMAIN_INFO
+        ? window.DOMAIN_INFO[question._examDomain]
+        : null
+      this.categoryBadge.textContent = domainInfo
+        ? `${question.category} / ${domainInfo.shortName}`
+        : question.category
     }
 
     // 問題文の改行を適切に処理
@@ -733,8 +1003,13 @@ class QuizGame {
     this.explanationContainer.style.display = 'none'
     this.nextBtn.style.display = 'none'
 
-    // Start timer
-    this.startTimer()
+    // Start timer（模擬試験モードは全体タイマーのみを使用し、問題ごとのタイマーは開始しない）
+    if (this.currentDifficulty === 'exam') {
+      // startTimer() を呼ばない場合でも、次の問題に回答できるよう明示的にリセットする
+      this.questionAnswered = false
+    } else {
+      this.startTimer()
+    }
   }
 
   shuffleOptions (question) {
@@ -1225,6 +1500,9 @@ class QuizGame {
   }
 
   showResults () {
+    // 模擬試験の全体タイマーが動いていれば停止（時間内に全問回答し終えた場合など）
+    this.stopExamTimer()
+
     const accuracyPercent = Math.round(
       (this.score / this.totalQuestions) * 100
     )
@@ -1244,8 +1522,21 @@ class QuizGame {
     this.maxStreakElement.textContent = `🔥 ${this.maxStreak}`
 
     // Show performance message
-    this.performanceMessage.innerHTML =
-      this.getPerformanceMessage(accuracyPercent, timeoutCount)
+    let message = this.getPerformanceMessage(accuracyPercent, timeoutCount)
+    if (this.currentDifficulty === 'exam') {
+      const passLine = accuracyPercent >= 75
+      message += `
+        <div class="exam-pass-estimate ${passLine ? 'pass' : 'fail'}">
+          <strong>${passLine ? '✅ 合格ラインの目安を超えています' : '⚠️ 合格ラインの目安を下回っています'}</strong>
+          <p>SAP-C02の合格ラインは1000点満点中750点（スケールドスコア）です。
+          正答率75%は簡易的な目安であり、AWS公式のスケーリング方式とは異なる点にご注意ください。</p>
+        </div>
+      `
+    }
+    this.performanceMessage.innerHTML = message
+
+    // ドメイン別正答率（模擬試験・弱点診断モードのみ）
+    this.renderDomainBreakdown()
 
     // 復習ボタンの表示制御
     this.updateReviewButton(incorrectCount)

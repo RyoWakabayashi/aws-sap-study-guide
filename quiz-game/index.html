@@ -54,10 +54,30 @@
                 <span class="option-description">本番試験レベルの長文問題</span>
                 <span class="option-details">制限時間: 90秒</span>
               </label>
+              <label class="difficulty-option">
+                <input type="radio" name="difficulty" value="exam">
+                <span class="option-label">模擬試験</span>
+                <span class="option-description">4ドメイン比率(26/29/25/20%)で75問を出題</span>
+                <span class="option-details">制限時間: 180分(全体)</span>
+              </label>
+              <label class="difficulty-option">
+                <input type="radio" name="difficulty" value="diagnostic">
+                <span class="option-label">弱点診断</span>
+                <span class="option-description">4ドメインを均等網羅する20問で弱点を診断</span>
+                <span class="option-details">制限時間: 45秒/問</span>
+              </label>
             </div>
           </div>
 
-          <div class="category-selection">
+          <div id="exam-mode-notice" class="exam-mode-notice" style="display: none">
+            <p>
+              このモードでは、カテゴリ・問題数の選択は無効になります。
+              問題は公式試験ガイドの4ドメイン比率に応じて自動的に選ばれます
+              （カテゴリ単位の重み付けによる参考区分です）。
+            </p>
+          </div>
+
+          <div id="category-selection" class="category-selection">
             <div class="category-toggle" id="category-toggle">
               <h3>カテゴリを選択 <span class="toggle-icon">▼</span></h3>
               <p class="category-instruction">
@@ -79,7 +99,7 @@
             </div>
           </div>
 
-          <div class="question-count-selection">
+          <div id="question-count-selection" class="question-count-selection">
             <h3>問題数を選択</h3>
             <div class="question-count-options">
               <label class="question-count-option">
@@ -143,6 +163,9 @@
                   </svg>
                 </div>
               </div>
+              <div id="exam-timer" class="exam-timer" style="display: none">
+                ⏱ 残り時間: <span id="exam-timer-text">180:00</span>
+              </div>
             </div>
           </div>
         </div>
@@ -203,6 +226,10 @@
             <!-- パフォーマンスメッセージがここに表示されます -->
           </div>
 
+          <div id="domain-breakdown" class="domain-breakdown" style="display: none">
+            <!-- ドメイン別正答率がJavaScriptで動的に生成されます -->
+          </div>
+
           <div class="result-actions">
             <button id="retry-btn" class="btn btn-primary">もう一度挑戦</button>
             <button id="review-incorrect-btn" class="btn btn-warning" style="display: none;">
@@ -234,6 +261,7 @@
 
     <script src="questions.js"></script>
     <script src="questions-advanced.js"></script>
+    <script src="domain-weights.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

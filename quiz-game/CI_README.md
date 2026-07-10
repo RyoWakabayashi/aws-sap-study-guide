@@ -7,27 +7,30 @@
 ### GitHub Actions ワークフロー
 
 - **ファイル**: `.github/workflows/ci.yml`
-- **トリガー**: `main`、`develop` ブランチへのプッシュ、プルリクエスト
+- **トリガー**: `main` ブランチへのプッシュ、`main` へのプルリクエスト
 - **対象パス**: `quiz-game/**`、`.github/workflows/**`
 
 ### ジョブ構成
 
-#### 1. `lint-and-test`
+#### 1. `lint-and-test` (push・プルリクエスト共通)
 
 - **Standard linter**: JavaScriptコードの品質チェック
 - **テスト実行**: 機能テスト、データ検証
 - **問題データ検証**: 問題の構造・内容チェック
 - **ビルドチェック**: ファイルサイズ、構造検証
 
-#### 2. `deploy-preview` (プルリクエスト時)
+#### 2. `deploy-production` (mainブランチへのpush時のみ)
 
-- **プレビューデプロイ**: GitHub Pagesでのプレビュー環境
-- **URL**: `https://[username].github.io/[repo]/preview/[PR番号]/`
+- **本番デプロイ**: `lint-and-test` が成功した場合のみ、`npm run build` で生成した
+  `quiz-game/dist` を GitHub Pages にデプロイする
+- **URL**: `https://[username].github.io/[repo]/`（`dist` の内容がPagesサイトのルートになる）
+- **事前準備（初回のみ・手動）**: リポジトリの **Settings > Pages > Build and deployment > Source** を
+  **GitHub Actions** に設定しておく必要がある
 
-#### 3. `deploy-production` (mainブランチ)
-
-- **本番デプロイ**: GitHub Pagesでの本番環境
-- **URL**: `https://[username].github.io/[repo]/quiz-game/`
+> 📝 プルリクエストごとのプレビュー環境（`deploy-preview`）は現時点では未実装です。
+> 必要であれば `peaceiris/actions-gh-pages` 等を使った `gh-pages` ブランチへの
+> サブパスデプロイで追加できますが、mainブランチへの本番デプロイと競合しないよう
+> 慎重に設計する必要があります。
 
 ## 🛠 ローカル開発
 
@@ -111,30 +114,34 @@ npm run precommit
 
 ### 自動デプロイ
 
-1. **プルリクエスト**: プレビュー環境に自動デプロイ
-2. **mainブランチマージ**: 本番環境に自動デプロイ
+- **mainブランチマージ**: `lint-and-test` 成功後、`deploy-production` ジョブが自動的に
+  GitHub Pagesへデプロイする
+- **プルリクエスト**: `lint-and-test` のみ実行され、デプロイは行われない
+  （プレビュー環境は未実装。上記「ジョブ構成」の注記を参照）
 
 ### 手動デプロイ
 
 ```bash
-# ビルド実行
+# ビルド実行（quiz-game/dist に成果物が生成される）
+cd quiz-game
 npm run build
 
-# GitHub Pagesに手動デプロイ
-# (通常は自動デプロイを使用)
+# dist の中身を任意のホスティング先に配置する
+# (通常はmainブランチへのpushによる自動デプロイを使用)
 ```
 
 ## 🔒 セキュリティ
 
 ### GitHub Secrets
 
-- `GITHUB_TOKEN`: 自動的に提供される（設定不要）
-- カスタムドメイン使用時は `CNAME` 設定を調整
+- `GITHUB_TOKEN`: 自動的に提供される（設定不要）。`deploy-production` ジョブが
+  `id-token: write` / `pages: write` 権限で使用する
+- カスタムドメイン使用時は `dist/CNAME` を配置するようビルドスクリプトの調整が必要
 
 ### 権限
 
-- **読み取り**: リポジトリコンテンツ
-- **書き込み**: GitHub Pages、プルリクエストコメント
+- **読み取り**: リポジトリコンテンツ（`lint-and-test` ジョブ）
+- **書き込み**: GitHub Pages（`deploy-production` ジョブのみ、`pages: write` / `id-token: write`）
 
 ## 📊 監視・メトリクス
 

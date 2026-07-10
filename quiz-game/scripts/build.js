@@ -28,6 +28,8 @@ const filesToCopy = [
   'styles.css',
   'script.js',
   'questions.js',
+  'questions-advanced.js',
+  'domain-weights.js',
   'manifest.json',
   'sw.js',
   'README.md'
