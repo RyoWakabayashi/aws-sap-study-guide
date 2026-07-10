@@ -434,6 +434,35 @@ Lambda vs EC2 の選択基準
 
 ---
 
+## 2025〜2026年の最新トピック
+
+### Graviton世代とプロセッサ選択
+
+- **Graviton4**: M8g/R8g/X8g/C8gなど第8世代インスタンスの基盤。Graviton3比で最大30%高性能、DBワークロードで最大40%高速
+- **Graviton5**: 2025年のre:Invent で発表。エージェント型AIワークロードを見据え、Graviton4比で最大25%の性能向上
+- **試験での着眼点**: コスト最適化やパフォーマンス効率の文脈で「同一ワークロードをGraviton系に移行してコスト削減」という選択肢が頻出。x86からArm64への移植性（コンテナ・Lambdaのマルチアーキテクチャビルド）も問われやすい
+
+### Lambda の進化
+
+- **Lambda Durable Functions** (2025年発表): 複数ステップにまたがる処理を、アイドル時間の課金なしで最長1年間かけて信頼性高く実行できる新機能。Step Functionsが担っていた長時間ワークフローの一部をLambda単体で実現
+- **SnapStart**: Java/.NET/Pythonなどでコールドスタートを大幅短縮。低レイテンシAPIバックエンド設計で選択肢に登場しやすい
+- **試験での着眼点**: 「長時間・状態管理が必要な非同期処理」に対してStep FunctionsとLambda Durable Functionsのどちらが適切かを判断する設計問題に注意
+
+### コンテナサービスの運用自動化
+
+- **EKS Auto Mode**: Karpenterベースの仕組みでノードプロビジョニング・スケーリング・パッチ適用をAWSが自動管理。EC2 Managed Instancesとして稼働し、運用負荷をFargate並みに軽減しつつK8s標準APIを維持
+- **ECS Managed Instances**: ECSでもEC2の管理（AMI更新、パッチ適用等）をAWS側に委任できる新しい実行モデルが登場し、Fargateほどの制約なしに運用負荷を下げる選択肢が増えた
+- **試験での着眼点**: 「Kubernetesの標準機能は必要だが運用負荷は下げたい」→ EKS Auto Mode、
+  「ECSでコスト効率と若干の制御性を両立したい」→ ECS Managed Instances、という新しい選択肢が
+  「EC2 vs Fargate」の二択に加わった
+
+### AI/ML関連コンピューティング（背景知識として）
+
+- **Trainium2/3・Inferentia**: 独自シリコンによる機械学習の学習・推論コスト最適化。GPU（P5/P6系）との比較や、Bedrock/SageMakerとの組み合わせが出題対象になりうる
+- **UltraServer**: 複数のTrainiumチップをNeuronLinkで束ねる大規模学習向け構成
+
+---
+
 ## まとめ
 
 ### 試験でのポイント

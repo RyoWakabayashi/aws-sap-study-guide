@@ -421,6 +421,31 @@ SaaS・Web サービス
 
 ---
 
+## 2025〜2026年の最新トピック
+
+### AWS Database Savings Plans (2025年12月発表)
+
+- RDS、Aurora、DynamoDB、ElastiCache、DocumentDBなど主要マネージドデータベースを横断して1年コミットで最大35%割引
+- サーバーレス型で最大35%、インスタンスベースの最新世代で最大20%の削減。特定のインスタンスタイプやリージョンに縛られない柔軟性が特徴
+- 既存のCompute Savings Plansと同様、Cost Optimization Hubの推奨事項・Purchase Analyzerから適用可能性を確認できる
+- **試験での着眼点**: 「複数のデータベースサービスを使い分けているが、まとめてコミット割引を
+  受けたい」という設問の解答候補。EC2/Fargate/LambdaはCompute Savings Plans、DB系はDatabase
+  Savings Plansという役割分担を整理しておく
+
+### AWS Cost Optimization Hub の強化
+
+- Savings PlansやReserved Instancesの「期間・支払いオプションの好み」を事前設定し、その条件に基づくレコメンデーションを受け取れるように
+- Cost Efficiency Metric（1 − 潜在的な節約額 ÷ 最適化可能な総支出）× 100% という指標が導入され、組織のコスト効率を定量的に追跡可能に
+- 全リソースタイプ（EC2、Lambda、EBS、DB等）の最適化提案を単一ダッシュボードに統合
+- **試験での着眼点**: Trusted Advisor・Compute Optimizer・Cost Explorerとの役割分担（それぞれ「推奨事項」「使用率分析」「可視化・予測」のどこに強みがあるか）を整理して覚えること
+
+### 試験での着眼点まとめ
+
+- 新しい購入オプションが増えても、コスト最適化の基本方針（適切なサイジング、適切な購入オプション、ライフサイクル管理、可視化）は不変
+- FinOps文化（技術・財務・ビジネス部門の連携）の重要性は、Domain 1・Domain 3の両方で継続的に問われる
+
+---
+
 ## まとめ
 
 ### 試験でのポイント

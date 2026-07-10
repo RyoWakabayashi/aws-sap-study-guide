@@ -456,6 +456,32 @@ AWS Elastic Disaster Recovery (AWS DRS) は、オンプレミスおよびクラ�
 
 ---
 
+## 2025〜2026年の最新トピック
+
+### 次世代 AWS Resilience Hub とDR設計の統合
+
+- 依存関係の自動発見、生成AIによる障害モード分析、モジュール式レジリエンスポリシー（SLO・マルチAZ/マルチリージョンDR要件・データ復旧要件を組み合わせて定義）を備えた刷新版がリリース
+- Organizations統合により、委任管理者アカウントから複数アカウントのDR成熟度を一元評価できるようになり、大規模組織でのDR統制がしやすくなった
+- **試験での着眼点**: RTO/RPOを個別システムごとに設定するだけでなく、「組織全体でレジリエンス基準をどう統一・監査するか」という観点がDomain 1・Domain 3で問われる
+
+### Amazon Aurora DSQLとマルチリージョンDR
+
+- 従来のPilot Light/Warm Standby/Multi-Siteといったパターンは、非同期レプリケーションによる結果整合性を前提としていた
+- Aurora DSQLはマルチリージョンで強整合性を保ったActive-Active構成をネイティブに提供するため、「RPO=0（データ損失ゼロ）をシンプルに実現したい」という要件に対する新しい選択肢になる
+- Aurora Global Database（非同期レプリケーション、書き込みは単一リージョン）との使い分け：整合性要件が厳格ならAurora DSQL、既存Auroraワークロードの移行コストを抑えたいならGlobal Databaseが基本方針
+
+### AWS Elastic Disaster Recovery の拡張
+
+- DoD Cloud Computing SRG IL4/IL5認証を取得するなど、規制業界での採用に向けた対応が進行
+- RHEL 9.5対応、EBSスナップショットへのタグ付けなど、運用性向上のアップデートが継続的に追加
+
+### 試験での着眼点まとめ
+
+- DR戦略選択（Backup and Restore／Pilot Light／Warm Standby／Multi-Site Active-Active）の基本的な判断軸（RTO/RPO、コスト）は不変
+- 新サービス（Aurora DSQL、次世代Resilience Hub）は、この基本軸の中で「より低いRTO/RPOをより低い運用負荷で実現する」ための選択肢として位置づけて理解する
+
+---
+
 ## ライセンス
 
 このコンテンツは MIT License の下で公開されています。詳細は [LICENSE](./LICENSE) ファイルをご確認ください。

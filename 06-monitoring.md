@@ -398,6 +398,29 @@ ROI重視の監視
 
 ---
 
+## 2025〜2026年の最新トピック
+
+### Amazon CloudWatch Database Insights
+
+- RDS/Aurora/DynamoDBの性能監視を担ってきた **RDS Performance Insights** の後継サービス。フリート単位の監視、ロック分析、実行計画のキャプチャ、オンデマンドのパフォーマンス分析を統合
+- CloudWatch Application Signalsと連携し、アプリケーションコードのどの部分がどのDB負荷を生んでいるかを相関分析可能
+- クロスアカウント・クロスリージョンでの集中監視に対応し、Organizationsレベルでのデータベース監視統合が可能に
+- **試験での着眼点**: 「複数アカウントのRDS/Auroraの性能問題を一元的に切り分けたい」という設問でDatabase Insightsが解答候補になる。Performance Insightsは新規機能追加が終了しつつある点も押さえておく
+
+### Amazon CloudWatch Application Signals
+
+- インストルメンテーション（コード変更）なしでアプリケーショントポロジを自動検出・可視化するアプリケーションマップ機能
+- SLO (Service Level Objective) の定義・監視をネイティブサポートし、ビジネス要件（可用性・レイテンシ目標）と技術メトリクスを直接紐付け
+- CI/CDパイプライン（GitHub Actions等）に統合し、デプロイ前後のパフォーマンス回帰を検出
+- **試験での着眼点**: 分散システム・マイクロサービスの可観測性設計において、X-Rayによる分散トレーシングとApplication Signalsによるサービスマップ・SLO監視を組み合わせる設計パターンが今後の頻出テーマ
+
+### その他
+
+- **Network Flow Monitor**: VPC Flow Logsよりも高頻度・低レイテンシでネットワーク性能問題（パケットロスなど）を検知する新しい監視機能
+- CloudWatch Logs Insights、Contributor Insightsなどログ分析系の機能は引き続き重要。ログの一元化とコスト最適化（保持期間・階層化）の両立が設計問題で問われやすい
+
+---
+
 ## まとめ
 
 ### 試験でのポイント

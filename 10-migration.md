@@ -480,6 +480,28 @@ Wave計画
 
 ---
 
+## 2025〜2026年の最新トピック
+
+### AWS Application Migration Service (MGN) → AWS Transform MGN へのリブランド
+
+- 2026年6月、**AWS Application Migration Service (MGN)** は **AWS Transform MGN** に名称変更。MGNはAWS Transform（エージェント型の移行・モダナイゼーションサービス）を支えるレプリケーションエンジンという位置づけに再定義された
+- 従来通りMGNコンソールから直接レプリケーション・カットオーバーを制御する方法に加え、AWS Transformのエージェント型ワークフロー（発見・Wave計画・ランディングゾーン構築・ネットワーク作成・リホスト/コンテナ化を自動実行）を選べるようになった
+- FSx for NetApp ONTAPへのターゲット移行（プレビュー）、IPv6対応、Windows Server 2025・Ubuntu 24.04 LTS対応など機能追加も継続
+- **試験ガイド上はまだ「AWS Application Migration Service」表記**だが、実務・最新ドキュメントでは新名称が使われる。試験では概念（7Rsのうち Rehost を実現するツール）を問われるため、名称変更に惑わされないこと
+
+### AWS Transform 全体像
+
+- 従来のAWS Migration Hub、Application Discovery Service、MGN、DMSなどの移行ツール群に、生成AIによる評価・計画・実行の自動化を組み合わせた新しい移行体験
+- .NETやWindowsワークロードのフルスタックモダナイゼーション（.NET Framework→.NET、Windowsライセンス最適化を含む）にも対応範囲を拡大
+- 移行実行時間を大幅に短縮することを目標とした「エージェントが移行タスクの大部分を代行する」モデルへのシフトが進行中
+
+### 試験での着眼点
+
+- **7Rs**（Retire, Retain, Rehost, Relocate, Repurchase, Replatform, Refactor/Re-architect）の判断軸そのものは不変。新サービスはあくまで各Rを実現する「手段」として位置づけて整理する
+- Domain 4のタスクステートメントは「移行対象の選定」「最適な移行アプローチの決定」「新アーキテクチャの決定」「モダナイゼーションの機会特定」の4つ。ツール名の暗記よりも、要件（ダウンタイム許容度、データ量、依存関係の複雑さ）からどのアプローチを選ぶかの判断力が問われる
+
+---
+
 ## まとめ
 
 ### 試験でのポイント

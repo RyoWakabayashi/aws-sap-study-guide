@@ -550,6 +550,33 @@ Infrastructure as Code
 
 ---
 
+## 2025〜2026年の最新トピック
+
+### GuardDuty Extended Threat Detection
+
+- 複数のデータソース（IAM資格情報の不審な利用、S3の異常アクセス、EKSクラスタの侵害兆候など）を横断的に相関分析し、単発のアラートでは見えない「多段階攻撃（Attack Sequence）」を検知
+- 2025年にEC2・ECSタスクへの対応が追加され、`AttackSequence:EC2/CompromisedInstanceGroup` や `AttackSequence:ECS/CompromisedCluster` のような重大度の高いFindingを検出可能に
+- GuardDutyを有効化するだけで追加コストなしに利用でき、既存アカウントでも自動的に有効
+- **試験での着眼点**: 「単発の異常検知では見逃す高度な攻撃キャンペーンを検出したい」という要件に対する回答として、GuardDutyの基本機能とExtended Threat Detectionの違いを理解しておく
+
+### AWS Security Hub の刷新 (CSPM)
+
+- 新しいSecurity Hub CSPM (Cloud Security Posture Management) は、GuardDuty・Macie・Inspector等複数サービスの結果を集約し、リスクの優先順位付けと「Exposure」ダッシュボードによる可視化を提供
+- 組織全体のセキュリティ体制をスコア化し、Well-Architected Frameworkのセキュリティの柱に基づくベストプラクティスとの突合をサポート
+- **試験での着眼点**: マルチアカウント環境における「一元的なセキュリティ状態の可視化・優先順位付け」の設計にはSecurity Hubが第一候補
+
+### アイデンティティ管理
+
+- **IAM Identity Center**: 旧AWS SSO。複数AWSアカウント・アプリケーションへのシングルサインオンの中心的存在で、Domain 1のタスクステートメントにも明記される重要トピック
+- **Amazon Verified Permissions**: Cedarポリシー言語を使ったきめ細かい認可(fine-grained authorization) をアプリケーションに組み込むサービス。マイクロサービス/API単位での認可ロジックの外部化が問われる場合の選択肢
+
+### 試験での着眼点まとめ
+
+- 「複数アカウントを横断したセキュリティイベントの集中管理・自動修復」はDomain 1・Domain 3双方で繰り返し問われる中心テーマ
+- 新サービスが増えても、根底にあるのは「最小権限」「多層防御」「暗号化」「自動化されたコンプライアンス監視」という原則。新サービス名と既存の設計原則を結び付けて覚えることが得点につながる
+
+---
+
 ## まとめ
 
 ### 試験でのポイント
