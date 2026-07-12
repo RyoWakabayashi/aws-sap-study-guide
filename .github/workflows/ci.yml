@@ -11,6 +11,7 @@ on:
     paths:
       - "quiz-game/**"
       - ".github/workflows/**"
+  workflow_dispatch: {}
 
 permissions:
   contents: read
@@ -55,7 +56,7 @@ jobs:
   # "GitHub Actions" に設定しておく必要がある（一度だけの手動設定）。
   deploy-production:
     needs: lint-and-test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: read
