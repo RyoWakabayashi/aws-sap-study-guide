@@ -99,18 +99,21 @@ function optimizeCSS (content) {
 }
 
 // JavaScriptの最適化
+//
+// 注意: 以前はconsole.log呼び出しやif(this.debugMode){...}ブロックを
+// 正規表現で物理的に削除していたが、文字列/テンプレートリテラル内の
+// 括弧や、ネストした波括弧を考慮できず、本番ビルドの構文を破壊するバグが
+// あった（例: console.log(`... (${x}):`) のように文中に ")" を含む場合に
+// 呼び出し全体ではなくその ")" までで打ち切られてしまう）。
+// JSの正しい構文解析なしに安全に行える範囲の変換のみを行う。
 function optimizeJS (content) {
-  // デバッグ用のconsole.logを削除（エラー系は保持）
-  content = content.replace(/console\.log\([^)]*\);?\n?/g, '')
-
-  // デバッグモードの無効化
+  // デバッグモードを本番では常に無効化する（単純なリテラル文字列置換のみ）。
+  // これにより、if (this.debugMode) { ... } ブロックは実行時に到達しなくなるため、
+  // ソースから物理的に取り除かなくても機能上・セキュリティ上の問題はない。
   content = content.replace(
     'this.debugMode = this.isDebugMode()',
     'this.debugMode = false'
   )
-
-  // デバッグ機能の削除
-  content = content.replace(/if \(this\.debugMode\) \{[\s\S]*?\}/g, '')
 
   return content
 }
